@@ -1,19 +1,12 @@
 {
-  "_id": "{{@ system @}}-company-collect",
+  "_id": "{{@ system @}}-contact-collect",
   "namespaced_identifiers": false,
   "source": {
     "operation": "list",
-    "operations": {
-      "list": {
-        "method": "GET",
-        "url": "{{ properties.datatype }}"
-      }
-    },
     "properties": {
       "datatype": "Contact"
     },
     "system": "{{@ system @}}",
-    "trace": true,
     "type": "rest"
   },
   "type": "pipe"

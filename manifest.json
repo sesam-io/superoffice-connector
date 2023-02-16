@@ -5,14 +5,15 @@
   },
   "auth": "oauth2",
   "datatypes": {
-    "company": {
-      "template": "templates/company.json"
+    "contact": {
+      "template": "templates/contact.json"
     }
   },
   "oauth2": {
     "login_url": "https://sod.superoffice.com/login/common/oauth/authorize",
     "scopes": [
-      "openid"
+      "openid",
+      "api"
     ],
     "token_url": "https://sod.superoffice.com/login/common/oauth/tokens"
   },

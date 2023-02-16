@@ -7,6 +7,17 @@
     "refresh_token": "$SECRET(oauth_refresh_token)",
     "token_url": "{{@ token_url @}}"
   },
+  "operations": {
+    "list": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "id_expression": "{{ PrimaryKey }}",
+      "method": "GET",
+      "payload_property": "value",
+      "url": "{{ properties.datatype }}"
+    }
+  },
   "type": "system:rest",
   "url_pattern": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/%s",
   "verify_ssl": true
