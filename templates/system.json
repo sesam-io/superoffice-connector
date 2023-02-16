@@ -19,6 +19,6 @@
     }
   },
   "type": "system:rest",
-  "url_pattern": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/%s",
+  "url_pattern": "https://{{@ environment @}}.superoffice.com/{{@ account_id @}}/api/v1/%s",
   "verify_ssl": true
 }
