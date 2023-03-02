@@ -7,6 +7,69 @@
   "datatypes": {
     "contact": {
       "template": "templates/contact.json"
+    },
+    "contactlist": {
+      "template": "templates/contactlist.json"
+    },
+    "country": {
+      "template": "templates/country.json"
+    },
+    "document": {
+      "template": "templates/document.json"
+    },
+    "documentlist": {
+      "template": "templates/documentlist.json"
+    },
+    "person": {
+      "template": "templates/person.json"
+    },
+    "personlist": {
+      "template": "templates/personlist.json"
+    },
+    "price": {
+      "template": "templates/price.json"
+    },
+    "pricelist": {
+      "template": "templates/pricelist.json"
+    },
+    "product": {
+      "template": "templates/product.json"
+    },
+    "productcategory": {
+      "template": "templates/productcategory.json"
+    },
+    "productfamily": {
+      "template": "templates/productfamily.json"
+    },
+    "productlist": {
+      "template": "templates/productlist.json"
+    },
+    "producttype": {
+      "template": "templates/producttype.json"
+    },
+    "project": {
+      "template": "templates/project.json"
+    },
+    "projectlist": {
+      "template": "templates/projectlist.json"
+    },
+    "role": {
+      "template": "templates/role.json"
+    },
+    "sale": {
+      "template": "templates/sale.json"
+    },
+    "salelist": {
+      "template": "templates/salelist.json"
+    },
+    "ticket": {
+      "template": "templates/ticket.json"
+    },
+    "ticketlist": {
+      "template": "templates/ticketlist.json"
+    },
+    "user": {
+      "template": "templates/user.json"
     }
   },
   "oauth2": {

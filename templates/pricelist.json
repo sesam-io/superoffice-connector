@@ -1,0 +1,17 @@
+{
+  "_id": "{{@ system @}}-pricelist-collect",
+  "namespaced_identifiers": false,
+  "source": {
+    "operation": "alternate_list",
+    "properties": {
+      "datatype": "pricelist",
+      "ordering": "name asc",
+      "skip": "0",
+      "top": "20"
+    },
+    "system": "{{@ system @}}",
+    "trace": true,
+    "type": "rest"
+  },
+  "type": "pipe"
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "{{@ system @}}-productfamily-collect",
+  "namespaced_identifiers": false,
+  "source": {
+    "operation": "list_list",
+    "properties": {
+      "datatype": "ProductFamily",
+      "ordering": "name asc",
+      "skip": "0",
+      "top": "20"
+    },
+    "system": "{{@ system @}}",
+    "trace": true,
+    "type": "rest"
+  },
+  "transform": {
+    "rules": {
+      "default": [
+        [
+          "copy",
+          "*"
+        ],
+        [
+          "add",
+          "_id",
+          "Id"
+        ]
+      ]
+    },
+    "type": "dtl"
+  },
+  "type": "pipe"
+}

@@ -1,0 +1,36 @@
+{
+  "_id": "{{@ system @}}-country-collect",
+  "namespaced_identifiers": false,
+  "source": {
+    "operation": "list_list",
+    "properties": {
+      "datatype": "Country",
+      "ordering": "name asc",
+      "skip": "0",
+      "top": "20"
+    },
+    "system": "{{@ system @}}",
+    "trace": true,
+    "type": "rest"
+  },
+  "transform": {
+    "rules": {
+      "default": [
+        [
+          "copy",
+          "*"
+        ],
+        [
+          "add",
+          "_id",
+          [
+            "string",
+            "_S.CountryId"
+          ]
+        ]
+      ]
+    },
+    "type": "dtl"
+  },
+  "type": "pipe"
+}
