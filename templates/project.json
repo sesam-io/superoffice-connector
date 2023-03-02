@@ -1,15 +1,15 @@
 {
-  "_id": "{{@ system @}}-contact-collect",
+  "_id": "{{@ system @}}-project-collect",
   "namespaced_identifiers": false,
   "source": {
-    "dataset": "{{@ system @}}-contactlist-collect",
+    "dataset": "{{@ system @}}-projectlist-collect",
     "type": "dataset"
   },
   "transform": [
     {
       "operation": "lookup",
       "properties": {
-        "datatype": "contact"
+        "datatype": "project"
       },
       "replace_entity": true,
       "system": "{{@ system @}}",
@@ -27,7 +27,7 @@
             "_id",
             [
               "string",
-              "_S.ContactId"
+              "_S.ProjectId"
             ]
           ]
         ]

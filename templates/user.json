@@ -1,0 +1,16 @@
+{
+  "_id": "{{@ system @}}-user-collect",
+  "namespaced_identifiers": false,
+  "source": {
+    "operation": "alternate_list",
+    "properties": {
+      "datatype": "user",
+      "ordering": "name asc",
+      "skip": "0",
+      "top": "20"
+    },
+    "system": "{{@ system @}}",
+    "type": "rest"
+  },
+  "type": "pipe"
+}

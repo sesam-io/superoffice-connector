@@ -1,15 +1,15 @@
 {
-  "_id": "{{@ system @}}-contact-collect",
+  "_id": "{{@ system @}}-product-collect",
   "namespaced_identifiers": false,
   "source": {
-    "dataset": "{{@ system @}}-contactlist-collect",
+    "dataset": "{{@ system @}}-productlist-collect",
     "type": "dataset"
   },
   "transform": [
     {
       "operation": "lookup",
       "properties": {
-        "datatype": "contact"
+        "datatype": "product"
       },
       "replace_entity": true,
       "system": "{{@ system @}}",
@@ -27,7 +27,7 @@
             "_id",
             [
               "string",
-              "_S.ContactId"
+              "_S.ProductId"
             ]
           ]
         ]
