@@ -21,22 +21,22 @@
     "transform": {
       "properties": {
         "operation_delete_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "TicketId"
+          "datatype": "List/category/Items",
+          "primaryKey": "Id"
         },
         "operation_insert_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "TicketId"
+          "datatype": "List/category/Items",
+          "primaryKey": "Id"
         },
         "operation_lookup_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "TicketId"
+          "datatype": "List/category/Items",
+          "primaryKey": "Id"
         },
         "operation_update_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "TicketId"
+          "datatype": "List/category/Items",
+          "primaryKey": "Id"
         },
-        "primary_key": "TicketId",
+        "primary_key": "Id",
         "rest_system": "{{@ system @}}",
         "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
       },
@@ -52,46 +52,17 @@
     ],
     "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}list-collect",
-      "type": "dataset"
+      "operation": "alternate_list",
+      "properties": {
+        "datatype": "List/category/Items",
+        "ordering": "name asc",
+        "skip": "0",
+        "top": "20"
+      },
+      "system": "{{@ system @}}",
+      "type": "rest"
     },
     "transform": [
-      {
-        "rules": {
-          "default": [
-            [
-              "comment",
-              "*** The below transform is to discard entities that have been deleted in the source and as such might result in a pump failed. ***"
-            ],
-            [
-              "if",
-              [
-                "eq",
-                "_S._deleted",
-                true
-              ],
-              [
-                "discard"
-              ]
-            ],
-            [
-              "copy",
-              "{{@ datatype @}}Id"
-            ]
-          ]
-        },
-        "type": "dtl"
-      },
-      {
-        "operation": "lookup",
-        "properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "{{@ datatype @}}Id"
-        },
-        "replace_entity": true,
-        "system": "{{@ system @}}",
-        "type": "rest"
-      },
       {
         "rules": {
           "default": [
@@ -104,7 +75,7 @@
               "_id",
               [
                 "string",
-                "_S.TicketId"
+                "_S.Id"
               ]
             ]
           ]
@@ -113,7 +84,7 @@
       },
       {
         "properties": {
-          "primary_key": "TicketId",
+          "primary_key": "Id",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-collect-rest",

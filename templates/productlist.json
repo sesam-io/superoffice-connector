@@ -1,5 +1,5 @@
 {
-  "_id": "{{@ system @}}-productlist-collect",
+  "_id": "{{@ system @}}-{{@ datatype @}}-collect",
   "namespaced_identifiers": false,
   "source": {
     "operation": "list",

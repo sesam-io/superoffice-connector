@@ -1,5 +1,5 @@
 {
-  "_id": "{{@ system @}}-personlist-collect",
+  "_id": "{{@ system @}}-{{@ datatype @}}-collect",
   "namespaced_identifiers": false,
   "source": {
     "operation": "list",
