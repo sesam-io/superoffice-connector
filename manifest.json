@@ -6,10 +6,10 @@
   "auth": "oauth2",
   "datatypes": {
     "business": {
-      "template": "templates/list.json"
+      "template": "templates/listcustomer.json"
     },
     "category": {
-      "template": "templates/list.json"
+      "template": "templates/listcustomer.json"
     },
     "contact": {
       "template": "templates/contact.json"
@@ -17,17 +17,17 @@
     "contactlist": {
       "template": "templates/contactlist.json"
     },
+    "country": {
+      "template": "templates/listcountry.json"
+    },
+    "currency": {
+      "template": "templates/listcurrency.json"
+    },
     "document": {
       "template": "templates/document.json"
     },
     "documentlist": {
       "template": "templates/documentlist.json"
-    },
-    "list-country-items": {
-      "template": "templates/listcountry.json"
-    },
-    "list-currency-items": {
-      "template": "templates/listcurrency.json"
     },
     "person": {
       "template": "templates/person.json"
@@ -45,16 +45,16 @@
       "template": "templates/product.json"
     },
     "productcategory": {
-      "template": "templates/list.json"
+      "template": "templates/listcustomer.json"
     },
     "productfamily": {
-      "template": "templates/list.json"
+      "template": "templates/listcustomer.json"
     },
     "productlist": {
       "template": "templates/productlist.json"
     },
     "producttype": {
-      "template": "templates/list.json"
+      "template": "templates/listcustomer.json"
     },
     "project": {
       "template": "templates/project.json"

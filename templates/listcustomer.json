@@ -52,7 +52,7 @@
     ],
     "namespaced_identifiers": false,
     "source": {
-      "operation": "alternate_{{@ datatype @}}",
+      "operation": "alternate_list",
       "properties": {
         "datatype": "List/{{@ datatype @}}/Items",
         "ordering": "name asc",
