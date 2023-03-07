@@ -1,51 +1,23 @@
 [
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "comment": "WARNING! This pipe is generated from the template of the 'listcurrency' datatype and changes will be silently ignored during collapse. For more information see the connectorpy README.",
     "exclude_completeness": [
       "{{@ system @}}-{{@ datatype @}}-share"
     ],
     "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}list-collect",
-      "type": "dataset"
+      "operation": "alternate_list",
+      "properties": {
+        "datatype": "List/Currency/Items",
+        "ordering": "name asc",
+        "skip": "0",
+        "top": "20"
+      },
+      "system": "{{@ system @}}",
+      "type": "rest"
     },
     "transform": [
-      {
-        "rules": {
-          "default": [
-            [
-              "comment",
-              "*** The below transform is to discard entities that have been deleted in the source and as such might result in a pump failed. ***"
-            ],
-            [
-              "if",
-              [
-                "eq",
-                "_S._deleted",
-                true
-              ],
-              [
-                "discard"
-              ]
-            ],
-            [
-              "copy",
-              "{{@ datatype @}}Id"
-            ]
-          ]
-        },
-        "type": "dtl"
-      },
-      {
-        "operation": "lookup",
-        "properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "{{@ datatype @}}Id"
-        },
-        "replace_entity": true,
-        "system": "{{@ system @}}",
-        "type": "rest"
-      },
       {
         "rules": {
           "default": [
@@ -58,7 +30,7 @@
               "_id",
               [
                 "string",
-                "_S.ProductId"
+                "_S.CurrencyId"
               ]
             ]
           ]
@@ -67,7 +39,7 @@
       },
       {
         "properties": {
-          "primary_key": "ProductId",
+          "primary_key": "CurrencyId",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-collect-rest",
@@ -80,6 +52,7 @@
     "_id": "{{@ system @}}-{{@ datatype @}}-share",
     "add_namespaces": false,
     "batch_size": 1,
+    "comment": "WARNING! This pipe is generated from the template of the 'listcurrency' datatype and changes will be silently ignored during collapse. For more information see the connectorpy README.",
     "compaction": {
       "keep_versions": 100
     },
@@ -97,23 +70,27 @@
     },
     "transform": {
       "properties": {
+        "operation_delete": "alternate_delete",
         "operation_delete_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "ProductId"
+          "datatype": "List/Currency/Items",
+          "primaryKey": "CurrencyId"
         },
+        "operation_insert": "alternate_insert",
         "operation_insert_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "ProductId"
+          "datatype": "List/Currency/Items",
+          "primaryKey": "CurrencyId"
         },
+        "operation_lookup": "alternate_lookup",
         "operation_lookup_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "ProductId"
+          "datatype": "List/Currency/Items",
+          "primaryKey": "CurrencyId"
         },
+        "operation_update": "alternate_update",
         "operation_update_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "ProductId"
+          "datatype": "List/Currency/Items",
+          "primaryKey": "CurrencyId"
         },
-        "primary_key": "ProductId",
+        "primary_key": "CurrencyId",
         "rest_system": "{{@ system @}}",
         "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
       },

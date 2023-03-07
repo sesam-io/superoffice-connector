@@ -27,6 +27,10 @@
               [
                 "discard"
               ]
+            ],
+            [
+              "copy",
+              "PrimaryKey"
             ]
           ]
         },
@@ -36,7 +40,7 @@
         "operation": "lookup",
         "properties": {
           "datatype": "{{@ datatype @}}list",
-          "primaryKey": "_id"
+          "primaryKey": "PrimaryKey"
         },
         "replace_entity": true,
         "system": "{{@ system @}}",

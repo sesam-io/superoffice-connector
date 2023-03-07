@@ -1,13 +1,14 @@
 [
   {
-    "_id": "{{@ system @}}-list-{{@ datatype @}}-items-share",
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
     "add_namespaces": false,
     "batch_size": 1,
+    "comment": "WARNING! This pipe is generated from the template of the 'listcustomer' datatype and changes will be silently ignored during collapse. For more information see the connectorpy README.",
     "compaction": {
       "keep_versions": 100
     },
     "exclude_completeness": [
-      "{{@ system @}}-list-{{@ datatype @}}-items-share"
+      "{{@ system @}}-{{@ datatype @}}-share"
     ],
     "namespaced_identifiers": false,
     "sink": {
@@ -15,30 +16,30 @@
       "set_initial_offset": "onload"
     },
     "source": {
-      "dataset": "{{@ system @}}-list-{{@ datatype @}}-items-transform",
+      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
       "type": "dataset"
     },
     "transform": {
       "properties": {
         "operation_delete_properties": {
-          "datatype": "List/{{@ datatype @}}/Items",
+          "datatype": "List/category/Items",
           "primaryKey": "Id"
         },
         "operation_insert_properties": {
-          "datatype": "List/{{@ datatype @}}/Items",
+          "datatype": "List/category/Items",
           "primaryKey": "Id"
         },
         "operation_lookup_properties": {
-          "datatype": "List/{{@ datatype @}}/Items",
+          "datatype": "List/category/Items",
           "primaryKey": "Id"
         },
         "operation_update_properties": {
-          "datatype": "List/{{@ datatype @}}/Items",
+          "datatype": "List/category/Items",
           "primaryKey": "Id"
         },
         "primary_key": "Id",
         "rest_system": "{{@ system @}}",
-        "share_dataset": "{{@ system @}}-list-{{@ datatype @}}-items-share"
+        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
       },
       "template": "transform-share-rest",
       "type": "template"
@@ -46,15 +47,16 @@
     "type": "pipe"
   },
   {
-    "_id": "{{@ system @}}-list-{{@ datatype @}}-items-collect",
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "comment": "WARNING! This pipe is generated from the template of the 'listcustomer' datatype and changes will be silently ignored during collapse. For more information see the connectorpy README.",
     "exclude_completeness": [
-      "{{@ system @}}-list-{{@ datatype @}}-items-share"
+      "{{@ system @}}-{{@ datatype @}}-share"
     ],
     "namespaced_identifiers": false,
     "source": {
       "operation": "alternate_list",
       "properties": {
-        "datatype": "List/{{@ datatype @}}/Items",
+        "datatype": "List/category/Items",
         "ordering": "name asc",
         "skip": "0",
         "top": "20"
@@ -85,7 +87,7 @@
       {
         "properties": {
           "primary_key": "Id",
-          "share_dataset": "{{@ system @}}-list-{{@ datatype @}}-items-share"
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-collect-rest",
         "type": "template"
