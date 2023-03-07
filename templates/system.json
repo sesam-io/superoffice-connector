@@ -8,14 +8,21 @@
     "token_url": "{{@ token_url @}}"
   },
   "operations": {
+    "alternate_delete": {
+      "method": "DELETE",
+      "url": "{{ properties.datatype }}/{{ entity[properties.primaryKey] }}"
+    },
+    "alternate_insert": {
+      "method": "POST",
+      "url": "{{ properties.datatype }}"
+    },
     "alternate_list": {
       "headers": {
         "Accept": "application/json",
         "X-Sesam-Page": "{% if (previous_request_headers is defined and previous_request_headers['X-Sesam-Page'] is defined) %}{{ previous_request_headers['X-Sesam-Page']|int + 1 }}{% else %}1{% endif %}"
       },
-      "id_expression": "{{ PrimaryKey }}",
       "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.datatype|capitalize }}",
+      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.datatype }}",
       "next_page_termination_strategy": [
         "same-next-page-request",
         "empty-result"
@@ -25,7 +32,25 @@
         "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
         "$top": "{{ properties.top }}"
       },
-      "payload_property": "value",
+      "url": "{{ properties.datatype }}"
+    },
+    "alternate_lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "GET",
+      "url": "{{ properties.datatype }}/{{ entity[properties.primaryKey] }}"
+    },
+    "alternate_update": {
+      "method": "PUT",
+      "url": "{{ properties.datatype }}/{{ entity[properties.primaryKey] }}"
+    },
+    "delete": {
+      "method": "DELETE",
+      "url": "{{ properties.datatype|capitalize }}/{{ entity[properties.primaryKey] }}"
+    },
+    "insert": {
+      "method": "POST",
       "url": "{{ properties.datatype|capitalize }}"
     },
     "list": {
@@ -49,31 +74,16 @@
       "payload_property": "value",
       "url": "{{ properties.datatype|capitalize }}"
     },
-    "list_list": {
-      "headers": {
-        "Accept": "application/json",
-        "X-Sesam-Page": "{% if (previous_request_headers is defined and previous_request_headers['X-Sesam-Page'] is defined) %}{{ previous_request_headers['X-Sesam-Page']|int + 1 }}{% else %}1{% endif %}"
-      },
-      "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.datatype|capitalize }}",
-      "next_page_termination_strategy": [
-        "same-next-page-request",
-        "empty-result"
-      ],
-      "params": {
-        "$orderby": "{{ properties.ordering }}",
-        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
-        "$top": "{{ properties.top }}"
-      },
-      "url": "List/{{ properties.datatype }}/Items"
-    },
     "lookup": {
       "headers": {
         "Accept": "application/json"
       },
       "method": "GET",
-      "payload_property": "value",
-      "url": "{{ properties.datatype|capitalize }}/{{ entity._id }}"
+      "url": "{{ properties.datatype|capitalize }}/{{ entity[properties.primaryKey] }}"
+    },
+    "update": {
+      "method": "PUT",
+      "url": "{{ properties.datatype|capitalize }}/{{ entity[properties.primaryKey] }}"
     }
   },
   "type": "system:rest",

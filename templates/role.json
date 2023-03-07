@@ -1,10 +1,10 @@
 {
-  "_id": "{{@ system @}}-role-collect",
+  "_id": "{{@ system @}}-{{@ datatype @}}-collect",
   "namespaced_identifiers": false,
   "source": {
     "operation": "list",
     "properties": {
-      "datatype": "role",
+      "datatype": "{{@ datatype @}}",
       "ordering": "name asc",
       "since_param": "updatedDate",
       "skip": "0",
