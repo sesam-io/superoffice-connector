@@ -6,79 +6,104 @@
   "auth": "oauth2",
   "datatypes": {
     "contact": {
-      "template": "templates/contact.json"
+      "template": "templates/contact.json",
+      "label": "Contact"
     },
     "contactlist": {
-      "template": "templates/contactlist.json"
+      "template": "templates/contactlist.json",
+      "label": "Contact List"
     },
     "document": {
-      "template": "templates/document.json"
+      "template": "templates/document.json",
+      "label": "Document"
     },
     "documentlist": {
-      "template": "templates/documentlist.json"
+      "template": "templates/documentlist.json",
+      "label": "Document List"
     },
     "listbusinessitems": {
-      "template": "templates/listbusinessitems.json"
+      "template": "templates/listbusinessitems.json",
+      "label": "Business Items List"
     },
     "listcategoryitems": {
-      "template": "templates/listcategoryitems.json"
+      "template": "templates/listcategoryitems.json",
+      "label": "Category Items List"
     },
     "listcountryitems": {
-      "template": "templates/listcountryitems.json"
+      "template": "templates/listcountryitems.json",
+      "label": "Country Items List"
     },
     "listcurrencyitems": {
-      "template": "templates/listcurrencyitems.json"
+      "template": "templates/listcurrencyitems.json",
+      "label": "Currency Items List"
     },
     "listproductcategoryitems": {
-      "template": "templates/listproductcategoryitems.json"
+      "template": "templates/listproductcategoryitems.json",
+      "label": "Product Category Items List"
     },
     "listproductfamilyitems": {
-      "template": "templates/listproductfamilyitems.json"
+      "template": "templates/listproductfamilyitems.json",
+      "label": "Product Family Items List"
     },
     "listproducttypeitems": {
-      "template": "templates/listproducttypeitems.json"
+      "template": "templates/listproducttypeitems.json",
+      "label": "Product Type Items List"
     },
     "person": {
-      "template": "templates/person.json"
+      "template": "templates/person.json",
+      "label": "Person"
     },
     "personlist": {
-      "template": "templates/personlist.json"
+      "template": "templates/personlist.json",
+      "label": "Person List"
     },
     "price": {
-      "template": "templates/price.json"
+      "template": "templates/price.json",
+      "label": "Price"
     },
     "pricelist": {
-      "template": "templates/pricelist.json"
+      "template": "templates/pricelist.json",
+      "label": "Price List"
     },
     "product": {
-      "template": "templates/product.json"
+      "template": "templates/product.json",
+      "label": "Product"
     },
     "productlist": {
-      "template": "templates/productlist.json"
+      "template": "templates/productlist.json",
+      "label": "Product List"
     },
     "project": {
-      "template": "templates/project.json"
+      "template": "templates/project.json",
+      "label": "Project"
     },
     "projectlist": {
-      "template": "templates/projectlist.json"
+      "template": "templates/projectlist.json",
+      "label": "Project List"
     },
     "role": {
-      "template": "templates/role.json"
+      "template": "templates/role.json",
+      "label": "Role"
     },
     "sale": {
-      "template": "templates/sale.json"
+      "template": "templates/sale.json",
+      "label": "Sale"
     },
     "salelist": {
-      "template": "templates/salelist.json"
+      "template": "templates/salelist.json",
+      "label": "Sale List"
     },
     "ticket": {
-      "template": "templates/ticket.json"
+      "template": "templates/ticket.json",
+      "label": "Ticket"
     },
     "ticketlist": {
-      "template": "templates/ticketlist.json"
+      "template": "templates/ticketlist.json",
+      "label": "Ticket List"
     },
     "user": {
-      "template": "templates/user.json"
+      "template": "templates/user.json",
+      "label": "User"
     }
   },
   "oauth2": {
