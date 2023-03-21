@@ -1,0 +1,88 @@
+[
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all2",
+    "namespaced_identifiers": false,
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
+      "type": "dataset"
+    },
+    "transform": [
+      {
+        "type": "emit_children"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "source": {
+      "dataset": "{{@ system @}}-quote-collect",
+      "type": "dataset"
+    },
+    "transform": [
+      {
+        "operation": "get_{{@ datatype @}}",
+        "properties": {
+          "datatype": "GetQuoteVersions",
+          "properties": ""
+        },
+        "system": "{{@ system @}}",
+        "type": "rest"
+      },
+      {
+        "rules": {
+          "create_versions": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "add",
+              "_id",
+              [
+                "string",
+                "_S.QuoteVersionId"
+              ]
+            ],
+            [
+              "add",
+              "$original_id",
+              "_R._S._id"
+            ]
+          ],
+          "default": [
+            [
+              "create-child",
+              [
+                "apply",
+                "create_versions",
+                "_S.response"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
+      "type": "dataset"
+    },
+    "transform": {
+      "properties": {
+        "primary_key": "QuoteVersionId",
+        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+      },
+      "template": "transform-collect-rest",
+      "type": "template"
+    },
+    "type": "pipe"
+  }
+]

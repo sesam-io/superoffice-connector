@@ -65,8 +65,17 @@
       "label": "Project List",
       "template": "templates/projectlist.json"
     },
-    "quotes": {
-      "template": "templates/quotes.json"
+    "quote": {
+      "template": "templates/quote.json"
+    },
+    "quotealternative": {
+      "template": "templates/quotealternative.json"
+    },
+    "quoteline": {
+      "template": "templates/quoteline.json"
+    },
+    "quoteversion": {
+      "template": "templates/quoteversion.json"
     },
     "role": {
       "label": "Role",
@@ -83,11 +92,20 @@
     "salelist-quotes": {
       "template": "templates/salelist-quotes.json"
     },
-    "salelistquotes": {
-      "template": "templates/salelistquotes.json"
+    "salelistquote": {
+      "template": "templates/salelistquote.json"
+    },
+    "salelistquotes-collect": {
+      "template": "templates/salelistquotes-collect.json"
     },
     "superoffice-quote": {
       "template": "templates/superoffice-quote.json"
+    },
+    "superoffice-quotealternative": {
+      "template": "templates/superoffice-quotealternative.json"
+    },
+    "superoffice-quoteversion": {
+      "template": "templates/superoffice-quoteversion.json"
     },
     "ticket": {
       "label": "Ticket",
