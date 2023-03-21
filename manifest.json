@@ -6,104 +6,100 @@
   "auth": "oauth2",
   "datatypes": {
     "contact": {
-      "template": "templates/contact.json",
-      "label": "Contact"
+      "label": "Contact",
+      "template": "templates/contact.json"
     },
     "contactlist": {
-      "template": "templates/contactlist.json",
-      "label": "Contact List"
+      "label": "Contact List",
+      "template": "templates/contactlist.json"
+    },
+    "country": {
+      "template": "templates/country.json"
     },
     "document": {
-      "template": "templates/document.json",
-      "label": "Document"
+      "label": "Document",
+      "template": "templates/document.json"
     },
     "documentlist": {
-      "template": "templates/documentlist.json",
-      "label": "Document List"
-    },
-    "listbusinessitems": {
-      "template": "templates/listbusinessitems.json",
-      "label": "Business Items List"
-    },
-    "listcategoryitems": {
-      "template": "templates/listcategoryitems.json",
-      "label": "Category Items List"
-    },
-    "listcountryitems": {
-      "template": "templates/listcountryitems.json",
-      "label": "Country Items List"
-    },
-    "listcurrencyitems": {
-      "template": "templates/listcurrencyitems.json",
-      "label": "Currency Items List"
-    },
-    "listproductcategoryitems": {
-      "template": "templates/listproductcategoryitems.json",
-      "label": "Product Category Items List"
-    },
-    "listproductfamilyitems": {
-      "template": "templates/listproductfamilyitems.json",
-      "label": "Product Family Items List"
-    },
-    "listproducttypeitems": {
-      "template": "templates/listproducttypeitems.json",
-      "label": "Product Type Items List"
+      "label": "Document List",
+      "template": "templates/documentlist.json"
     },
     "person": {
-      "template": "templates/person.json",
-      "label": "Person"
+      "label": "Person",
+      "template": "templates/person.json"
     },
     "personlist": {
-      "template": "templates/personlist.json",
-      "label": "Person List"
+      "label": "Person List",
+      "template": "templates/personlist.json"
     },
     "price": {
-      "template": "templates/price.json",
-      "label": "Price"
+      "label": "Price",
+      "template": "templates/price.json"
     },
     "pricelist": {
-      "template": "templates/pricelist.json",
-      "label": "Price List"
+      "label": "Price List",
+      "template": "templates/pricelist.json"
     },
     "product": {
-      "template": "templates/product.json",
-      "label": "Product"
+      "label": "Product",
+      "template": "templates/product.json"
+    },
+    "productcategory": {
+      "template": "templates/productcategory.json"
+    },
+    "productfamily": {
+      "template": "templates/productfamily.json"
     },
     "productlist": {
-      "template": "templates/productlist.json",
-      "label": "Product List"
+      "label": "Product List",
+      "template": "templates/productlist.json"
+    },
+    "producttype": {
+      "template": "templates/producttype.json"
     },
     "project": {
-      "template": "templates/project.json",
-      "label": "Project"
+      "label": "Project",
+      "template": "templates/project.json"
     },
     "projectlist": {
-      "template": "templates/projectlist.json",
-      "label": "Project List"
+      "label": "Project List",
+      "template": "templates/projectlist.json"
+    },
+    "quotes": {
+      "template": "templates/quotes.json"
     },
     "role": {
-      "template": "templates/role.json",
-      "label": "Role"
+      "label": "Role",
+      "template": "templates/role.json"
     },
     "sale": {
-      "template": "templates/sale.json",
-      "label": "Sale"
+      "label": "Sale",
+      "template": "templates/sale.json"
     },
     "salelist": {
-      "template": "templates/salelist.json",
-      "label": "Sale List"
+      "label": "Sale List",
+      "template": "templates/salelist.json"
+    },
+    "salelist-quotes": {
+      "template": "templates/salelist-quotes.json"
+    },
+    "salelistquotes": {
+      "template": "templates/salelistquotes.json"
+    },
+    "superoffice-quote": {
+      "template": "templates/superoffice-quote.json"
     },
     "ticket": {
-      "template": "templates/ticket.json",
-      "label": "Ticket"
+      "label": "Ticket",
+      "template": "templates/ticket.json"
     },
     "ticketlist": {
-      "template": "templates/ticketlist.json",
-      "label": "Ticket List"
+      "label": "Ticket List",
+      "template": "templates/ticketlist.json"
     },
     "user": {
-      "template": "templates/user.json",
-      "label": "User"
+      "label": "User",
+      "template": "templates/user.json"
     }
   },
   "oauth2": {
