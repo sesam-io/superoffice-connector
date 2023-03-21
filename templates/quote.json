@@ -1,0 +1,51 @@
+{
+  "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+  "exclude_completeness": [
+    "{{@ system @}}-{{@ datatype @}}-share"
+  ],
+  "namespaced_identifiers": false,
+  "source": {
+    "dataset": "{{@ system @}}-salelistQuote-collect",
+    "type": "dataset"
+  },
+  "transform": [
+    {
+      "operation": "lookup-{{@ datatype @}}",
+      "properties": {
+        "datatype": "GetQuoteEntity"
+      },
+      "replace_entity": true,
+      "system": "{{@ system @}}",
+      "trace": true,
+      "type": "rest"
+    },
+    {
+      "rules": {
+        "default": [
+          [
+            "copy",
+            "*"
+          ],
+          [
+            "add",
+            "_id",
+            [
+              "string",
+              "_S.QuoteId"
+            ]
+          ]
+        ]
+      },
+      "type": "dtl"
+    },
+    {
+      "properties": {
+        "primary_key": "QuoteId",
+        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+      },
+      "template": "transform-collect-rest",
+      "type": "template"
+    }
+  ],
+  "type": "pipe"
+}
