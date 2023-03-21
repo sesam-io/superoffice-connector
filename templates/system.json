@@ -28,27 +28,6 @@
       "payload_property": "value",
       "url": "{{ properties.datatype|capitalize }}"
     },
-    "archive": {
-      "headers": {
-        "Accept": "application/json",
-        "X-Sesam-Page": "{% if (previous_request_headers is defined and previous_request_headers['X-Sesam-Page'] is defined) %}{{ previous_request_headers['X-Sesam-Page']|int + 1 }}{% else %}1{% endif %}"
-      },
-      "id_expression": "{{ PrimaryKey }}",
-      "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
-      "next_page_termination_strategy": [
-        "same-next-page-request",
-        "empty-result"
-      ],
-      "params": {
-        "$filter": "{% if since is defined and since is not none %}({{ properties.since_param }} ge '{{ since }}'){% else %}({{ properties.since_param }} ge '1970-01-01'){% endif %}",
-        "$orderby": "{{ properties.ordering }}",
-        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
-        "$top": "{{ properties.top }}"
-      },
-      "payload_property": "value",
-      "url": "archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate"
-    },
     "list": {
       "headers": {
         "Accept": "application/json",
@@ -96,7 +75,7 @@
       "payload_property": "value",
       "url": "{{ properties.datatype|capitalize }}/{{ entity._id }}"
     },
-    "lookup-quote": {
+    "quote-lookup": {
       "headers": {
         "Accept": "application/json"
       },
@@ -105,6 +84,57 @@
         "QuoteId": "{{ entity['quote/quoteId'] }}"
       },
       "url": "Agents/Quote/{{ properties.datatype }}"
+    },
+    "quotealternative-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteVersionId": "{{ entity['QuoteVersionId'] }}"
+      },
+      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+    },
+    "quoteline-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteAlternativeId": "{{ entity['QuoteAlternativeId'] }}"
+      },
+      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+    },
+    "quoteversion-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteId": "{{ entity['QuoteId'] }}"
+      },
+      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+    },
+    "salequote-list": {
+      "headers": {
+        "Accept": "application/json",
+        "X-Sesam-Page": "{% if (previous_request_headers is defined and previous_request_headers['X-Sesam-Page'] is defined) %}{{ previous_request_headers['X-Sesam-Page']|int + 1 }}{% else %}1{% endif %}"
+      },
+      "id_expression": "{{ PrimaryKey }}",
+      "method": "GET",
+      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
+      "next_page_termination_strategy": [
+        "same-next-page-request",
+        "empty-result"
+      ],
+      "params": {
+        "$filter": "{% if since is defined and since is not none %}({{ properties.since_param }} ge '{{ since }}'){% else %}({{ properties.since_param }} ge '1970-01-01'){% endif %}",
+        "$orderby": "{{ properties.ordering }}",
+        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
+        "$top": "{{ properties.top }}"
+      },
+      "payload_property": "value",
+      "url": "archive/{{ properties.datatype|capitalize }}?${{ properties.properties }}"
     }
   },
   "type": "system:rest",
