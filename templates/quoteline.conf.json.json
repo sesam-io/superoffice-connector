@@ -1,0 +1,24 @@
+{
+  "_id": "{{@ system @}}-quoteline",
+  "namespaced_identifiers": false,
+  "source": {
+    "entities": [
+      {
+        "QuoteAlternativeId": "4",
+        "_id": "1"
+      }
+    ],
+    "if_source_empty": "accept",
+    "type": "embedded"
+  },
+  "transform": {
+    "operation": "lookup-quotlines",
+    "properties": {
+      "datatype": "GetQuoteLines",
+      "properties": ""
+    },
+    "system": "{{@ system @}}",
+    "type": "rest"
+  },
+  "type": "pipe"
+}

@@ -34,7 +34,7 @@
     },
     "transform": [
       {
-        "operation": "get_{{@ datatype @}}",
+        "operation": "{{@ datatype @}}s-lookup",
         "properties": {
           "datatype": "GetQuoteVersions",
           "properties": ""

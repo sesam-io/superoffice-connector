@@ -1,29 +1,5 @@
 [
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-copy",
-    "namespaced_identifiers": false,
-    "source": {
-      "entities": [
-        {
-          "QuoteAlternativeId": "4",
-          "_id": "1"
-        }
-      ],
-      "if_source_empty": "accept",
-      "type": "embedded"
-    },
-    "transform": {
-      "operation": "lookup-quotlines",
-      "properties": {
-        "datatype": "GetQuoteLines",
-        "properties": ""
-      },
-      "system": "{{@ system @}}",
-      "type": "rest"
-    },
-    "type": "pipe"
-  },
-  {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
     "exclude_completeness": [
       "{{@ system @}}-{{@ datatype @}}-share"
@@ -50,7 +26,7 @@
     },
     "transform": [
       {
-        "operation": "get_{{@ datatype @}}",
+        "operation": "{{@ datatype @}}s-lookup",
         "properties": {
           "datatype": "GetQuoteLines",
           "properties": ""
