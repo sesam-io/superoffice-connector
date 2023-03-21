@@ -26,7 +26,7 @@
     },
     "transform": [
       {
-        "operation": "{{@ datatype @}}s-lookup",
+        "operation": "{{@ datatype @}}-lookup",
         "properties": {
           "datatype": "GetQuoteLines",
           "properties": ""

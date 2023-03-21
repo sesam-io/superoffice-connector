@@ -10,7 +10,7 @@
   },
   "transform": [
     {
-      "operation": "lookup-{{@ datatype @}}",
+      "operation": "{{@ datatype @}}-lookup",
       "properties": {
         "datatype": "GetQuoteEntity"
       },

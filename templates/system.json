@@ -85,7 +85,7 @@
       },
       "url": "Agents/Quote/{{ properties.datatype }}"
     },
-    "quotealternatives-lookup": {
+    "quotealternative-lookup": {
       "headers": {
         "Accept": "application/json"
       },
@@ -95,7 +95,7 @@
       },
       "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
     },
-    "quotelines-lookup": {
+    "quoteline-lookup": {
       "headers": {
         "Accept": "application/json"
       },
@@ -105,7 +105,7 @@
       },
       "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
     },
-    "quoteversions-lookup": {
+    "quoteversion-lookup": {
       "headers": {
         "Accept": "application/json"
       },
