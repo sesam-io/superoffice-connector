@@ -51,7 +51,7 @@
     "type": "pipe"
   },
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-salelist-collect",
+    "_id": "{{@ system @}}-{{@ datatype @}}-salelist",
     "namespaced_identifiers": false,
     "source": {
       "operation": "sale{{@ datatype @}}-list",
