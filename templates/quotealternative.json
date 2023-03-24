@@ -1,18 +1,5 @@
 [
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-share",
-    "source": {
-      "entities": [
-        {
-          "_id": "1"
-        }
-      ],
-      "if_source_empty": "accept",
-      "type": "embedded"
-    },
-    "type": "pipe"
-  },
-  {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "source": {
       "dataset": "{{@ system @}}-quoteversion-collect",
@@ -66,6 +53,17 @@
     "type": "pipe"
   },
   {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all2",
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
+      "type": "dataset"
+    },
+    "transform": {
+      "type": "emit_children"
+    },
+    "type": "pipe"
+  },
+  {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
     "exclude_completeness": [
       "{{@ system @}}-{{@ datatype @}}-share"
@@ -85,13 +83,15 @@
     "type": "pipe"
   },
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-all2",
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
-      "type": "dataset"
-    },
-    "transform": {
-      "type": "emit_children"
+      "entities": [
+        {
+          "_id": "1"
+        }
+      ],
+      "if_source_empty": "accept",
+      "type": "embedded"
     },
     "type": "pipe"
   }
