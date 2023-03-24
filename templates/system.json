@@ -93,7 +93,7 @@
       "payload": {
         "QuoteVersionId": "{{ entity['QuoteVersionId'] }}"
       },
-      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+      "url": "Agents/Quote/GetQuoteAlternatives"
     },
     "quoteline-lookup": {
       "headers": {
@@ -103,7 +103,7 @@
       "payload": {
         "QuoteAlternativeId": "{{ entity['QuoteAlternativeId'] }}"
       },
-      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+      "url": "Agents/Quote/GetQuoteLines"
     },
     "quoteversion-lookup": {
       "headers": {
@@ -113,7 +113,7 @@
       "payload": {
         "QuoteId": "{{ entity['QuoteId'] }}"
       },
-      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+      "url": "Agents/Quote/GetQuoteVersions"
     },
     "salequote-list": {
       "headers": {
