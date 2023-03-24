@@ -8,10 +8,6 @@
     "transform": [
       {
         "operation": "{{@ datatype @}}-lookup",
-        "properties": {
-          "datatype": "GetQuoteAlternatives",
-          "properties": ""
-        },
         "system": "{{@ system @}}",
         "type": "rest"
       },
