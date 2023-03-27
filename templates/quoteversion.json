@@ -1,32 +1,5 @@
 [
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-share",
-    "source": {
-      "entities": [
-        {
-          "_id": "1"
-        }
-      ],
-      "if_source_empty": "accept",
-      "type": "embedded"
-    },
-    "type": "pipe"
-  },
-  {
-    "_id": "{{@ system @}}-{{@ datatype @}}-all2",
-    "namespaced_identifiers": false,
-    "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
-      "type": "dataset"
-    },
-    "transform": [
-      {
-        "type": "emit_children"
-      }
-    ],
-    "type": "pipe"
-  },
-  {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "source": {
       "dataset": "{{@ system @}}-quote-collect",
@@ -35,10 +8,6 @@
     "transform": [
       {
         "operation": "{{@ datatype @}}-lookup",
-        "properties": {
-          "datatype": "GetQuoteVersions",
-          "properties": ""
-        },
         "system": "{{@ system @}}",
         "type": "rest"
       },
@@ -75,6 +44,20 @@
           ]
         },
         "type": "dtl"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all2",
+    "namespaced_identifiers": false,
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
+      "type": "dataset"
+    },
+    "transform": [
+      {
+        "type": "emit_children"
       }
     ],
     "type": "pipe"
@@ -118,6 +101,19 @@
         "type": "dtl"
       }
     ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "source": {
+      "entities": [
+        {
+          "_id": "1"
+        }
+      ],
+      "if_source_empty": "accept",
+      "type": "embedded"
+    },
     "type": "pipe"
   }
 ]

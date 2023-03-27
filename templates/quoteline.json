@@ -1,24 +1,5 @@
 [
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
-    "exclude_completeness": [
-      "{{@ system @}}-{{@ datatype @}}-share"
-    ],
-    "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
-      "type": "dataset"
-    },
-    "transform": {
-      "properties": {
-        "primary_key": "QuoteLineId",
-        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
-      },
-      "template": "transform-collect-rest",
-      "type": "template"
-    },
-    "type": "pipe"
-  },
-  {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "source": {
       "dataset": "{{@ system @}}-quotealternative-collect",
@@ -27,10 +8,6 @@
     "transform": [
       {
         "operation": "{{@ datatype @}}-lookup",
-        "properties": {
-          "datatype": "GetQuoteLines",
-          "properties": ""
-        },
         "system": "{{@ system @}}",
         "type": "rest"
       },
@@ -79,6 +56,25 @@
     },
     "transform": {
       "type": "emit_children"
+    },
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
+      "type": "dataset"
+    },
+    "transform": {
+      "properties": {
+        "primary_key": "QuoteLineId",
+        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+      },
+      "template": "transform-collect-rest",
+      "type": "template"
     },
     "type": "pipe"
   },

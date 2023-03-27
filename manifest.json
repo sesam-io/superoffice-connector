@@ -89,24 +89,6 @@
       "label": "Sale List",
       "template": "templates/salelist.json"
     },
-    "salelist-quotes": {
-      "template": "templates/salelist-quotes.json"
-    },
-    "salelistquote": {
-      "template": "templates/salelistquote.json"
-    },
-    "salelistquotes-collect": {
-      "template": "templates/salelistquotes-collect.json"
-    },
-    "superoffice-quote": {
-      "template": "templates/superoffice-quote.json"
-    },
-    "superoffice-quotealternative": {
-      "template": "templates/superoffice-quotealternative.json"
-    },
-    "superoffice-quoteversion": {
-      "template": "templates/superoffice-quoteversion.json"
-    },
     "ticket": {
       "label": "Ticket",
       "template": "templates/ticket.json"

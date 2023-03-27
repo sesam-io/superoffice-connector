@@ -83,7 +83,7 @@
       "payload": {
         "QuoteId": "{{ entity['quote/quoteId'] }}"
       },
-      "url": "Agents/Quote/{{ properties.datatype }}"
+      "url": "Agents/Quote/GetQuoteEntity"
     },
     "quotealternative-lookup": {
       "headers": {
@@ -93,7 +93,7 @@
       "payload": {
         "QuoteVersionId": "{{ entity['QuoteVersionId'] }}"
       },
-      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+      "url": "Agents/Quote/GetQuoteAlternatives"
     },
     "quoteline-lookup": {
       "headers": {
@@ -103,7 +103,7 @@
       "payload": {
         "QuoteAlternativeId": "{{ entity['QuoteAlternativeId'] }}"
       },
-      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+      "url": "Agents/Quote/GetQuoteLines"
     },
     "quoteversion-lookup": {
       "headers": {
@@ -113,7 +113,7 @@
       "payload": {
         "QuoteId": "{{ entity['QuoteId'] }}"
       },
-      "url": "Agents/Quote/{{ properties.datatype }}?${{ properties.properties }}"
+      "url": "Agents/Quote/GetQuoteVersions"
     },
     "salequote-list": {
       "headers": {
@@ -128,13 +128,13 @@
         "empty-result"
       ],
       "params": {
-        "$filter": "{% if since is defined and since is not none %}({{ properties.since_param }} ge '{{ since }}'){% else %}({{ properties.since_param }} ge '1970-01-01'){% endif %}",
-        "$orderby": "{{ properties.ordering }}",
-        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
-        "$top": "{{ properties.top }}"
+        "$filter": "{% if since is defined and since is not none %}(updatedDate ge '{{ since }}'){% else %}(updatedDate ge '1970-01-01'){% endif %}",
+        "$orderby": "name asc",
+        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ 1000|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
+        "$top": "1000"
       },
       "payload_property": "value",
-      "url": "archive/{{ properties.datatype|capitalize }}?${{ properties.properties }}"
+      "url": "archive/Sale?$select=quote/quoteId,updatedDate"
     }
   },
   "type": "system:rest",
