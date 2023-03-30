@@ -1,47 +1,15 @@
 [
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-share",
-    "add_namespaces": false,
-    "batch_size": 1,
-    "compaction": {
-      "keep_versions": 100
-    },
-    "exclude_completeness": [
-      "{{@ system @}}-{{@ datatype @}}-share"
-    ],
+    "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "namespaced_identifiers": false,
-    "sink": {
-      "deletion_tracking": false,
-      "set_initial_offset": "onload"
-    },
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
-      "type": "dataset"
-    },
-    "transform": {
-      "properties": {
-        "operation_delete_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "ContactId"
-        },
-        "operation_insert_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "ContactId"
-        },
-        "operation_lookup_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "ContactId"
-        },
-        "operation_update_properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "ContactId"
-        },
-        "primary_key": "ContactId",
-        "rest_system": "{{@ system @}}",
-        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
-      },
-      "template": "transform-share-rest",
-      "type": "template"
+      "operation": "{{@ datatype @}}-list",
+      "since_property_location": "manual",
+      "since_property_name": "since",
+      "supports_since": true,
+      "system": "{{@ system @}}",
+      "type": "rest",
+      "updated_expression": "{{ updatedDate }}"
     },
     "type": "pipe"
   },
@@ -52,7 +20,7 @@
     ],
     "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}list-collect",
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
       "type": "dataset"
     },
     "transform": [
@@ -83,11 +51,7 @@
         "type": "dtl"
       },
       {
-        "operation": "lookup",
-        "properties": {
-          "datatype": "{{@ datatype @}}",
-          "primaryKey": "{{@ datatype @}}Id"
-        },
+        "operation": "{{@ datatype @}}-lookup-from-list",
         "replace_entity": true,
         "system": "{{@ system @}}",
         "type": "rest"
@@ -104,7 +68,28 @@
               "_id",
               [
                 "string",
-                "_S.ContactId"
+                [
+                  "path",
+                  [
+                    "concat",
+                    [
+                      "upper",
+                      [
+                        "substring",
+                        0,
+                        1,
+                        "{{@ datatype @}}"
+                      ]
+                    ],
+                    [
+                      "substring",
+                      1,
+                      "{{@ datatype @}}"
+                    ],
+                    "Id"
+                  ],
+                  "_S."
+                ]
               ]
             ]
           ]
@@ -120,6 +105,40 @@
         "type": "template"
       }
     ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "add_namespaces": false,
+    "batch_size": 1,
+    "compaction": {
+      "keep_versions": 100
+    },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "namespaced_identifiers": false,
+    "sink": {
+      "deletion_tracking": false,
+      "set_initial_offset": "onload"
+    },
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
+      "type": "dataset"
+    },
+    "transform": {
+      "properties": {
+        "operation_delete": "{{@ datatype @}}-delete",
+        "operation_insert": "{{@ datatype @}}-insert",
+        "operation_lookup": "{{@ datatype @}}-lookup",
+        "operation_update": "{{@ datatype @}}-update",
+        "primary_key": "ContactId",
+        "rest_system": "{{@ system @}}",
+        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+      },
+      "template": "transform-share-rest",
+      "type": "template"
+    },
     "type": "pipe"
   }
 ]

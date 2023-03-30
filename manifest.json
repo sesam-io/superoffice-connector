@@ -9,17 +9,9 @@
       "label": "Contact",
       "template": "templates/contact.json"
     },
-    "contactlist": {
-      "label": "Contact List",
-      "template": "templates/contactlist.json"
-    },
     "document": {
       "label": "Document",
-      "template": "templates/document.json"
-    },
-    "documentlist": {
-      "label": "Document List",
-      "template": "templates/documentlist.json"
+      "template": "templates/contact.json"
     },
     "listbusinessitems": {
       "template": "templates/listbusinessitems.json"
@@ -44,11 +36,7 @@
     },
     "person": {
       "label": "Person",
-      "template": "templates/person.json"
-    },
-    "personlist": {
-      "label": "Person List",
-      "template": "templates/personlist.json"
+      "template": "templates/contact.json"
     },
     "price": {
       "label": "Price",
@@ -60,19 +48,11 @@
     },
     "product": {
       "label": "Product",
-      "template": "templates/product.json"
-    },
-    "productlist": {
-      "label": "Product List",
-      "template": "templates/productlist.json"
+      "template": "templates/contact.json"
     },
     "project": {
       "label": "Project",
-      "template": "templates/project.json"
-    },
-    "projectlist": {
-      "label": "Project List",
-      "template": "templates/projectlist.json"
+      "template": "templates/contact.json"
     },
     "quote": {
       "template": "templates/quote.json"
@@ -92,19 +72,11 @@
     },
     "sale": {
       "label": "Sale",
-      "template": "templates/sale.json"
-    },
-    "salelist": {
-      "label": "Sale List",
-      "template": "templates/salelist.json"
+      "template": "templates/contact.json"
     },
     "ticket": {
       "label": "Ticket",
-      "template": "templates/ticket.json"
-    },
-    "ticketlist": {
-      "label": "Ticket List",
-      "template": "templates/ticketlist.json"
+      "template": "templates/contact.json"
     },
     "user": {
       "label": "User",

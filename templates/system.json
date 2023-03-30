@@ -26,6 +26,53 @@
       },
       "url": "{{ properties.datatype }}"
     },
+    "contact-delete": {
+      "method": "DELETE",
+      "url": "Contact/{{ entity.ContactId }}"
+    },
+    "contact-insert": {
+      "method": "POST",
+      "url": "Contact"
+    },
+    "contact-list": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "id_expression": "{{ PrimaryKey }}",
+      "method": "GET",
+      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/Contact",
+      "next_page_termination_strategy": [
+        "same-next-page-request",
+        "empty-result"
+      ],
+      "params": {
+        "$filter": "{% if since is defined and since is not none %}(updatedDate ge '{{ since }}'){% else %}(updatedDate ge '1970-01-01'){% endif %}",
+        "$orderby": "name asc",
+        "$skip": "{{ 20|int*page }}",
+        "$top": "20"
+      },
+      "payload_property": "value",
+      "updated_expression": "{{ updatedDate }}",
+      "url": "Contact"
+    },
+    "contact-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "GET",
+      "url": "Contact/{{ entity.ContactId }}"
+    },
+    "contact-lookup-from-list": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "GET",
+      "url": "Contact/{{ entity.contactId }}"
+    },
+    "contact-update": {
+      "method": "PUT",
+      "url": "Contact/{{ entity.ContactId }}"
+    },
     "list": {
       "headers": {
         "Accept": "application/json",
@@ -60,7 +107,7 @@
       ],
       "params": {
         "$orderby": "{{ properties.ordering }}",
-        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
+        "$skip": "{% if page is gt 0) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
         "$top": "{{ properties.top }}"
       },
       "url": "List/{{ properties.datatype }}/Items"
