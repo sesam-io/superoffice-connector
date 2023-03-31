@@ -2,50 +2,60 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "source": {
-      "dataset": "{{@ system @}}-quote-collect",
+      "dataset": "{{@ system @}}-{{@ parent @}}-collect",
       "type": "dataset"
     },
-    "transform": [
-      {
-        "operation": "{{@ datatype @}}-lookup",
-        "system": "{{@ system @}}",
-        "type": "rest"
-      },
-      {
-        "rules": {
-          "create_versions": [
+    "transform": {
+      "rules": {
+        "create_versions": [
+          [
+            "comment",
+            "we're only interested in the active version"
+          ],
+          [
+            "filter",
             [
-              "copy",
-              "*"
-            ],
-            [
-              "add",
-              "_id",
-              [
-                "string",
-                "_S.QuoteVersionId"
-              ]
-            ],
-            [
-              "add",
-              "$original_id",
-              "_R._S._id"
+              "eq",
+              "_S.QuoteVersionId",
+              "_R._S.ActiveQuoteVersionId"
             ]
           ],
-          "default": [
+          [
+            "copy",
+            "*"
+          ],
+          [
+            "add",
+            "$SaleId",
+            "_R._S.SaleId"
+          ],
+          [
+            "add",
+            "_id",
             [
-              "create-child",
-              [
-                "apply",
-                "create_versions",
-                "_S.response"
-              ]
+              "string",
+              "_S.QuoteVersionId"
+            ]
+          ],
+          [
+            "add",
+            "$original_id",
+            "_R._S._id"
+          ]
+        ],
+        "default": [
+          [
+            "create-child",
+            [
+              "apply",
+              "create_versions",
+              "_S.QuoteVersions"
             ]
           ]
-        },
-        "type": "dtl"
-      }
-    ],
+        ]
+      },
+      "type": "dtl"
+    },
     "type": "pipe"
   },
   {

@@ -2,7 +2,7 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "source": {
-      "dataset": "{{@ system @}}-quotealternative-collect",
+      "dataset": "{{@ system @}}-{{@ parent @}}-collect",
       "type": "dataset"
     },
     "transform": [

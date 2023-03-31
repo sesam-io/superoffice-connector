@@ -12,7 +12,7 @@
     "transform": [
       {
         "operation": "{{@ datatype @}}-lookup",
-        "replace_entity": true,
+        "replace_entity": false,
         "system": "{{@ system @}}",
         "trace": true,
         "type": "rest"
@@ -21,15 +21,20 @@
         "rules": {
           "default": [
             [
-              "copy",
-              "*"
+              "add",
+              "$original_id",
+              "_S._id"
+            ],
+            [
+              "merge",
+              "_S.response"
             ],
             [
               "add",
               "_id",
               [
                 "string",
-                "_S.QuoteId"
+                "_T.QuoteId"
               ]
             ]
           ]
