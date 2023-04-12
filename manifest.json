@@ -129,6 +129,17 @@
       "parent": "quote",
       "template": "templates/quoteversion.json"
     },
+    "quote": {
+      "template": "templates/quote.json"
+    },
+    "quotealternative": {
+      "parent": "quoteversion",
+      "template": "templates/quotealternative.json"
+    },
+    "quoteversion": {
+      "parent": "quote",
+      "template": "templates/quoteversion.json"
+    },
     "role": {
       "label": "Role",
       "template": "templates/role.json"

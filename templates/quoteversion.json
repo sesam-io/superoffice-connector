@@ -2,24 +2,12 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "source": {
-      "dataset": "{{@ system @}}-{{@ parent @}}-collect",
+      "dataset": "{{@ system @}}-quote-collect",
       "type": "dataset"
     },
     "transform": {
       "rules": {
         "create_versions": [
-          [
-            "comment",
-            "we're only interested in the active version"
-          ],
-          [
-            "filter",
-            [
-              "eq",
-              "_S.QuoteVersionId",
-              "_R._S.ActiveQuoteVersionId"
-            ]
-          ],
           [
             "copy",
             "*"
