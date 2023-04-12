@@ -6,63 +6,33 @@
   "auth": "oauth2",
   "datatypes": {
     "contact": {
-      "label": "Contact",
       "template": "templates/contact.json"
     },
     "contactlist": {
-      "label": "Contact List",
       "template": "templates/contactlist.json"
     },
     "country": {
       "template": "templates/country.json"
     },
     "document": {
-      "label": "Document",
       "template": "templates/document.json"
     },
     "documentlist": {
-      "label": "Document List",
       "template": "templates/documentlist.json"
     },
-    "listbusinessitems": {
-      "template": "templates/listbusinessitems.json"
-    },
-    "listcategoryitems": {
-      "template": "templates/listcategoryitems.json"
-    },
-    "listcountryitems": {
-      "template": "templates/listcountryitems.json"
-    },
-    "listcurrencyitems": {
-      "template": "templates/listcurrencyitems.json"
-    },
-    "listproductcategoryitems": {
-      "template": "templates/listproductcategoryitems.json"
-    },
-    "listproductfamilyitems": {
-      "template": "templates/listproductfamilyitems.json"
-    },
-    "listproducttypeitems": {
-      "template": "templates/listproducttypeitems.json"
-    },
     "person": {
-      "label": "Person",
       "template": "templates/person.json"
     },
     "personlist": {
-      "label": "Person List",
       "template": "templates/personlist.json"
     },
     "price": {
-      "label": "Price",
       "template": "templates/price.json"
     },
     "pricelist": {
-      "label": "Price List",
       "template": "templates/pricelist.json"
     },
     "product": {
-      "label": "Product",
       "template": "templates/product.json"
     },
     "productcategory": {
@@ -72,18 +42,15 @@
       "template": "templates/productfamily.json"
     },
     "productlist": {
-      "label": "Product List",
       "template": "templates/productlist.json"
     },
     "producttype": {
       "template": "templates/producttype.json"
     },
     "project": {
-      "label": "Project",
       "template": "templates/project.json"
     },
     "projectlist": {
-      "label": "Project List",
       "template": "templates/projectlist.json"
     },
     "quote": {
@@ -102,26 +69,21 @@
       "template": "templates/quoteversion.json"
     },
     "role": {
-      "label": "Role",
       "template": "templates/role.json"
     },
     "sale": {
-      "label": "Sale",
       "template": "templates/sale.json"
     },
     "salelist": {
       "template": "templates/salelist.json"
     },
     "ticket": {
-      "label": "Ticket",
       "template": "templates/ticket.json"
     },
     "ticketlist": {
-      "label": "Ticket List",
       "template": "templates/ticketlist.json"
     },
     "user": {
-      "label": "User",
       "template": "templates/user.json"
     }
   },
