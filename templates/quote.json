@@ -1,0 +1,81 @@
+[
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "namespaced_identifiers": false,
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-salelist",
+      "type": "dataset"
+    },
+    "transform": [
+      {
+        "operation": "{{@ datatype @}}-lookup",
+        "replace_entity": false,
+        "system": "{{@ system @}}",
+        "trace": true,
+        "type": "rest"
+      },
+      {
+        "rules": {
+          "default": [
+            [
+              "add",
+              "$original_id",
+              "_S._id"
+            ],
+            [
+              "merge",
+              "_S.response"
+            ],
+            [
+              "add",
+              "_id",
+              [
+                "string",
+                "_T.QuoteId"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "primary_key": "QuoteId",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-collect-rest",
+        "type": "template"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-salelist",
+    "namespaced_identifiers": false,
+    "source": {
+      "operation": "sale{{@ datatype @}}-list",
+      "since_property_name": "updatedDate",
+      "supports_since": true,
+      "system": "{{@ system @}}",
+      "type": "rest",
+      "updated_expression": "{{ updatedDate }}"
+    },
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "source": {
+      "entities": [
+        {
+          "_id": "1"
+        }
+      ],
+      "if_source_empty": "accept",
+      "type": "embedded"
+    },
+    "type": "pipe"
+  }
+]

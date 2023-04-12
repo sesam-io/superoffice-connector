@@ -53,6 +53,17 @@
     "projectlist": {
       "template": "templates/projectlist.json"
     },
+    "quote": {
+      "template": "templates/quote.json"
+    },
+    "quotealternative": {
+      "parent": "quoteversion",
+      "template": "templates/quotealternative.json"
+    },
+    "quoteversion": {
+      "parent": "quote",
+      "template": "templates/quoteversion.json"
+    },
     "role": {
       "template": "templates/role.json"
     },
