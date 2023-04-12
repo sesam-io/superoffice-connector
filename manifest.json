@@ -60,10 +60,6 @@
       "parent": "quoteversion",
       "template": "templates/quotealternative.json"
     },
-    "quoteline": {
-      "parent": "quotealternative",
-      "template": "templates/quoteline.json"
-    },
     "quoteversion": {
       "parent": "quote",
       "template": "templates/quoteversion.json"
