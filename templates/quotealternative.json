@@ -830,6 +830,10 @@
             "rules": {
               "default": [
                 [
+                  "comment",
+                  "transform for inserts where we add the entity's payload to the default entity from SuperOffice in order to ensure all vital fields are populated"
+                ],
+                [
                   "if",
                   [
                     "neq",
@@ -960,6 +964,10 @@
           {
             "rules": {
               "default": [
+                [
+                  "comment",
+                  "transform for inserts where we add the QuoteAlternativeId from the rpevious insert operation to the payload in order to populate the remaining metadata"
+                ],
                 [
                   "if",
                   [
