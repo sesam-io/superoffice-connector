@@ -83,15 +83,51 @@
       },
       "url": "Agents/Quote/GetQuoteEntity"
     },
-    "quotealternative-lookup": {
+    "quotealternative-default": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/CreateDefaultQuoteAlternative"
+    },
+    "quotealternative-delete": {
       "headers": {
         "Accept": "application/json"
       },
       "method": "POST",
       "payload": {
-        "QuoteVersionId": "{{ entity['QuoteVersionId'] }}"
+        "QuoteAlternativeId": "{{ entity['QuoteAlternativeId'] }}"
       },
-      "url": "Agents/Quote/GetQuoteAlternatives"
+      "url": "Agents/Quote/DeleteQuoteAlternative"
+    },
+    "quotealternative-insert": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteAlternativeDescription": "{{ entity['payload']['Description'] }}",
+        "QuoteAlternativeName": "{{ entity['payload']['Name'] }}",
+        "QuoteVersionId": "{{ entity['payload']['QuoteVersionId'] }}"
+      },
+      "url": "Agents/Quote/CreateQuoteAlternative"
+    },
+    "quotealternative-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "params": {
+        "QuoteAlternativeId": "{{ entity['QuoteAlternativeId'] }}"
+      },
+      "url": "Agents/Quote/GetQuoteAlternative"
+    },
+    "quotealternative-update": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/SaveQuoteAlternative"
     },
     "quoteline-lookup": {
       "headers": {

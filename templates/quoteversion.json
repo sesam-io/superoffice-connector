@@ -9,18 +9,6 @@
       "rules": {
         "create_versions": [
           [
-            "comment",
-            "we're only interested in the active version"
-          ],
-          [
-            "filter",
-            [
-              "eq",
-              "_S.QuoteVersionId",
-              "_R._S.ActiveQuoteVersionId"
-            ]
-          ],
-          [
             "copy",
             "*"
           ],
