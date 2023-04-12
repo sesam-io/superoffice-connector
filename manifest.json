@@ -7,52 +7,112 @@
   "datatypes": {
     "contact": {
       "label": "Contact",
-      "template": "templates/contact.json"
+      "parameters": {
+        "base_url": "Contact",
+        "list_url": "contactId",
+        "primary_key": "ContactId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "document": {
       "label": "Document",
-      "template": "templates/contact.json"
+      "parameters": {
+        "base_url": "Document",
+        "list_url": "documentId",
+        "primary_key": "DocumentId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "listbusinessitems": {
+      "parameters": {
+        "base_url": "List/business/Items",
+        "lookup_id": "Id"
+      },
       "template": "templates/listbusinessitems.json"
     },
     "listcategoryitems": {
-      "template": "templates/listcategoryitems.json"
+      "parameters": {
+        "base_url": "List/category/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
     },
     "listcountryitems": {
-      "template": "templates/listcountryitems.json"
+      "parameters": {
+        "base_url": "List/Country/Items",
+        "lookup_id": "CountryId"
+      },
+      "template": "templates/listbusinessitems.json"
     },
     "listcurrencyitems": {
-      "template": "templates/listcurrencyitems.json"
+      "parameters": {
+        "base_url": "List/Currency/Items",
+        "lookup_id": "CurrencyId"
+      },
+      "template": "templates/listbusinessitems.json"
     },
     "listproductcategoryitems": {
-      "template": "templates/listproductcategoryitems.json"
+      "parameters": {
+        "base_url": "List/prouductcategory/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
     },
     "listproductfamilyitems": {
-      "template": "templates/listproductfamilyitems.json"
+      "parameters": {
+        "base_url": "List/productfamily/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
     },
     "listproducttypeitems": {
-      "template": "templates/listproducttypeitems.json"
+      "parameters": {
+        "base_url": "List/business/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
     },
     "person": {
       "label": "Person",
-      "template": "templates/contact.json"
-    },
-    "price": {
-      "label": "Price",
-      "template": "templates/price.json"
+      "parameters": {
+        "base_url": "Person",
+        "list_url": "personId",
+        "primary_key": "PersonId",
+        "updated_param": "personUpdatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "pricelist": {
-      "label": "Price List",
+      "label": "Price",
+      "parameters": {
+        "base_url": "PriceList",
+        "list_url": "PrimaryKey",
+        "primary_key": "PriceListId",
+        "updated_param": "updatedDate"
+      },
       "template": "templates/pricelist.json"
     },
     "product": {
       "label": "Product",
-      "template": "templates/contact.json"
+      "parameters": {
+        "base_url": "Product",
+        "list_url": "productId",
+        "primary_key": "ProductId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "project": {
       "label": "Project",
-      "template": "templates/contact.json"
+      "parameters": {
+        "base_url": "Project",
+        "list_url": "projectId",
+        "primary_key": "ProjectId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "quote": {
       "template": "templates/quote.json"
@@ -75,11 +135,23 @@
     },
     "sale": {
       "label": "Sale",
-      "template": "templates/contact.json"
+      "parameters": {
+        "base_url": "Sale",
+        "list_url": "saleId",
+        "primary_key": "SaleId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "ticket": {
       "label": "Ticket",
-      "template": "templates/contact.json"
+      "parameters": {
+        "base_url": "Ticket",
+        "list_url": "ticketId",
+        "primary_key": "TicketId",
+        "updated_param": "lastChangedS"
+      },
+      "template": "templates/pricelist.json"
     },
     "user": {
       "label": "User",

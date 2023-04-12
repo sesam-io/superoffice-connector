@@ -4,11 +4,11 @@
   "source": {
     "operation": "list",
     "properties": {
-      "datatype": "{{@ datatype @}}",
+      "base_url": "{{@ datatype @}}",
       "ordering": "name asc",
-      "since_param": "updatedDate",
       "skip": "0",
-      "top": "20"
+      "top": "20",
+      "updated_param": "updatedDate"
     },
     "since_property_name": "since",
     "supports_since": true,

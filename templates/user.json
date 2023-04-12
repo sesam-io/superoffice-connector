@@ -6,7 +6,7 @@
     "operation": "alternate_list",
     "payload_property": "value",
     "properties": {
-      "datatype": "{{@ datatype @}}",
+      "base_url": "{{@ datatype @}}",
       "ordering": "name asc",
       "skip": "0",
       "top": "20"
