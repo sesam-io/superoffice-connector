@@ -2,50 +2,48 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "source": {
-      "dataset": "{{@ system @}}-quoteversion-collect",
+      "dataset": "{{@ system @}}-{{@ parent @}}-collect",
       "type": "dataset"
     },
-    "transform": [
-      {
-        "operation": "{{@ datatype @}}-lookup",
-        "system": "{{@ system @}}",
-        "type": "rest"
-      },
-      {
-        "rules": {
-          "create_versions": [
+    "transform": {
+      "rules": {
+        "create_versions": [
+          [
+            "copy",
+            "*"
+          ],
+          [
+            "add",
+            "$SaleId",
+            "_R._S.$SaleId"
+          ],
+          [
+            "add",
+            "_id",
             [
-              "copy",
-              "*"
-            ],
-            [
-              "add",
-              "_id",
-              [
-                "string",
-                "_S.QuoteAlternativeId"
-              ]
-            ],
-            [
-              "add",
-              "$original_id",
-              "_R._S._id"
+              "string",
+              "_S.QuoteAlternativeId"
             ]
           ],
-          "default": [
+          [
+            "add",
+            "$original_id",
+            "_R._S._id"
+          ]
+        ],
+        "default": [
+          [
+            "create-child",
             [
-              "create-child",
-              [
-                "apply",
-                "create_versions",
-                "_S.response"
-              ]
+              "apply",
+              "create_versions",
+              "_S.QuoteAlternatives"
             ]
           ]
-        },
-        "type": "dtl"
-      }
-    ],
+        ]
+      },
+      "type": "dtl"
+    },
     "type": "pipe"
   },
   {
