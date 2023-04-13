@@ -1,70 +1,19 @@
 [
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-all",
-    "namespaced_identifiers": false,
-    "source": {
-      "operation": "list",
-      "properties": {
-        "base_url": "{{@ base_url @}}",
-        "updated_param": "{{@ updated_param @}}"
-      },
-      "since_property_location": "manual",
-      "since_property_name": "since",
-      "supports_since": true,
-      "system": "{{@ system @}}",
-      "type": "rest",
-      "updated_expression": "{{ {{@ updated_param @}} }}"
-    },
-    "type": "pipe"
-  },
-  {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
     "exclude_completeness": [
       "{{@ system @}}-{{@ datatype @}}-share"
     ],
     "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
-      "type": "dataset"
+      "operation": "alternate_list",
+      "properties": {
+        "base_url": "{{@ base_url @}}"
+      },
+      "system": "{{@ system @}}",
+      "type": "rest"
     },
     "transform": [
-      {
-        "rules": {
-          "default": [
-            [
-              "comment",
-              "*** The below transform is to discard entities that have been deleted in the source and as such might result in a pump failed. ***"
-            ],
-            [
-              "if",
-              [
-                "eq",
-                "_S._deleted",
-                true
-              ],
-              [
-                "discard"
-              ]
-            ],
-            [
-              "copy",
-              "{{@ list_url @}}"
-            ]
-          ]
-        },
-        "type": "dtl"
-      },
-      {
-        "operation": "lookup-from-list",
-        "properties": {
-          "base_url": "{{@ base_url @}}",
-          "list_id": "{{@ list_url @}}",
-          "primary_key": "{{@ base_url @}}Id"
-        },
-        "replace_entity": true,
-        "system": "{{@ system @}}",
-        "type": "rest"
-      },
       {
         "rules": {
           "default": [
@@ -77,7 +26,7 @@
               "_id",
               [
                 "string",
-                "_S.{{@ base_url @}}Id"
+                "_S.{{@ lookup_id @}}"
               ]
             ]
           ]
@@ -86,7 +35,7 @@
       },
       {
         "properties": {
-          "primary_key": "{{@ base_url @}}Id",
+          "primary_key": "{{@ lookup_id @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-collect-rest",
@@ -118,20 +67,21 @@
       "properties": {
         "operation_delete_properties": {
           "base_url": "{{@ base_url @}}",
-          "lookup_id": "{{@ base_url @}}Id"
+          "lookup_id": "Document{{@ lookup_id @}}"
         },
         "operation_insert_properties": {
-          "base_url": "{{@ base_url @}}"
+          "base_url": "{{@ base_url @}}",
+          "lookup_id": "Document{{@ lookup_id @}}"
         },
         "operation_lookup_properties": {
           "base_url": "{{@ base_url @}}",
-          "lookup_id": "{{@ base_url @}}Id"
+          "lookup_id": "Document{{@ lookup_id @}}"
         },
         "operation_update_properties": {
           "base_url": "{{@ base_url @}}",
-          "lookup_id": "{{@ base_url @}}Id"
+          "lookup_id": "Document{{@ lookup_id @}}"
         },
-        "primary_key": "{{@ base_url @}}Id",
+        "primary_key": "Document{{@ lookup_id @}}",
         "rest_system": "{{@ system @}}",
         "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
       },
