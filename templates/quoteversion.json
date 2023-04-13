@@ -1,8 +1,9 @@
 [
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-quote-collect",
+      "dataset": "{{@ system @}}-{{@ parent @}}-collect",
       "type": "dataset"
     },
     "transform": {
@@ -62,55 +63,30 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
-    "exclude_completeness": [
-      "{{@ system @}}-{{@ datatype @}}-share"
-    ],
+    "namespaced_identifiers": false,
     "source": {
       "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
       "type": "dataset"
     },
-    "transform": [
-      {
-        "properties": {
-          "primary_key": "QuoteVersionId",
-          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
-        },
-        "template": "transform-collect-rest",
-        "type": "template"
-      },
-      {
-        "rules": {
-          "default": [
+    "transform": {
+      "rules": {
+        "default": [
+          [
+            "copy",
+            "*"
+          ],
+          [
+            "add",
+            "$last-modified",
             [
-              "copy",
-              "*"
-            ],
-            [
-              "add",
-              "$last-modified",
-              [
-                "datetime-parse",
-                "%Y-%m-%dT%H:%M:%S",
-                "_S.Updated"
-              ]
+              "datetime-parse",
+              "%Y-%m-%dT%H:%M:%S",
+              "_S.Updated"
             ]
           ]
-        },
-        "type": "dtl"
-      }
-    ],
-    "type": "pipe"
-  },
-  {
-    "_id": "{{@ system @}}-{{@ datatype @}}-share",
-    "source": {
-      "entities": [
-        {
-          "_id": "1"
-        }
-      ],
-      "if_source_empty": "accept",
-      "type": "embedded"
+        ]
+      },
+      "type": "dtl"
     },
     "type": "pipe"
   }
