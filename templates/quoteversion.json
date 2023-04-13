@@ -1,6 +1,7 @@
 [
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "namespaced_identifiers": false,
     "source": {
       "dataset": "{{@ system @}}-{{@ parent @}}-collect",
       "type": "dataset"
@@ -62,6 +63,7 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "namespaced_identifiers": false,
     "source": {
       "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
       "type": "dataset"
