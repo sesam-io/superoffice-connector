@@ -55,7 +55,7 @@
     },
     "listproductcategoryitems": {
       "parameters": {
-        "base_url": "List/prouductcategory/Items",
+        "base_url": "List/productcategory/Items",
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
@@ -113,32 +113,6 @@
         "updated_param": "updatedDate"
       },
       "template": "templates/pricelist.json"
-    },
-    "quote": {
-      "template": "templates/quote.json"
-    },
-    "quotealternative": {
-      "parent": "quoteversion",
-      "template": "templates/quotealternative.json"
-    },
-    "quoteline": {
-      "parent": "quotealternative",
-      "template": "templates/quoteline.json"
-    },
-    "quoteversion": {
-      "parent": "quote",
-      "template": "templates/quoteversion.json"
-    },
-    "quote": {
-      "template": "templates/quote.json"
-    },
-    "quotealternative": {
-      "parent": "quoteversion",
-      "template": "templates/quotealternative.json"
-    },
-    "quoteversion": {
-      "parent": "quote",
-      "template": "templates/quoteversion.json"
     },
     "quote": {
       "template": "templates/quote.json"
