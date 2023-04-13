@@ -55,7 +55,7 @@
     },
     "listproductcategoryitems": {
       "parameters": {
-        "base_url": "List/prouductcategory/Items",
+        "base_url": "List/productcategory/Items",
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
