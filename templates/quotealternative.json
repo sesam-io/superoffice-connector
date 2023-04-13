@@ -1,8 +1,9 @@
 [
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-quoteversion-collect",
+      "dataset": "{{@ system @}}-{{@ parent @}}-collect",
       "type": "dataset"
     },
     "transform": {
@@ -48,6 +49,7 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all2",
+    "namespaced_identifiers": false,
     "source": {
       "dataset": "{{@ system @}}-{{@ datatype @}}-all",
       "type": "dataset"
@@ -62,6 +64,7 @@
     "exclude_completeness": [
       "{{@ system @}}-{{@ datatype @}}-share"
     ],
+    "namespaced_identifiers": false,
     "source": {
       "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
       "type": "dataset"
