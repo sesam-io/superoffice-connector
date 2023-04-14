@@ -6,52 +6,113 @@
   "auth": "oauth2",
   "datatypes": {
     "contact": {
-      "template": "templates/contact.json"
-    },
-    "contactlist": {
-      "template": "templates/contactlist.json"
-    },    
-    "country": {
-      "template": "templates/country.json"
+      "label": "Contact",
+      "parameters": {
+        "base_url": "Contact",
+        "list_url": "contactId",
+        "primary_key": "ContactId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "document": {
-      "template": "templates/document.json"
+      "label": "Document",
+      "parameters": {
+        "base_url": "Document",
+        "list_url": "documentId",
+        "primary_key": "DocumentId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
-    "documentlist": {
-      "template": "templates/documentlist.json"
+    "listbusinessitems": {
+      "parameters": {
+        "base_url": "List/business/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
+    "listcategoryitems": {
+      "parameters": {
+        "base_url": "List/category/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
+    "listcountryitems": {
+      "parameters": {
+        "base_url": "List/Country/Items",
+        "lookup_id": "CountryId"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
+    "listcurrencyitems": {
+      "parameters": {
+        "base_url": "List/Currency/Items",
+        "lookup_id": "CurrencyId"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
+    "listproductcategoryitems": {
+      "parameters": {
+        "base_url": "List/productcategory/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
+    "listproductfamilyitems": {
+      "parameters": {
+        "base_url": "List/productfamily/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
+    "listproducttypeitems": {
+      "parameters": {
+        "base_url": "List/business/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
     },
     "person": {
-      "template": "templates/person.json"
-    },
-    "personlist": {
-      "template": "templates/personlist.json"
-    },
-    "price": {
-      "template": "templates/price.json"
+      "label": "Person",
+      "parameters": {
+        "base_url": "Person",
+        "list_url": "personId",
+        "primary_key": "PersonId",
+        "updated_param": "personUpdatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "pricelist": {
+      "label": "Price",
+      "parameters": {
+        "base_url": "PriceList",
+        "list_url": "PrimaryKey",
+        "primary_key": "PriceListId",
+        "updated_param": "updatedDate"
+      },
       "template": "templates/pricelist.json"
     },
     "product": {
-      "template": "templates/product.json"
-    },
-    "productcategory": {
-      "template": "templates/productcategory.json"
-    },
-    "productfamily": {
-      "template": "templates/productfamily.json"
-    },
-    "productlist": {
-      "template": "templates/productlist.json"
-    },
-    "producttype": {
-      "template": "templates/producttype.json"
+      "label": "Product",
+      "parameters": {
+        "base_url": "Product",
+        "list_url": "productId",
+        "primary_key": "ProductId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "project": {
-      "template": "templates/project.json"
-    },
-    "projectlist": {
-      "template": "templates/projectlist.json"
+      "label": "Project",
+      "parameters": {
+        "base_url": "Project",
+        "list_url": "projectId",
+        "primary_key": "ProjectId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "quote": {
       "template": "templates/quote.json"
@@ -68,21 +129,31 @@
       "template": "templates/quoteversion.json"
     },
     "role": {
+      "label": "Role",
       "template": "templates/role.json"
     },
     "sale": {
-      "template": "templates/sale.json"
-    },
-    "salelist": {
-      "template": "templates/salelist.json"
+      "label": "Sale",
+      "parameters": {
+        "base_url": "Sale",
+        "list_url": "saleId",
+        "primary_key": "SaleId",
+        "updated_param": "updatedDate"
+      },
+      "template": "templates/pricelist.json"
     },
     "ticket": {
-      "template": "templates/ticket.json"
-    },
-    "ticketlist": {
-      "template": "templates/ticketlist.json"
+      "label": "Ticket",
+      "parameters": {
+        "base_url": "Ticket",
+        "list_url": "ticketId",
+        "primary_key": "TicketId",
+        "updated_param": "lastChangedS"
+      },
+      "template": "templates/pricelist.json"
     },
     "user": {
+      "label": "User",
       "template": "templates/user.json"
     }
   },
