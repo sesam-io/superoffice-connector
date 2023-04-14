@@ -49,11 +49,7 @@
             [
               "add",
               "tmp-lastmodified",
-              [
-                "datetime-parse",
-                "%Y-%m-%dT%H:%M:%S",
-                "_S.{{@ updated_param @}}"
-              ]
+              "_S.{{@ updated_param @}}"
             ],
             [
               "copy",
@@ -85,15 +81,15 @@
               "add",
               "$last-modified",
               [
-                "coalesce",
+                "datetime-parse",
+                "%Y-%m-%dT%H:%M:%S",
                 [
-                  "list",
+                  "coalesce",
                   [
-                    "datetime-parse",
-                    "%Y-%m-%dT%H:%M:%S",
-                    "_S.UpdatedDate"
-                  ],
-                  "_S.tmp-lastmodified"
+                    "list",
+                    "_S.UpdatedDate",
+                    "_S.tmp-lastmodified"
+                  ]
                 ]
               ]
             ],
