@@ -88,7 +88,28 @@
       },
       "url": "Agents/Quote/GetQuoteAlternatives"
     },
-    "quoteline-lookup": {
+    "quoteline-delete": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteLineId": "{{ entity['QuoteLineId'] }}"
+      },
+      "url": "Agents/Quote/DeleteQuoteLine"
+    },
+    "quoteline-insert": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "ERPProductKey": "{{ entity['payload']['ERPProductKey'] }}",
+        "QuoteAlternativeId": "{{ entity['payload']['QuoteAlternativeId'] }}"
+      },
+      "url": "Agents/Quote/CreateQuoteLine"
+    },
+    "quoteline-list": {
       "headers": {
         "Accept": "application/json"
       },
@@ -97,6 +118,26 @@
         "QuoteAlternativeId": "{{ entity['QuoteAlternativeId'] }}"
       },
       "url": "Agents/Quote/GetQuoteLines"
+    },
+    "quoteline-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteLineId": "{{ entity['QuoteLineId'] }}"
+      },
+      "url": "Agents/Quote/GetQuoteLine"
+    },
+    "quoteline-update": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteLine": "{{ entity['payload'] }}"
+      },
+      "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteversion-lookup": {
       "headers": {
