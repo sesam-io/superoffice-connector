@@ -67,21 +67,21 @@
       "properties": {
         "operation_delete_properties": {
           "base_url": "{{@ base_url @}}",
-          "lookup_id": "Document{{@ lookup_id @}}"
+          "lookup_id": "{{@ lookup_id @}}"
         },
         "operation_insert_properties": {
           "base_url": "{{@ base_url @}}",
-          "lookup_id": "Document{{@ lookup_id @}}"
+          "lookup_id": "{{@ lookup_id @}}"
         },
         "operation_lookup_properties": {
           "base_url": "{{@ base_url @}}",
-          "lookup_id": "Document{{@ lookup_id @}}"
+          "lookup_id": "{{@ lookup_id @}}"
         },
         "operation_update_properties": {
           "base_url": "{{@ base_url @}}",
-          "lookup_id": "Document{{@ lookup_id @}}"
+          "lookup_id": "{{@ lookup_id @}}"
         },
-        "primary_key": "Document{{@ lookup_id @}}",
+        "primary_key": "{{@ lookup_id @}}",
         "rest_system": "{{@ system @}}",
         "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
       },
