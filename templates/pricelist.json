@@ -48,7 +48,7 @@
             ],
             [
               "add",
-              "$last-modified",
+              "tmp-lastmodified",
               [
                 "datetime-parse",
                 "%Y-%m-%dT%H:%M:%S",
@@ -82,8 +82,20 @@
               "*** This transform needs to be here since we need replace_entity to be false in order for us to grab $last-modified which is only part of the first transform. ***"
             ],
             [
-              "copy",
-              "$last-modified"
+              "add",
+              "$last-modified",
+              [
+                "coalesce",
+                [
+                  "list",
+                  [
+                    "datetime-parse",
+                    "%Y-%m-%dT%H:%M:%S",
+                    "_S.UpdatedDate"
+                  ],
+                  "_S.tmp-lastmodified"
+                ]
+              ]
             ],
             [
               "merge",
