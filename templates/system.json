@@ -134,8 +134,8 @@
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     }
   },
-  "rate_limiting_retries": 3,
   "rate_limiting_delay": 60,
+  "rate_limiting_retries": 3,
   "type": "system:rest",
   "url_pattern": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/%s",
   "verify_ssl": true

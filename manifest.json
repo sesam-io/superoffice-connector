@@ -15,16 +15,6 @@
       },
       "template": "templates/pricelist.json"
     },
-    "document": {
-      "label": "Document",
-      "parameters": {
-        "base_url": "Document",
-        "list_url": "documentId",
-        "primary_key": "DocumentId",
-        "updated_param": "updatedDate"
-      },
-      "template": "templates/pricelist.json"
-    },
     "listbusinessitems": {
       "parameters": {
         "base_url": "List/business/Items",
@@ -148,7 +138,7 @@
         "base_url": "Ticket",
         "list_url": "ticketId",
         "primary_key": "TicketId",
-        "updated_param": "lastChangedS"
+        "updated_param": "lastChanged"
       },
       "template": "templates/pricelist.json"
     },

@@ -47,6 +47,15 @@
               ]
             ],
             [
+              "add",
+              "$last-modified",
+              [
+                "datetime-parse",
+                "%Y-%m-%dT%H:%M:%S",
+                "_S.{{@ updated_param @}}"
+              ]
+            ],
+            [
               "copy",
               "{{@ list_url @}}"
             ]
@@ -61,7 +70,7 @@
           "list_id": "{{@ list_url @}}",
           "primary_key": "{{@ base_url @}}Id"
         },
-        "replace_entity": true,
+        "replace_entity": false,
         "system": "{{@ system @}}",
         "type": "rest"
       },
@@ -69,15 +78,23 @@
         "rules": {
           "default": [
             [
+              "comment",
+              "*** This transform needs to be here since we need replace_entity to be false in order for us to grab $last-modified which is only part of the first transform. ***"
+            ],
+            [
               "copy",
-              "*"
+              "$last-modified"
+            ],
+            [
+              "merge",
+              "_S.response"
             ],
             [
               "add",
               "_id",
               [
                 "string",
-                "_S.{{@ base_url @}}Id"
+                "_T.{{@ base_url @}}Id"
               ]
             ]
           ]
