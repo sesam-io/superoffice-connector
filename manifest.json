@@ -11,14 +11,32 @@
     "contactlist": {
       "template": "templates/contactlist.json"
     },
-    "country": {
-      "template": "templates/country.json"
-    },
     "document": {
       "template": "templates/document.json"
     },
     "documentlist": {
       "template": "templates/documentlist.json"
+    },
+    "listbusinessitems": {
+      "template": "templates/listbusinessitems.json"
+    },
+    "listcategoryitems": {
+      "template": "templates/listcategoryitems.json"
+    },
+    "listcountryitems": {
+      "template": "templates/listcountryitems.json"
+    },
+    "listcurrencyitems": {
+      "template": "templates/listcurrencyitems.json"
+    },
+    "listproductcategoryitems": {
+      "template": "templates/listproductcategoryitems.json"
+    },
+    "listproductfamilyitems": {
+      "template": "templates/listproductfamilyitems.json"
+    },
+    "listproducttypeitems": {
+      "template": "templates/listproducttypeitems.json"
     },
     "person": {
       "template": "templates/person.json"
@@ -35,17 +53,8 @@
     "product": {
       "template": "templates/product.json"
     },
-    "productcategory": {
-      "template": "templates/productcategory.json"
-    },
-    "productfamily": {
-      "template": "templates/productfamily.json"
-    },
     "productlist": {
       "template": "templates/productlist.json"
-    },
-    "producttype": {
-      "template": "templates/producttype.json"
     },
     "project": {
       "template": "templates/project.json"
@@ -59,6 +68,9 @@
     "quotealternative": {
       "parent": "quoteversion",
       "template": "templates/quotealternative.json"
+    },
+    "quoteline": {
+      "template": "templates/quoteline.json"
     },
     "quoteversion": {
       "parent": "quote",
