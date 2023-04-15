@@ -177,6 +177,7 @@
   },
   "rate_limiting_delay": 60,
   "rate_limiting_retries": 3,
+  "worker_threads": 2,
   "type": "system:rest",
   "url_pattern": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/%s",
   "verify_ssl": true
