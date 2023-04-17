@@ -64,6 +64,20 @@
       },
       "template": "templates/listbusinessitems.json"
     },
+    "listprojecttypeitems": {
+      "parameters": {
+        "base_url": "List/ProjectType/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
+    "listsaletypeitems": {
+      "parameters": {
+        "base_url": "List/SaleType/Items",
+        "lookup_id": "SaleTypeId"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
     "person": {
       "label": "Person",
       "parameters": {
