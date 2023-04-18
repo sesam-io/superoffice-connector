@@ -41,7 +41,7 @@
         "base_url": "List/Currency/Items",
         "lookup_id": "CurrencyId"
       },
-      "template": "templates/listbusinessitems.json"
+      "template": "templates/listcurrencyitems.json"
     },
     "listproductcategoryitems": {
       "parameters": {
