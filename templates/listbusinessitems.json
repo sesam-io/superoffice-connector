@@ -63,31 +63,45 @@
       "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
       "type": "dataset"
     },
-    "transform": {
-      "properties": {
-        "operation_delete_properties": {
-          "base_url": "{{@ base_url @}}",
-          "lookup_id": "{{@ lookup_id @}}"
+    "transform": [
+      {
+        "properties": {
+          "operation": "defaults",
+          "operation_properties": {
+            "base_url": "{{@ base_url @}}/Default"
+          },
+          "primary_key": "{{@ lookup_id @}}",
+          "rest_system": "{{@ system @}}"
         },
-        "operation_insert_properties": {
-          "base_url": "{{@ base_url @}}",
-          "lookup_id": "{{@ lookup_id @}}"
-        },
-        "operation_lookup_properties": {
-          "base_url": "{{@ base_url @}}",
-          "lookup_id": "{{@ lookup_id @}}"
-        },
-        "operation_update_properties": {
-          "base_url": "{{@ base_url @}}",
-          "lookup_id": "{{@ lookup_id @}}"
-        },
-        "primary_key": "{{@ lookup_id @}}",
-        "rest_system": "{{@ system @}}",
-        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        "template": "transform-defaults-rest",
+        "type": "template"
       },
-      "template": "transform-share-rest",
-      "type": "template"
-    },
+      {
+        "properties": {
+          "operation_delete_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_insert_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_lookup_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_update_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "primary_key": "{{@ lookup_id @}}",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-share-rest",
+        "type": "template"
+      }
+    ],
     "type": "pipe"
   }
 ]

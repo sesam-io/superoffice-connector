@@ -25,6 +25,13 @@
       },
       "url": "{{ properties.base_url }}"
     },
+    "defaults": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "GET",
+      "url": "{{ properties.base_url }}"
+    },
     "delete": {
       "method": "DELETE",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
@@ -177,8 +184,8 @@
   },
   "rate_limiting_delay": 60,
   "rate_limiting_retries": 3,
-  "worker_threads": 1,
   "type": "system:rest",
   "url_pattern": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/%s",
-  "verify_ssl": true
+  "verify_ssl": true,
+  "worker_threads": 1
 }
