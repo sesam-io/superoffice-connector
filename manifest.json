@@ -17,14 +17,14 @@
     },
     "listbusinessitems": {
       "parameters": {
-        "base_url": "List/business/Items",
+        "base_url": "List/Business/Items",
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
     },
     "listcategoryitems": {
       "parameters": {
-        "base_url": "List/category/Items",
+        "base_url": "List/Category/Items",
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
@@ -45,21 +45,21 @@
     },
     "listproductcategoryitems": {
       "parameters": {
-        "base_url": "List/productcategory/Items",
+        "base_url": "List/ProductCategory/Items",
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
     },
     "listproductfamilyitems": {
       "parameters": {
-        "base_url": "List/productfamily/Items",
+        "base_url": "List/ProductFamily/Items",
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
     },
     "listproducttypeitems": {
       "parameters": {
-        "base_url": "List/business/Items",
+        "base_url": "List/ProductType/Items",
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
