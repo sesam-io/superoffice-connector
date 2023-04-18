@@ -2,6 +2,9 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "namespaced_identifiers": false,
+    "metadata": {
+      "supports_since": true
+    },
     "source": {
       "operation": "list",
       "properties": {

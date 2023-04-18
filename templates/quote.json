@@ -43,6 +43,9 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-salelist",
     "namespaced_identifiers": false,
+    "metadata": {
+      "supports_since": true
+    },
     "source": {
       "operation": "sale{{@ datatype @}}-list",
       "since_property_name": "updatedDate",
