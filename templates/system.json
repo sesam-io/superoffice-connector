@@ -13,7 +13,7 @@
         "Accept": "application/json"
       },
       "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
+      "next_page_link": "https://sod2.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
         "same-next-page-request",
         "empty-result"
@@ -46,7 +46,7 @@
       },
       "id_expression": "{{ PrimaryKey }}",
       "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
+      "next_page_link": "https://sod2.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
         "same-next-page-request",
         "empty-result"
@@ -163,7 +163,7 @@
       },
       "id_expression": "{{ PrimaryKey }}",
       "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
+      "next_page_link": "https://sod2.superoffice.com/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
       "next_page_termination_strategy": [
         "same-next-page-request",
         "empty-result"
@@ -185,7 +185,7 @@
   "rate_limiting_delay": 60,
   "rate_limiting_retries": 3,
   "type": "system:rest",
-  "url_pattern": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/%s",
+  "url_pattern": "https://sod2.superoffice.com/{{@ account_id @}}/api/v1/%s",
   "verify_ssl": true,
   "worker_threads": 1
 }
