@@ -22,24 +22,31 @@
       "template": "templates/documentlist.json"
     },
     "listbusinessitems": {
+      "label": "Business Items List",
       "template": "templates/listbusinessitems.json"
     },
     "listcategoryitems": {
+      "label": "Category Items List",
       "template": "templates/listcategoryitems.json"
     },
     "listcountryitems": {
+      "label": "Country Items List",
       "template": "templates/listcountryitems.json"
     },
     "listcurrencyitems": {
+      "label": "Currency Items List",
       "template": "templates/listcurrencyitems.json"
     },
     "listproductcategoryitems": {
+      "label": "Product Category Items List",
       "template": "templates/listproductcategoryitems.json"
     },
     "listproductfamilyitems": {
+      "label": "Product Family Items List",
       "template": "templates/listproductfamilyitems.json"
     },
     "listproducttypeitems": {
+      "label": "Product Type Items List",
       "template": "templates/listproducttypeitems.json"
     },
     "person": {
@@ -75,17 +82,21 @@
       "template": "templates/projectlist.json"
     },
     "quote": {
+      "label": "Quote",
       "template": "templates/quote.json"
     },
     "quotealternative": {
+      "label": "Quote Alternative",
       "parent": "quoteversion",
       "template": "templates/quotealternative.json"
     },
     "quoteline": {
+      "label": "Quote Line",
       "parent": "quotealternative",
       "template": "templates/quoteline.json"
     },
     "quoteversion": {
+      "label": "Quote Version",
       "parent": "quote",
       "template": "templates/quoteversion.json"
     },
