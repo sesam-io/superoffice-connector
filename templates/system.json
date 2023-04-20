@@ -10,68 +10,70 @@
   "operations": {
     "alternate_list": {
       "headers": {
-        "Accept": "application/json",
-        "X-Sesam-Page": "{% if (previous_request_headers is defined and previous_request_headers['X-Sesam-Page'] is defined) %}{{ previous_request_headers['X-Sesam-Page']|int + 1 }}{% else %}1{% endif %}"
+        "Accept": "application/json"
       },
       "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.datatype|capitalize }}",
+      "next_page_link": "https://sod2.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
         "same-next-page-request",
         "empty-result"
       ],
       "params": {
-        "$orderby": "{{ properties.ordering }}",
-        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
-        "$top": "{{ properties.top }}"
+        "$orderby": "name asc",
+        "$skip": "{{ 20|int*page }}",
+        "$top": "20"
       },
-      "url": "{{ properties.datatype }}"
+      "url": "{{ properties.base_url }}"
+    },
+    "defaults": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "GET",
+      "url": "{{ properties.base_url }}"
+    },
+    "delete": {
+      "method": "DELETE",
+      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+    },
+    "insert": {
+      "method": "POST",
+      "url": "{{ properties.base_url }}"
     },
     "list": {
       "headers": {
-        "Accept": "application/json",
-        "X-Sesam-Page": "{% if (previous_request_headers is defined and previous_request_headers['X-Sesam-Page'] is defined) %}{{ previous_request_headers['X-Sesam-Page']|int + 1 }}{% else %}1{% endif %}"
+        "Accept": "application/json"
       },
       "id_expression": "{{ PrimaryKey }}",
       "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.datatype|capitalize }}",
+      "next_page_link": "https://sod2.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
         "same-next-page-request",
         "empty-result"
       ],
       "params": {
-        "$filter": "{% if since is defined and since is not none %}({{ properties.since_param }} ge '{{ since }}'){% else %}({{ properties.since_param }} ge '1970-01-01'){% endif %}",
-        "$orderby": "{{ properties.ordering }}",
-        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
-        "$top": "{{ properties.top }}"
+        "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} ge '{{ since }}'){% else %}({{ properties.updated_param }} ge '1970-01-01'){% endif %}",
+        "$orderby": "name asc",
+        "$skip": "{{ 20|int*page }}",
+        "$top": "20"
       },
       "payload_property": "value",
-      "url": "{{ properties.datatype|capitalize }}"
-    },
-    "list_list": {
-      "headers": {
-        "Accept": "application/json",
-        "X-Sesam-Page": "{% if (previous_request_headers is defined and previous_request_headers['X-Sesam-Page'] is defined) %}{{ previous_request_headers['X-Sesam-Page']|int + 1 }}{% else %}1{% endif %}"
-      },
-      "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/{{ properties.datatype|capitalize }}",
-      "next_page_termination_strategy": [
-        "same-next-page-request",
-        "empty-result"
-      ],
-      "params": {
-        "$orderby": "{{ properties.ordering }}",
-        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ properties.top|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
-        "$top": "{{ properties.top }}"
-      },
-      "url": "List/{{ properties.datatype }}/Items"
+      "url": "{{ properties.base_url }}"
     },
     "lookup": {
       "headers": {
         "Accept": "application/json"
       },
       "method": "GET",
-      "payload_property": "value",
-      "url": "{{ properties.datatype|capitalize }}/{{ entity._id }}"
+      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+    },
+    "lookup-from-list": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "id_expression": "{{ properties.primary_key|string }}",
+      "method": "GET",
+      "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
     },
     "quote-lookup": {
       "headers": {
@@ -93,7 +95,28 @@
       },
       "url": "Agents/Quote/GetQuoteAlternatives"
     },
-    "quoteline-lookup": {
+    "quoteline-delete": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteLineId": "{{ entity['QuoteLineId'] }}"
+      },
+      "url": "Agents/Quote/DeleteQuoteLine"
+    },
+    "quoteline-insert": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "ERPProductKey": "{{ entity['payload']['ERPProductKey'] }}",
+        "QuoteAlternativeId": "{{ entity['payload']['QuoteAlternativeId'] }}"
+      },
+      "url": "Agents/Quote/CreateQuoteLine"
+    },
+    "quoteline-list": {
       "headers": {
         "Accept": "application/json"
       },
@@ -102,6 +125,26 @@
         "QuoteAlternativeId": "{{ entity['QuoteAlternativeId'] }}"
       },
       "url": "Agents/Quote/GetQuoteLines"
+    },
+    "quoteline-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteLineId": "{{ entity['QuoteLineId'] }}"
+      },
+      "url": "Agents/Quote/GetQuoteLine"
+    },
+    "quoteline-update": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "QuoteLine": "{{ entity['payload'] }}"
+      },
+      "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteversion-lookup": {
       "headers": {
@@ -120,7 +163,7 @@
       },
       "id_expression": "{{ PrimaryKey }}",
       "method": "GET",
-      "next_page_link": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
+      "next_page_link": "https://sod2.superoffice.com/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
       "next_page_termination_strategy": [
         "same-next-page-request",
         "empty-result"
@@ -133,9 +176,16 @@
       },
       "payload_property": "value",
       "url": "archive/Sale?$select=quote/quoteId,updatedDate"
+    },
+    "update": {
+      "method": "PUT",
+      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     }
   },
+  "rate_limiting_delay": 60,
+  "rate_limiting_retries": 3,
   "type": "system:rest",
-  "url_pattern": "https://sod.superoffice.com/{{@ account_id @}}/api/v1/%s",
-  "verify_ssl": true
+  "url_pattern": "https://sod2.superoffice.com/{{@ account_id @}}/api/v1/%s",
+  "verify_ssl": true,
+  "worker_threads": 1
 }

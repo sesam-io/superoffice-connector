@@ -1,5 +1,50 @@
 [
   {
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "namespaced_identifiers": false,
+    "source": {
+      "operation": "alternate_list",
+      "properties": {
+        "base_url": "{{@ base_url @}}"
+      },
+      "system": "{{@ system @}}",
+      "type": "rest"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "add",
+              "_id",
+              [
+                "string",
+                "_S.{{@ lookup_id @}}"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "primary_key": "{{@ lookup_id @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-collect-rest",
+        "type": "template"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
     "_id": "{{@ system @}}-{{@ datatype @}}-share",
     "add_namespaces": false,
     "batch_size": 1,
@@ -18,76 +63,42 @@
       "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
       "type": "dataset"
     },
-    "transform": {
-      "properties": {
-        "operation_delete_properties": {
-          "datatype": "List/business/Items",
-          "primaryKey": "Id"
-        },
-        "operation_insert_properties": {
-          "datatype": "List/business/Items",
-          "primaryKey": "Id"
-        },
-        "operation_lookup_properties": {
-          "datatype": "List/business/Items",
-          "primaryKey": "Id"
-        },
-        "operation_update_properties": {
-          "datatype": "List/business/Items",
-          "primaryKey": "Id"
-        },
-        "primary_key": "Id",
-        "rest_system": "{{@ system @}}",
-        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
-      },
-      "template": "transform-share-rest",
-      "type": "template"
-    },
-    "type": "pipe"
-  },
-  {
-    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
-    "exclude_completeness": [
-      "{{@ system @}}-{{@ datatype @}}-share"
-    ],
-    "namespaced_identifiers": false,
-    "source": {
-      "operation": "alternate_list",
-      "properties": {
-        "datatype": "List/business/Items",
-        "ordering": "name asc",
-        "skip": "0",
-        "top": "20"
-      },
-      "system": "{{@ system @}}",
-      "type": "rest"
-    },
     "transform": [
       {
-        "rules": {
-          "default": [
-            [
-              "copy",
-              "*"
-            ],
-            [
-              "add",
-              "_id",
-              [
-                "string",
-                "_S.Id"
-              ]
-            ]
-          ]
+        "properties": {
+          "operation": "defaults",
+          "operation_properties": {
+            "base_url": "{{@ base_url @}}/Default"
+          },
+          "primary_key": "{{@ lookup_id @}}",
+          "rest_system": "{{@ system @}}"
         },
-        "type": "dtl"
+        "template": "transform-defaults-rest",
+        "type": "template"
       },
       {
         "properties": {
-          "primary_key": "Id",
+          "operation_delete_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_insert_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_lookup_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_update_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "primary_key": "{{@ lookup_id @}}",
+          "rest_system": "{{@ system @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
-        "template": "transform-collect-rest",
+        "template": "transform-share-rest",
         "type": "template"
       }
     ],

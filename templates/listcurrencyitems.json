@@ -8,10 +8,7 @@
     "source": {
       "operation": "alternate_list",
       "properties": {
-        "datatype": "List/Currency/Items",
-        "ordering": "name asc",
-        "skip": "0",
-        "top": "20"
+        "base_url": "{{@ base_url @}}"
       },
       "system": "{{@ system @}}",
       "type": "rest"
@@ -29,7 +26,7 @@
               "_id",
               [
                 "string",
-                "_S.CurrencyId"
+                "_S.{{@ lookup_id @}}"
               ]
             ]
           ]
@@ -38,7 +35,7 @@
       },
       {
         "properties": {
-          "primary_key": "CurrencyId",
+          "primary_key": "{{@ lookup_id @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-collect-rest",
@@ -66,35 +63,33 @@
       "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
       "type": "dataset"
     },
-    "transform": {
-      "properties": {
-        "operation_delete": "alternate_delete",
-        "operation_delete_properties": {
-          "datatype": "List/Currency/Items",
-          "primaryKey": "CurrencyId"
+    "transform": [
+      {
+        "properties": {
+          "operation_delete_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_insert_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_lookup_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "operation_update_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ lookup_id @}}"
+          },
+          "primary_key": "{{@ lookup_id @}}",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
-        "operation_insert": "alternate_insert",
-        "operation_insert_properties": {
-          "datatype": "List/Currency/Items",
-          "primaryKey": "CurrencyId"
-        },
-        "operation_lookup": "alternate_lookup",
-        "operation_lookup_properties": {
-          "datatype": "List/Currency/Items",
-          "primaryKey": "CurrencyId"
-        },
-        "operation_update": "alternate_update",
-        "operation_update_properties": {
-          "datatype": "List/Currency/Items",
-          "primaryKey": "CurrencyId"
-        },
-        "primary_key": "CurrencyId",
-        "rest_system": "{{@ system @}}",
-        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
-      },
-      "template": "transform-share-rest",
-      "type": "template"
-    },
+        "template": "transform-share-rest",
+        "type": "template"
+      }
+    ],
     "type": "pipe"
   }
 ]

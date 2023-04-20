@@ -1,20 +1,43 @@
 {
   "_id": "{{@ system @}}-{{@ datatype @}}-collect",
   "namespaced_identifiers": false,
+  "metadata": {
+    "supports_since": true
+  },
   "source": {
     "operation": "list",
     "properties": {
-      "datatype": "{{@ datatype @}}",
+      "base_url": "{{@ datatype @}}",
       "ordering": "name asc",
-      "since_param": "updatedDate",
       "skip": "0",
-      "top": "20"
+      "top": "20",
+      "updated_param": "updatedDate"
     },
     "since_property_name": "since",
     "supports_since": true,
     "system": "{{@ system @}}",
     "type": "rest",
     "updated_expression": "{{ updatedDate }}"
+  },
+  "transform": {
+    "rules": {
+      "default": [
+        [
+          "copy",
+          "*"
+        ],
+        [
+          "add",
+          "$last-modified",
+          [
+            "datetime-parse",
+            "%Y-%m-%dT%H:%M:%S",
+            "_S.updatedDate"
+          ]
+        ]
+      ]
+    },
+    "type": "dtl"
   },
   "type": "pipe"
 }
