@@ -45,6 +45,14 @@
         "base_url": "List/Currency/Items",
         "lookup_id": "CurrencyId"
       },
+      "template": "templates/listcategoryitems.json"
+    },
+    "listcountryitems": {
+      "label": "Country Items List",
+      "template": "templates/listcountryitems.json"
+    },
+    "listcurrencyitems": {
+      "label": "Currency Items List",
       "template": "templates/listcurrencyitems.json"
     },
     "listproductcategoryitems": {
@@ -70,6 +78,15 @@
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
+      "template": "templates/listproductcategoryitems.json"
+    },
+    "listproductfamilyitems": {
+      "label": "Product Family Items List",
+      "template": "templates/listproductfamilyitems.json"
+    },
+    "listproducttypeitems": {
+      "label": "Product Type Items List",
+      "template": "templates/listproducttypeitems.json"
     },
     "listprojecttypeitems": {
       "label": "Project Type Items List",
@@ -138,6 +155,7 @@
     },
     "quoteline": {
       "label": "Quote Line",
+      "parent": "quotealternative",
       "template": "templates/quoteline.json"
     },
     "quoteversion": {
