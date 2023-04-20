@@ -8,7 +8,8 @@
     "source": {
       "operation": "alternate_list",
       "properties": {
-        "base_url": "{{@ base_url @}}"
+        "base_url": "{{@ base_url @}}",
+        "primary_key": "{{@ lookup_id @}}"
       },
       "system": "{{@ system @}}",
       "type": "rest"
