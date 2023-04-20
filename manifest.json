@@ -45,7 +45,7 @@
         "base_url": "List/Currency/Items",
         "lookup_id": "CurrencyId"
       },
-      "template": "templates/listcategoryitems.json"
+      "template": "templates/listcurrencyitems.json"
     },
     "listproductcategoryitems": {
       "label": "Product Category Items List",
