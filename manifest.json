@@ -47,10 +47,6 @@
       },
       "template": "templates/listcategoryitems.json"
     },
-    "listcurrencyitems": {
-      "label": "Currency Items List",
-      "template": "templates/listcurrencyitems.json"
-    },
     "listproductcategoryitems": {
       "label": "Product Category Items List",
       "parameters": {
