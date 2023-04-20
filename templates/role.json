@@ -1,14 +1,14 @@
 {
   "_id": "{{@ system @}}-{{@ datatype @}}-collect",
-  "namespaced_identifiers": false,
   "metadata": {
     "supports_since": true
   },
+  "namespaced_identifiers": false,
   "source": {
     "operation": "list",
     "properties": {
       "base_url": "{{@ datatype @}}",
-      "ordering": "name asc",
+      "ordering": "PrimaryKey asc",
       "skip": "0",
       "top": "20",
       "updated_param": "updatedDate"

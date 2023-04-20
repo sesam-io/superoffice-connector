@@ -7,7 +7,7 @@
     "payload_property": "value",
     "properties": {
       "base_url": "{{@ datatype @}}",
-      "ordering": "name asc",
+      "ordering": "PrimaryKey asc",
       "skip": "0",
       "top": "20"
     },

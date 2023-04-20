@@ -1,14 +1,15 @@
 [
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
-    "namespaced_identifiers": false,
     "metadata": {
       "supports_since": true
     },
+    "namespaced_identifiers": false,
     "source": {
       "operation": "list",
       "properties": {
         "base_url": "{{@ base_url @}}",
+        "primary_key": "{{@ list_url @}}",
         "updated_param": "{{@ updated_param @}}"
       },
       "since_property_location": "manual",
