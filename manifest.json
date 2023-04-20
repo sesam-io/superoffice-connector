@@ -78,7 +78,6 @@
         "lookup_id": "Id"
       },
       "template": "templates/listbusinessitems.json"
-      "template": "templates/listproductcategoryitems.json"
     },
     "listproductfamilyitems": {
       "label": "Product Family Items List",
