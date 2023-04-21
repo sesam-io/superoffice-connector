@@ -112,7 +112,7 @@
       "parameters": {
         "base_url": "Product",
         "list_url": "productId",
-        "primary_key": "ProductId",
+        "primary_key": "ERPProductKey",
         "updated_param": "updatedDate"
       },
       "template": "templates/pricelist.json"
