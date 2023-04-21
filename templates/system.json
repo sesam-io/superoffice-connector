@@ -52,7 +52,7 @@
         "empty-result"
       ],
       "params": {
-        "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} ge '{{ since }}'){% else %}({{ properties.updated_param }} ge '1970-01-01'){% endif %}",
+        "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} afterTime '{{ since }}'){% else %}({{ properties.updated_param }} afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "{{ properties.primary_key }}",
         "$skip": "{{ 20|int*page }}",
         "$top": "20"
@@ -169,7 +169,7 @@
         "empty-result"
       ],
       "params": {
-        "$filter": "{% if since is defined and since is not none %}(updatedDate ge '{{ since }}'){% else %}(updatedDate ge '1970-01-01'){% endif %}",
+        "$filter": "{% if since is defined and since is not none %}(updatedDate afterTime '{{ since }}'){% else %}(updatedDate afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "PrimaryKey asc",
         "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ 1000|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
         "$top": "1000"
