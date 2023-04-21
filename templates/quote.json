@@ -32,6 +32,18 @@
                 "string",
                 "_T.QuoteId"
               ]
+            ],
+            [
+              "if",
+              [
+                "eq",
+                "_T.AcceptedQuoteAlternativeId",
+                0
+              ],
+              [
+                "remove",
+                "AcceptedQuoteAlternativeId"
+              ]
             ]
           ]
         },
@@ -42,10 +54,10 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-salelist",
-    "namespaced_identifiers": false,
     "metadata": {
       "supports_since": true
     },
+    "namespaced_identifiers": false,
     "source": {
       "operation": "sale{{@ datatype @}}-list",
       "since_property_name": "updatedDate",
