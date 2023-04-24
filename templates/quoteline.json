@@ -35,7 +35,7 @@
             [
               "add",
               "$last-modified",
-              "_R.$last-modified"
+              "_R._S.$last-modified"
             ]
           ],
           "default": [
@@ -88,14 +88,6 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-share",
-    "add_namespaces": false,
-    "batch_size": 1,
-    "compaction": {
-      "keep_versions": 100
-    },
-    "exclude_completeness": [
-      "{{@ system @}}-{{@ datatype @}}-share"
-    ],
     "namespaced_identifiers": false,
     "sink": {
       "dataset": "{{@ system @}}-{{@ datatype @}}-share",
