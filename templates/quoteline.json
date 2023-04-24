@@ -3,7 +3,7 @@
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-quotealternative-collect",
+      "dataset": "{{@ system @}}-{{@ parent @}}-collect",
       "type": "dataset"
     },
     "transform": [
@@ -31,6 +31,11 @@
               "add",
               "$original_id",
               "_R._S._id"
+            ],
+            [
+              "add",
+              "$last-modified",
+              "_R.$last-modified"
             ]
           ],
           "default": [
@@ -83,6 +88,14 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "add_namespaces": false,
+    "batch_size": 1,
+    "compaction": {
+      "keep_versions": 100
+    },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
     "namespaced_identifiers": false,
     "sink": {
       "dataset": "{{@ system @}}-{{@ datatype @}}-share",
