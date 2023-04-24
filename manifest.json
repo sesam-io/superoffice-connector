@@ -47,6 +47,14 @@
       },
       "template": "templates/listcurrencyitems.json"
     },
+    "listprojectstatusitems": {
+      "label": "Product Status Items List",
+      "parameters": {
+        "base_url": "List/ProjectStatus/Items",
+        "lookup_id": "Id"
+      },
+      "template": "templates/listbusinessitems.json"
+    },
     "listproductcategoryitems": {
       "label": "Product Category Items List",
       "parameters": {
