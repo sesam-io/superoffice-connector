@@ -30,6 +30,11 @@
             "add",
             "$original_id",
             "_R._S._id"
+          ],
+          [
+            "add",
+            "$last-modified",
+            "_R._S.$last-modified"
           ]
         ],
         "default": [
