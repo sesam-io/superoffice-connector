@@ -8,6 +8,7 @@
     "properties": {
       "base_url": "{{@ datatype @}}",
       "ordering": "PrimaryKey asc",
+      "primary_key": "PrimaryKey",
       "skip": "0",
       "top": "20"
     },
