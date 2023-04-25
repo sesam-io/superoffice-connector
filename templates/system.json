@@ -201,6 +201,11 @@
     "update": {
       "method": "PUT",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+    },
+    "webhook-insert": {
+      "method": "POST",
+      "payload-type": "json",
+      "url": "Webhook"
     }
   },
   "rate_limiting_delay": 60,
