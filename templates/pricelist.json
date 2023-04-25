@@ -142,6 +142,32 @@
     },
     "transform": [
       {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "comment",
+              "Workaround for IS-14640"
+            ],
+            [
+              "if",
+              [
+                "is-null",
+                "_S.{{@ base_url @}}Id"
+              ],
+              [
+                "remove",
+                "{{@ base_url @}}Id"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
         "properties": {
           "operation": "defaults",
           "operation_properties": {
