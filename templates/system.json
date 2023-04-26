@@ -85,7 +85,7 @@
       },
       "url": "Agents/Quote/GetQuoteEntity"
     },
-    "quotealternative-lookup": {
+    "quotealternative-create": {
       "headers": {
         "Accept": "application/json"
       },
@@ -93,7 +93,28 @@
       "payload": {
         "QuoteVersionId": "{{ entity['QuoteVersionId'] }}"
       },
-      "url": "Agents/Quote/GetQuoteAlternatives"
+      "url": "Agents/Quote/CreateQuoteAlternative"
+    },
+    "quotealternative-default": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/CreateDefaultQuoteAlternative"
+    },
+    "quotealternative-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/GetQuoteAlternative?quoteAlternativeId={{ entity['QuoteAlternativeId'] }}"
+    },
+    "quotealternative-save": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/SaveQuoteAlternative"
     },
     "quoteline-delete": {
       "headers": {
