@@ -20,8 +20,8 @@
       ],
       "params": {
         "$orderby": "{{ properties.primary_key }}",
-        "$skip": "{{ 20|int*page }}",
-        "$top": "20"
+        "$skip": "{{ 1000|int*page }}",
+        "$top": "1000"
       },
       "url": "{{ properties.base_url }}"
     },
@@ -54,8 +54,8 @@
       "params": {
         "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} afterTime '{{ since }}'){% else %}({{ properties.updated_param }} afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "{{ properties.primary_key }}",
-        "$skip": "{{ 20|int*page }}",
-        "$top": "20"
+        "$skip": "{{ 1000|int*page }}",
+        "$top": "1000"
       },
       "payload_property": "value",
       "url": "{{ properties.base_url }}"
