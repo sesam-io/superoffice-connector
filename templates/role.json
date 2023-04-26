@@ -14,6 +14,7 @@
       "top": "20",
       "updated_param": "updatedDate"
     },
+    "since_property_location": "manual",
     "since_property_name": "since",
     "supports_since": true,
     "system": "{{@ system @}}",
