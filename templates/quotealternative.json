@@ -15,8 +15,8 @@
           ],
           [
             "add",
-            "$SaleId",
-            "_R._S.$SaleId"
+            "$sale_id",
+            "_R._S.$sale_id"
           ],
           [
             "add",
@@ -86,6 +86,14 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "add_namespaces": false,
+    "batch_size": 1,
+    "compaction": {
+      "keep_versions": 100
+    },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
     "namespaced_identifiers": false,
     "sink": {
       "dataset": "{{@ system @}}-{{@ datatype @}}-share",
@@ -99,6 +107,405 @@
     "transform": [
       {
         "transforms": [
+          {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*"
+                ],
+                [
+                  "comment",
+                  "Rename necessary because jinja can't handle $"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S._deleted",
+                    false
+                  ],
+                  [
+                    [
+                      "rename",
+                      "$sale_id",
+                      "sale_id"
+                    ],
+                    [
+                      "add",
+                      "$operation",
+                      "lookup-quote"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "{{@ datatype @}}-sale-lookup",
+            "operations": {
+              "{{@ datatype @}}-sale-lookup": {
+                "method": "POST",
+                "url": "Agents/Quote/GetQuoteFromSaleId"
+              }
+            },
+            "payload": {
+              "SaleId": "{{ entity.sale_id }}"
+            },
+            "side_effects": false,
+            "system": "{{@ system @}}",
+            "trace": true,
+            "trigger_on": {
+              "key": "$operation",
+              "value": "lookup-quote"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S._deleted",
+                    false
+                  ],
+                  [
+                    [
+                      "comment",
+                      "See if the sale_id has a corresponding quote or not. If there isn't then one needs to be created. If there is, move on to checking the quote version"
+                    ],
+                    [
+                      "if",
+                      [
+                        "is-empty",
+                        "_S.response"
+                      ],
+                      [
+                        "merge",
+                        [
+                          "apply",
+                          "no-quote",
+                          "_S."
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "no-quote": [
+                [
+                  "add",
+                  "$operation",
+                  "create-quote"
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "{{@ datatype @}}-create-quote",
+            "operations": {
+              "{{@ datatype @}}-create-quote": {
+                "method": "POST",
+                "url": "Agents/Quote/CreateAndSaveQuote"
+              }
+            },
+            "payload": {
+              "ConnectionId": 1,
+              "SaleId": "{{ entity.sale_id }}"
+            },
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "create-quote"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S._deleted",
+                    false
+                  ],
+                  [
+                    [
+                      "comment",
+                      "At this point there should be a quote entity in response. Need to pull ActiveQuoteVersionId out of response in order to be accessible by the jinja 'entity'"
+                    ],
+                    [
+                      "add",
+                      "sesam_ActiveQuoteVersionId",
+                      [
+                        "first",
+                        "_S.response.ActiveQuoteVersionId"
+                      ]
+                    ],
+                    [
+                      "add",
+                      "QuoteVersionId",
+                      [
+                        "first",
+                        "_S.response.ActiveQuoteVersionId"
+                      ]
+                    ],
+                    [
+                      "add",
+                      "$operation",
+                      "lookup-version"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "{{@ datatype @}}-version-lookup",
+            "operations": {
+              "{{@ datatype @}}-version-lookup": {
+                "method": "POST",
+                "url": "Agents/Quote/GetQuoteVersion"
+              }
+            },
+            "payload": {
+              "QuoteVersionId": "{{ entity.sesam_ActiveQuoteVersionId }}"
+            },
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "lookup-version"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S._deleted",
+                    false
+                  ],
+                  [
+                    [
+                      "comment",
+                      "If the quote version is locked then we need a new one, otherwise mopve on to process the quote alternative"
+                    ],
+                    [
+                      "if",
+                      [
+                        "neq",
+                        "_S.response.State",
+                        "Draft"
+                      ],
+                      [
+                        "merge",
+                        [
+                          "apply",
+                          "version-is-locked",
+                          "_S."
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "version-is-locked": [
+                [
+                  "add",
+                  "$operation",
+                  "create-quote-version"
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "{{@ datatype @}}-create-version",
+            "operations": {
+              "{{@ datatype @}}-create-version": {
+                "method": "POST",
+                "url": "Agents/Quote/CreateAndSaveQuoteVersion"
+              }
+            },
+            "payload": {
+              "QuoteVersionId": "{{ entity.sesam_ActiveQuoteVersionId }}"
+            },
+            "response_property": "response_body",
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "create-quote-version"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "comment",
+                  "We need to use the new {{@ parent @}}Id from the insert now"
+                ],
+                [
+                  "if",
+                  [
+                    "neq",
+                    "_S.$operation",
+                    "create-quote-version"
+                  ],
+                  [
+                    "copy",
+                    "*"
+                  ],
+                  [
+                    [
+                      "copy",
+                      "*",
+                      [
+                        "list",
+                        "response_body",
+                        "payload"
+                      ]
+                    ],
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "apply",
+                        "default-values",
+                        [
+                          "dict",
+                          "a",
+                          "_S.payload",
+                          "b",
+                          [
+                            "first",
+                            "_S.response_body"
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "default-values": [
+                [
+                  "merge",
+                  [
+                    "dict",
+                    [
+                      "map",
+                      [
+                        "list",
+                        "_.",
+                        [
+                          "sorted",
+                          [
+                            "if",
+                            [
+                              "is-dict",
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ]
+                            ],
+                            [
+                              "apply",
+                              "default-values",
+                              [
+                                "dict",
+                                "a",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ],
+                                "b",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ],
+                            [
+                              "if",
+                              [
+                                "eq",
+                                "_.",
+                                "QuoteVersionId"
+                              ],
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ],
+                              [
+                                "if",
+                                [
+                                  "is-not-null",
+                                  [
+                                    "path",
+                                    "_.",
+                                    "_S.a"
+                                  ]
+                                ],
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ],
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "keys",
+                        "_S.b"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "properties": {
+              "operation": "{{@ datatype @}}-default",
+              "primary_key": "QuoteAlternativeId",
+              "rest_system": "{{@ system @}}"
+            },
+            "template": "transform-defaults-rest",
+            "type": "template"
+          },
           {
             "rules": {
               "default": [
@@ -286,7 +693,7 @@
                 [
                   "add",
                   "$operation",
-                  "delete"
+                  "discard-deletes-not-enabled"
                 ]
               ],
               "discard-already-inserted": [
@@ -463,93 +870,18 @@
                   ]
                 ]
               ],
-              "based-on-extract": [
-                [
-                  "if",
-                  [
-                    "is-dict",
-                    "_S.a"
-                  ],
-                  [
-                    "merge",
-                    [
-                      "dict",
-                      [
-                        "map",
-                        [
-                          "list",
-                          "_.",
-                          [
-                            "sorted",
-                            [
-                              "if",
-                              [
-                                "is-dict",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.b"
-                                ]
-                              ],
-                              [
-                                "apply",
-                                "based-on-extract",
-                                [
-                                  "dict",
-                                  "a",
-                                  [
-                                    "path",
-                                    "_.",
-                                    "_S.a"
-                                  ],
-                                  "b",
-                                  [
-                                    "path",
-                                    "_.",
-                                    "_S.b"
-                                  ]
-                                ]
-                              ],
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ]
-                            ]
-                          ]
-                        ],
-                        [
-                          "keys",
-                          "_S.a"
-                        ]
-                      ]
-                    ]
-                  ]
-                ],
-                [
-                  "remove",
-                  [
-                    "literal",
-                    "QuoteAlternativeId"
-                  ]
-                ]
-              ],
               "based-on-lookup": [
                 [
                   "add",
                   "$based_on_lookup",
                   [
                     "apply",
-                    "based-on-extract",
+                    "remove-unmapped-properties",
                     [
                       "dict",
-                      "a",
-                      [
-                        "apply",
-                        "payload",
-                        "_S.$source"
-                      ],
-                      "b",
+                      "prefix",
+                      "",
+                      "data",
                       [
                         "first",
                         "_S.response_body"
@@ -562,21 +894,7 @@
                 [
                   "add",
                   "$based_on_source",
-                  [
-                    "apply",
-                    "based-on-extract",
-                    [
-                      "dict",
-                      "a",
-                      [
-                        "apply",
-                        "payload",
-                        "_S.$source"
-                      ],
-                      "b",
-                      "_S.$source.$based_on"
-                    ]
-                  ]
+                  "_S.$source.$based_on"
                 ]
               ],
               "based-on-update": [
@@ -585,21 +903,13 @@
                   "$based_on_update",
                   [
                     "apply",
-                    "based-on-extract",
+                    "remove-unmapped-properties",
                     [
                       "dict",
-                      "a",
-                      [
-                        "apply",
-                        "payload",
-                        "_S.$source"
-                      ],
-                      "b",
-                      [
-                        "apply",
-                        "payload",
-                        "_S.$source"
-                      ]
+                      "prefix",
+                      "",
+                      "data",
+                      "_S.$source"
                     ]
                   ]
                 ]
@@ -740,6 +1050,27 @@
                   "discard-modified-in-system"
                 ]
               ],
+              "is-match": [
+                [
+                  "comment",
+                  "workaround for shadowing the outer _. variable"
+                ],
+                [
+                  "discard",
+                  [
+                    "is-not-empty",
+                    [
+                      "filter",
+                      [
+                        "matches",
+                        "_S.pattern",
+                        "_."
+                      ],
+                      "_R._S.$source.$based_on_properties"
+                    ]
+                  ]
+                ]
+              ],
               "payload": [
                 [
                   "merge",
@@ -777,6 +1108,191 @@
                   ]
                 ]
               ],
+              "remove-unmapped-properties": [
+                [
+                  "comment",
+                  "function that builds up the dotted key and checks if one of dotted notations in _based_on_properties starts with this dotted key, recurses if the value is a dict"
+                ],
+                [
+                  "merge",
+                  [
+                    "dict",
+                    [
+                      "map",
+                      [
+                        "if",
+                        [
+                          "or",
+                          [
+                            "and",
+                            [
+                              "is-dict",
+                              [
+                                "last",
+                                "_."
+                              ]
+                            ],
+                            [
+                              "gt",
+                              [
+                                "count",
+                                [
+                                  "apply",
+                                  "remove-unmapped-properties",
+                                  [
+                                    "dict",
+                                    "data",
+                                    [
+                                      "last",
+                                      "_."
+                                    ],
+                                    "prefix",
+                                    [
+                                      "concat",
+                                      "_S.prefix",
+                                      [
+                                        "ni-id",
+                                        [
+                                          "ni",
+                                          [
+                                            "first",
+                                            "_."
+                                          ]
+                                        ]
+                                      ],
+                                      "."
+                                    ]
+                                  ]
+                                ]
+                              ],
+                              0
+                            ]
+                          ],
+                          [
+                            "and",
+                            [
+                              "not",
+                              [
+                                "is-dict",
+                                [
+                                  "last",
+                                  "_."
+                                ]
+                              ]
+                            ],
+                            [
+                              "and",
+                              [
+                                "is-not-empty",
+                                [
+                                  "last",
+                                  "_."
+                                ]
+                              ],
+                              [
+                                "neq",
+                                [
+                                  "last",
+                                  "_."
+                                ],
+                                ""
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          "list",
+                          [
+                            "if",
+                            [
+                              "is-not-empty",
+                              [
+                                "apply",
+                                "is-match",
+                                [
+                                  "dict",
+                                  "pattern",
+                                  [
+                                    "concat",
+                                    "_S.prefix",
+                                    [
+                                      "ni-id",
+                                      [
+                                        "ni",
+                                        [
+                                          "first",
+                                          "_."
+                                        ]
+                                      ]
+                                    ],
+                                    "*"
+                                  ]
+                                ]
+                              ]
+                            ],
+                            [
+                              "ni-id",
+                              [
+                                "ni",
+                                [
+                                  "first",
+                                  "_."
+                                ]
+                              ]
+                            ]
+                          ],
+                          [
+                            "if",
+                            [
+                              "is-dict",
+                              [
+                                "last",
+                                "_."
+                              ]
+                            ],
+                            [
+                              "apply",
+                              "remove-unmapped-properties",
+                              [
+                                "dict",
+                                "data",
+                                [
+                                  "last",
+                                  "_."
+                                ],
+                                "prefix",
+                                [
+                                  "concat",
+                                  "_S.prefix",
+                                  [
+                                    "ni-id",
+                                    [
+                                      "ni",
+                                      [
+                                        "first",
+                                        "_."
+                                      ]
+                                    ]
+                                  ],
+                                  "."
+                                ]
+                              ]
+                            ],
+                            [
+                              "last",
+                              "_."
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "items",
+                        "_S.data"
+                      ]
+                    ]
+                  ]
+                ]
+              ],
               "trace": [
                 [
                   "copy",
@@ -790,9 +1306,13 @@
               ],
               "update": [
                 [
+                  "comment",
+                  "Because of SO's archiving functionality, an update should behave the same way as an insert"
+                ],
+                [
                   "add",
                   "$operation",
-                  "update"
+                  "insert"
                 ],
                 [
                   "add",
@@ -822,142 +1342,7 @@
           },
           {
             "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-default",
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": false,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "insert"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "comment",
-                  "transform for inserts where we add the entity's payload to the default entity from SuperOffice in order to ensure all vital fields are populated"
-                ],
-                [
-                  "if",
-                  [
-                    "neq",
-                    "_S.$operation",
-                    "insert"
-                  ],
-                  [
-                    "copy",
-                    "*"
-                  ],
-                  [
-                    [
-                      "copy",
-                      "*",
-                      "response_body"
-                    ],
-                    [
-                      "add",
-                      "payload",
-                      [
-                        "apply",
-                        "default-values",
-                        [
-                          "dict",
-                          "a",
-                          "_S.payload",
-                          "b",
-                          [
-                            "first",
-                            "_S.response_body"
-                          ]
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "default-values": [
-                [
-                  "merge",
-                  [
-                    "dict",
-                    [
-                      "map",
-                      [
-                        "list",
-                        "_.",
-                        [
-                          "sorted",
-                          [
-                            "if",
-                            [
-                              "is-dict",
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ]
-                            ],
-                            [
-                              "apply",
-                              "default-values",
-                              [
-                                "dict",
-                                "a",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.a"
-                                ],
-                                "b",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.b"
-                                ]
-                              ]
-                            ],
-                            [
-                              "if",
-                              [
-                                "is-not-null",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.a"
-                                ]
-                              ],
-                              [
-                                "path",
-                                "_.",
-                                "_S.a"
-                              ],
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ]
-                            ]
-                          ]
-                        ]
-                      ],
-                      [
-                        "keys",
-                        "_S.b"
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-insert",
+            "operation": "{{@ datatype @}}-create",
             "replace_entity": false,
             "response_property": "response_body",
             "response_status_property": "response_status",
@@ -1109,7 +1494,7 @@
           },
           {
             "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-update",
+            "operation": "{{@ datatype @}}-save",
             "replace_entity": false,
             "response_property": "response_body",
             "response_status_property": "response_status",
@@ -1118,20 +1503,6 @@
             "trigger_on": {
               "key": "$operation",
               "value": "insert"
-            },
-            "type": "rest"
-          },
-          {
-            "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-update",
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "update"
             },
             "type": "rest"
           },
@@ -1389,43 +1760,6 @@
                   ]
                 ],
                 [
-                  "comment",
-                  "If entity is $replaced and it has a $generated_id then we must not delete it."
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "is-not-null",
-                      "_T.$generated_id"
-                    ],
-                    [
-                      "eq",
-                      "_S.$operation",
-                      "discard-replaced"
-                    ]
-                  ],
-                  [
-                    "add",
-                    "_deleted",
-                    false
-                  ]
-                ],
-                [
-                  "if",
-                  [
-                    "eq",
-                    "_S.$replaced",
-                    true
-                  ],
-                  [
-                    "add-if",
-                    "$origin",
-                    "_T._previous.$origin"
-                  ]
-                ],
-                [
                   "add-if",
                   "$previous_success",
                   "_T._previous.$success"
@@ -1458,6 +1792,54 @@
                       "$success",
                       true
                     ]
+                  ]
+                ],
+                [
+                  "comment",
+                  "If entity is not successfully deleted and it has a $generated_id then we must not delete it"
+                ],
+                [
+                  "if",
+                  [
+                    "and",
+                    [
+                      "is-not-null",
+                      "_T.$generated_id"
+                    ],
+                    [
+                      "not",
+                      [
+                        "and",
+                        [
+                          "eq",
+                          "_S.$operation",
+                          "delete"
+                        ],
+                        [
+                          "eq",
+                          "_T.$success",
+                          true
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "add",
+                    "_deleted",
+                    false
+                  ]
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S.$replaced",
+                    true
+                  ],
+                  [
+                    "add-if",
+                    "$origin",
+                    "_T._previous.$origin"
                   ]
                 ]
               ],
