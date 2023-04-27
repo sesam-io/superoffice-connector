@@ -26,7 +26,7 @@
       "{{@ system @}}-{{@ datatype @}}-share"
     ],
     "namespaced_identifiers": false,
-    "source": {    
+    "source": {
       "datasets": [
         "{{@ system @}}-{{@ datatype @}}-event",
         "{{@ system @}}-{{@ datatype @}}-all"

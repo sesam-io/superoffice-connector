@@ -194,7 +194,6 @@
     ],
     "token_url": "https://sod.superoffice.com/login/common/oauth/tokens"
   },
-  
   "requires_service_api_access": true,
   "system-template": "templates/system.json",
   "use_webhook_secret": true
