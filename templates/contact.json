@@ -32,7 +32,7 @@
         "{{@ system @}}-{{@ datatype @}}-event",
         "{{@ system @}}-{{@ datatype @}}-all"
       ],
-      "type": "union_datasets"
+      "type": "merge_datasets"
     },
     "transform": [
       {
