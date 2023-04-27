@@ -80,7 +80,6 @@
         "Accept": "application/json"
       },
       "id_expression": "PrimaryKey",
-      "id_expression": "PrimaryKey",
       "method": "GET",
       "url": "{{ properties.base_url }}/{{ entity['PrimaryKey'] }}"
     },
