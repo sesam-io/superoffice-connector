@@ -1,6 +1,7 @@
 {
   "additional_parameters": {
     "account_id": {},
+    "service_url": {},
     "token_url": {}
   },
   "auth": "oauth2",
@@ -180,6 +181,9 @@
     "user": {
       "label": "User",
       "template": "templates/user.json"
+    },
+    "webhook": {
+      "template": "templates/webhook.json"
     }
   },
   "oauth2": {
@@ -191,5 +195,6 @@
     "token_url": "https://sod.superoffice.com/login/common/oauth/tokens"
   },
   "requires_service_api_access": true,
+  "use_webhook_secret": true,
   "system-template": "templates/system.json"
 }

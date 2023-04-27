@@ -27,7 +27,10 @@
     ],
     "namespaced_identifiers": false,
     "source": {
-      "datasets": ["{{@ system @}}-{{@ datatype @}}-event", "{{@ system @}}-{{@ datatype @}}-all"],
+      "datasets": [
+        "{{@ system @}}-{{@ datatype @}}-event",
+        "{{@ system @}}-{{@ datatype @}}-all"
+      ],
       "type": "union_datasets"
     },
     "transform": [
@@ -36,7 +39,7 @@
           "default": [
             [
               "comment",
-              "*** The below transform is to discard entities that have been deleted in the source and as such might result in a pump failed. ***"
+              "TODO we should do lookup on deletes to verify that they are actually deletes and not just bugs in the pagination (IS-14656)"
             ],
             [
               "if",
@@ -46,7 +49,7 @@
                 true
               ],
               [
-                "discard"
+                "filter"
               ]
             ],
             [
@@ -56,7 +59,7 @@
             ],
             [
               "copy",
-              "PrimaryKey"
+              "{{@ list_url @}}"
             ]
           ]
         },
@@ -68,6 +71,7 @@
           "base_url": "{{@ base_url @}}"
         },
         "replace_entity": false,
+        "side_effects": false,
         "system": "{{@ system @}}",
         "type": "rest"
       },
@@ -75,8 +79,16 @@
         "rules": {
           "default": [
             [
+              "merge",
+              "_S.response"
+            ],
+            [
               "comment",
               "*** This transform needs to be here since we need replace_entity to be false in order for us to grab $last-modified which is only part of the first transform. ***"
+            ],
+            [
+              "comment",
+              "TODO are we sure there is an UpdatedDate on the response? couldn't find one when testing the price list type"
             ],
             [
               "add",
@@ -88,22 +100,10 @@
                   "coalesce",
                   [
                     "list",
-                    "_S.UpdatedDate",
+                    "_T.UpdatedDate",
                     "_S.tmp-lastmodified"
                   ]
                 ]
-              ]
-            ],
-            [
-              "merge",
-              "_S.response"
-            ],
-            [
-              "add",
-              "_id",
-              [
-                "string",
-                "_T.{{@ base_url @}}Id"
               ]
             ]
           ]
@@ -119,6 +119,74 @@
         "type": "template"
       }
     ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-event",
+    "compaction": {
+      "keep_versions": 0,
+      "time_threshold_hours": 168
+    },
+    "namespaced_identifiers": false,
+    "source": {
+      "type": "http_endpoint"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "add",
+              "_id",
+              [
+                "string",
+                "_S.PrimaryKey"
+              ]
+            ],
+            [
+              "comment",
+              "When we register a webhook in SO, they send a test event to this pipe instantly, with an Event: test property, these we want to get rid of."
+            ],
+            [
+              "discard",
+              [
+                "neq",
+                "_S.Event",
+                "test"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-registerwebhook",
+    "namespaced_identifiers": false,
+    "source": {
+      "entities": [
+        {
+          "_id": "{{@ datatype @}}",
+          "_updated": 0
+        }
+      ],
+      "supports_since": true,
+      "type": "embedded"
+    },
+    "transform": {
+      "allowed_status_codes": "200,201",
+      "operation": "{{@ datatype @}}-webhook-insert",
+      "replace_entity": false,
+      "side_effects": true,
+      "system": "{{@ system @}}",
+      "type": "rest"
+    },
     "type": "pipe"
   },
   {
@@ -141,6 +209,32 @@
       "type": "dataset"
     },
     "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "comment",
+              "Workaround for IS-14640"
+            ],
+            [
+              "if",
+              [
+                "is-null",
+                "_S.{{@ base_url @}}Id"
+              ],
+              [
+                "remove",
+                "{{@ base_url @}}Id"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
       {
         "properties": {
           "operation": "defaults",
@@ -179,63 +273,5 @@
       }
     ],
     "type": "pipe"
-  },
-  {
-    "_id": "xxxxxx-{{@ datatype @}}-registerwebhook",
-    "type": "pipe",
-    "source": {
-      "type": "embedded",
-      "entities": [{
-        "_id": "{{@ datatype @}}",
-        "_updated": 0,
-        "properties": {
-          "targetUrl": "{{@ service_url @}}/receivers/xxxxxx-{{@ datatype @}}-event/entities"
-        }
-      }],
-      "supports_since": true
-    },
-    "transform": {
-      "type": "rest",
-      "system": "xxxxxx",
-      "trace": true,
-      "allowed_status_codes": "200,201",
-      "operation": "webhook-insert",
-      "payload": {
-        "Events": ["{{@ datatype @}}.created", "{{@ datatype @}}.changed", "{{@ datatype @}}.deleted"],
-        "State": "Active",
-        "TargetUrl": "{{ properties.targetUrl }}",
-        "Type": "webhook"
-      },
-      "replace_entity": false,
-      "side_effects": true
-    },
-    "namespaced_identifiers": false
-  },
-  {
-    "_id": "xxxxxx-{{@ datatype @}}-event",
-    "type": "pipe",
-    "source": {
-      "type": "http_endpoint"
-    },
-    "transform": [{
-      "type": "dtl",
-      "rules": {
-        "default": [
-          ["copy", "*"],
-          ["add", "_id",
-            ["string", "_S.PrimaryKey"]
-          ],
-          ["comment", "When we register a webhook in SO, they send a test event to this pipe instantly, with an Event: test property, these we want to get rid of."],
-          ["discard",
-            ["neq", "_S.Event", "test"]
-          ]
-        ]
-      }
-    }],
-    "compaction": {
-      "keep_versions": 0,
-      "time_threshold_hours": 168
-    },
-    "namespaced_identifiers": false
   }
 ]
