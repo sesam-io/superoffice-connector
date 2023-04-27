@@ -1,0 +1,381 @@
+[
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "metadata": {
+      "supports_since": true
+    },
+    "namespaced_identifiers": false,
+    "source": {
+      "operation": "list",
+      "properties": {
+        "base_url": "{{@ base_url @}}",
+        "primary_key": "{{@ list_url @}}",
+        "updated_param": "{{@ updated_param @}}"
+      },
+      "since_property_location": "manual",
+      "since_property_name": "since",
+      "supports_since": true,
+      "system": "{{@ system @}}",
+      "type": "rest",
+      "updated_expression": "{{ {{@ updated_param @}} }}"
+    },
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "namespaced_identifiers": false,
+    "source": {
+      "datasets": [
+        "{{@ system @}}-{{@ datatype @}}-event",
+        "{{@ system @}}-{{@ datatype @}}-all"
+      ],
+      "type": "union_datasets"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "comment",
+              "TODO we should do lookup on deletes to verify that they are actually deletes and not just bugs in the pagination (IS-14656)"
+            ],
+            [
+              "if",
+              [
+                "eq",
+                "_S._deleted",
+                true
+              ],
+              [
+                "filter"
+              ]
+            ],
+            [
+              "add",
+              "tmp-lastmodified",
+              "_S.{{@ updated_param @}}"
+            ],
+            [
+              "comment",
+              "In the case of webhook events, we only have the PrimaryKey available."
+            ],
+            [
+              "default",
+              "{{@ list_url @}}",
+              "_S.PrimaryKey"
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "operation": "lookup-from-list",
+        "properties": {
+          "base_url": "{{@ base_url @}}",
+          "list_id": "{{@ list_url @}}",
+          "primary_key": "{{@ base_url @}}Id"
+        },
+        "replace_entity": false,
+        "side_effects": false,
+        "system": "{{@ system @}}",
+        "type": "rest"
+      },
+      {
+        "rules": {
+          "default": [
+            [
+              "merge",
+              "_S.response"
+            ],
+            [
+              "comment",
+              "*** This transform needs to be here since we need replace_entity to be false in order for us to grab $last-modified which is only part of the first transform. ***"
+            ],
+            [
+              "comment",
+              "TODO are we sure there is an UpdatedDate on the response? couldn't find one when testing the price list type"
+            ],
+            [
+              "add",
+              "$last-modified",
+              [
+                "datetime-parse",
+                "%Y-%m-%dT%H:%M:%S",
+                [
+                  "coalesce",
+                  [
+                    "list",
+                    "_T.UpdatedDate",
+                    "_S.tmp-lastmodified"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "primary_key": "{{@ base_url @}}Id",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-collect-rest",
+        "type": "template"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "add_namespaces": false,
+    "batch_size": 1,
+    "compaction": {
+      "keep_versions": 100
+    },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "namespaced_identifiers": false,
+    "sink": {
+      "deletion_tracking": false,
+      "set_initial_offset": "onload"
+    },
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
+      "type": "dataset"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "comment",
+              "Workaround for IS-14640"
+            ],
+            [
+              "if",
+              [
+                "is-null",
+                "_S.{{@ base_url @}}Id"
+              ],
+              [
+                "remove",
+                "{{@ base_url @}}Id"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "operation": "defaults",
+          "operation_properties": {
+            "base_url": "{{@ base_url @}}/default"
+          },
+          "primary_key": "{{@ base_url @}}Id",
+          "rest_system": "{{@ system @}}"
+        },
+        "template": "transform-defaults-rest",
+        "type": "template"
+      },
+      {
+        "properties": {
+          "operation_delete_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ base_url @}}Id"
+          },
+          "operation_insert_properties": {
+            "base_url": "{{@ base_url @}}"
+          },
+          "operation_lookup_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ base_url @}}Id"
+          },
+          "operation_update_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ base_url @}}Id"
+          },
+          "primary_key": "{{@ base_url @}}Id",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-share-rest",
+        "type": "template"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-event",
+    "compaction": {
+      "keep_versions": 0,
+      "time_threshold_hours": 168
+    },
+    "namespaced_identifiers": false,
+    "permissions": [
+      [
+        "allow",
+        [
+          "group:Anonymous"
+        ],
+        [
+          "write_data"
+        ]
+      ]
+    ],
+    "source": {
+      "type": "http_endpoint"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "add",
+              "_id",
+              [
+                "string",
+                "_S.PrimaryKey"
+              ]
+            ],
+            [
+              "comment",
+              "When we register a webhook in SO, they send a test event to this pipe instantly, with an Event: test property, these we want to get rid of."
+            ],
+            [
+              "discard",
+              [
+                "neq",
+                "_S.Event",
+                "test"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-registerwebhook",
+    "namespaced_identifiers": false,
+    "source": {
+      "entities": [
+        {
+          "_id": "{{@ datatype @}}",
+          "_updated": 0
+        }
+      ],
+      "supports_since": true,
+      "type": "embedded"
+    },
+    "transform": {
+      "allowed_status_codes": "200,201",
+      "operation": "{{@ datatype @}}-webhook-insert",
+      "replace_entity": false,
+      "side_effects": true,
+      "system": "{{@ system @}}",
+      "type": "rest"
+    },
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "add_namespaces": false,
+    "batch_size": 1,
+    "compaction": {
+      "keep_versions": 100
+    },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "namespaced_identifiers": false,
+    "sink": {
+      "deletion_tracking": false,
+      "set_initial_offset": "onload"
+    },
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
+      "type": "dataset"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "comment",
+              "Workaround for IS-14640"
+            ],
+            [
+              "if",
+              [
+                "is-null",
+                "_S.{{@ base_url @}}Id"
+              ],
+              [
+                "remove",
+                "{{@ base_url @}}Id"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "operation": "defaults",
+          "operation_properties": {
+            "base_url": "{{@ base_url @}}/default"
+          },
+          "primary_key": "{{@ base_url @}}Id",
+          "rest_system": "{{@ system @}}"
+        },
+        "template": "transform-defaults-rest",
+        "type": "template"
+      },
+      {
+        "properties": {
+          "operation_delete_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ base_url @}}Id"
+          },
+          "operation_insert_properties": {
+            "base_url": "{{@ base_url @}}"
+          },
+          "operation_lookup_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ base_url @}}Id"
+          },
+          "operation_update_properties": {
+            "base_url": "{{@ base_url @}}",
+            "lookup_id": "{{@ base_url @}}Id"
+          },
+          "primary_key": "{{@ base_url @}}Id",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-share-rest",
+        "type": "template"
+      }
+    ],
+    "type": "pipe"
+  }
+]

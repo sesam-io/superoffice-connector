@@ -1,6 +1,7 @@
 {
   "additional_parameters": {
     "account_id": {},
+    "service_url": {},
     "token_url": {}
   },
   "auth": "oauth2",
@@ -13,7 +14,7 @@
         "primary_key": "ContactId",
         "updated_param": "updatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "listbusinessitems": {
       "label": "Business Items List",
@@ -112,7 +113,7 @@
         "primary_key": "PersonId",
         "updated_param": "personUpdatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "pricelist": {
       "label": "Price",
@@ -142,7 +143,7 @@
         "primary_key": "ProjectId",
         "updated_param": "updatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "quote": {
       "label": "Quote",
@@ -175,7 +176,7 @@
         "primary_key": "SaleId",
         "updated_param": "updatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "ticket": {
       "label": "Ticket",
@@ -185,11 +186,14 @@
         "primary_key": "TicketId",
         "updated_param": "lastChanged"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "user": {
       "label": "User",
       "template": "templates/user.json"
+    },
+    "webhook": {
+      "template": "templates/webhook.json"
     }
   },
   "oauth2": {
@@ -200,5 +204,7 @@
     ],
     "token_url": "https://sod.superoffice.com/login/common/oauth/tokens"
   },
-  "system-template": "templates/system.json"
+  "requires_service_api_access": true,
+  "system-template": "templates/system.json",
+  "use_webhook_secret": true
 }

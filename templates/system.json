@@ -25,6 +25,21 @@
       },
       "url": "{{ properties.base_url }}"
     },
+    "contact-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "contact.created",
+          "contact.changed",
+          "contact.deleted"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-contact-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
     "defaults": {
       "headers": {
         "Accept": "application/json"
@@ -75,6 +90,38 @@
       "method": "GET",
       "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
     },
+    "person-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "person.created",
+          "person.changed",
+          "person.deleted",
+          "person.consented",
+          "person.unconsented"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-person-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
+    "project-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "project.created",
+          "project.changed",
+          "project.deleted"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-project-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
     "quote-lookup": {
       "headers": {
         "Accept": "application/json"
@@ -84,6 +131,22 @@
         "QuoteId": "{{ entity['quote/quoteId'] }}"
       },
       "url": "Agents/Quote/GetQuoteEntity"
+    },
+    "quote-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "quote.approved",
+          "quote.rejected",
+          "quote.sent",
+          "quote.ordered"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-quote-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
     },
     "quotealternative-create": {
       "headers": {
@@ -177,6 +240,24 @@
       },
       "url": "Agents/Quote/GetQuoteVersions"
     },
+    "sale-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "sale.created",
+          "sale.changed",
+          "sale.deleted",
+          "sale.completed",
+          "sale.lost",
+          "sale.sold"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-sale-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
     "salequote-list": {
       "headers": {
         "Accept": "application/json",
@@ -198,9 +279,33 @@
       "payload_property": "value",
       "url": "archive/Sale?$select=quote/quoteId,updatedDate"
     },
+    "ticket-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "ticket.created",
+          "ticket.changed"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-ticket-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
     "update": {
       "method": "PUT",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+    },
+    "webhook-insert": {
+      "method": "POST",
+      "payload-type": "json",
+      "url": "Webhook"
+    },
+    "webhook-list": {
+      "id_expression": "{{ WebhookId }}",
+      "method": "GET",
+      "url": "Webhook"
     }
   },
   "rate_limiting_delay": 60,
