@@ -28,8 +28,8 @@
     ],
     "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
-      "type": "dataset"
+      "datasets": ["{{@ system @}}-{{@ datatype @}}-event", "{{@ system @}}-{{@ datatype @}}-all"],
+      "type": "union_datasets"
     },
     "transform": [
       {
