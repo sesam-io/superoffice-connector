@@ -7,7 +7,7 @@
         "{{@ system @}}-{{@ datatype @}}-event",
         "{{@ system @}}-{{@ datatype @}}-salelist"
       ],
-      "type": "union_datasets"
+      "type": "merge_datasets"
     },
     "transform": [
       {
