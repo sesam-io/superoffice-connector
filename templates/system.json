@@ -172,12 +172,26 @@
       "method": "POST",
       "url": "Agents/Quote/GetQuoteAlternative?quoteAlternativeId={{ entity['QuoteAlternativeId'] }}"
     },
+    "quotealternative-sale-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/GetQuoteFromSaleId"
+    },
     "quotealternative-save": {
       "headers": {
         "Accept": "application/json"
       },
       "method": "POST",
       "url": "Agents/Quote/SaveQuoteAlternative"
+    },
+    "quotealternative-save-quote": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/SaveQuote"
     },
     "quoteline-delete": {
       "headers": {
