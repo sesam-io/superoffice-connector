@@ -31,6 +31,10 @@
         "{{@ system @}}-{{@ datatype @}}-event",
         "{{@ system @}}-{{@ datatype @}}-all"
       ],
+      "datasets": [
+        "{{@ system @}}-{{@ datatype @}}-event",
+        "{{@ system @}}-{{@ datatype @}}-all"
+      ],
       "type": "union_datasets"
     },
     "transform": [
@@ -59,7 +63,7 @@
             ],
             [
               "copy",
-              "PrimaryKey"
+              "{{@ list_url @}}"
             ]
           ]
         },
