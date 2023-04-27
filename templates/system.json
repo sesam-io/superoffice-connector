@@ -100,6 +100,21 @@
       "payload-type": "json",
       "url": "Webhook"
     },
+    "project-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "project.created",
+          "project.changed",
+          "project.deleted"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-project-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
     "quote-lookup": {
       "headers": {
         "Accept": "application/json"
@@ -109,6 +124,22 @@
         "QuoteId": "{{ entity['quote/quoteId'] }}"
       },
       "url": "Agents/Quote/GetQuoteEntity"
+    },
+    "quote-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "quote.approved",
+          "quote.rejected",
+          "quote.sent",
+          "quote.ordered"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-quote-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
     },
     "quotealternative-create": {
       "headers": {
@@ -202,6 +233,24 @@
       },
       "url": "Agents/Quote/GetQuoteVersions"
     },
+    "sale-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "sale.created",
+          "sale.changed",
+          "sale.deleted",
+          "sale.completed",
+          "sale.lost",
+          "sale.sold"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-sale-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
     "salequote-list": {
       "headers": {
         "Accept": "application/json",
@@ -222,6 +271,20 @@
       },
       "payload_property": "value",
       "url": "archive/Sale?$select=quote/quoteId,updatedDate"
+    },
+    "ticket-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "ticket.created",
+          "ticket.changed"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-ticket-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
     },
     "update": {
       "method": "PUT",
