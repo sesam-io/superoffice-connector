@@ -1,6 +1,7 @@
 {
   "additional_parameters": {
     "account_id": {},
+    "service_url": {},
     "token_url": {}
   },
   "auth": "oauth2",
@@ -9,11 +10,9 @@
       "label": "Contact",
       "parameters": {
         "base_url": "Contact",
-        "list_url": "contactId",
-        "primary_key": "ContactId",
         "updated_param": "updatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "listbusinessitems": {
       "label": "Business Items List",
@@ -108,11 +107,9 @@
       "label": "Person",
       "parameters": {
         "base_url": "Person",
-        "list_url": "personId",
-        "primary_key": "PersonId",
         "updated_param": "personUpdatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "pricelist": {
       "label": "Price",
@@ -138,11 +135,9 @@
       "label": "Project",
       "parameters": {
         "base_url": "Project",
-        "list_url": "projectId",
-        "primary_key": "ProjectId",
         "updated_param": "updatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "quote": {
       "label": "Quote",
@@ -171,25 +166,24 @@
       "label": "Sale",
       "parameters": {
         "base_url": "Sale",
-        "list_url": "saleId",
-        "primary_key": "SaleId",
         "updated_param": "updatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "ticket": {
       "label": "Ticket",
       "parameters": {
         "base_url": "Ticket",
-        "list_url": "ticketId",
-        "primary_key": "TicketId",
         "updated_param": "lastChanged"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/contact.json"
     },
     "user": {
       "label": "User",
       "template": "templates/user.json"
+    },
+    "webhook": {
+      "template": "templates/webhook.json"
     }
   },
   "oauth2": {
@@ -200,5 +194,7 @@
     ],
     "token_url": "https://sod.superoffice.com/login/common/oauth/tokens"
   },
-  "system-template": "templates/system.json"
+  "requires_service_api_access": true,
+  "system-template": "templates/system.json",
+  "use_webhook_secret": true
 }
