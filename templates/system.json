@@ -59,21 +59,14 @@
       },
       "payload_property": "value",
       "url": "{{ properties.base_url }}"
-    },
-    "lookup": {
-      "headers": {
-        "Accept": "application/json"
-      },
-      "method": "GET",
-      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
-    },
+    },   
     "lookup-from-list": {
       "headers": {
         "Accept": "application/json"
       },
-      "id_expression": "{{ properties.primary_key|string }}",
+      "id_expression": "PrimaryKey",
       "method": "GET",
-      "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
+      "url": "{{ properties.base_url }}/{{ entity['PrimaryKey'] }}"
     },
     "quote-lookup": {
       "headers": {
