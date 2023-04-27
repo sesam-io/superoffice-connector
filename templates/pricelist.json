@@ -28,8 +28,8 @@
     ],
     "namespaced_identifiers": false,
     "source": {
-      "datasets": ["{{@ system @}}-{{@ datatype @}}-event", "{{@ system @}}-{{@ datatype @}}-all"],
-      "type": "union_datasets"
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
+      "type": "dataset"
     },
     "transform": [
       {
@@ -205,36 +205,5 @@
       }
     ],
     "type": "pipe"
-  },
-  {
-    "_id": "xxxxxx-{{@ datatype @}}-registerwebhook",
-    "type": "pipe",
-    "source": {
-      "type": "embedded",
-      "entities": [{
-        "_id": "{{@ datatype @}}",
-        "_updated": 0,
-        "properties": {
-          "targetUrl": "{{@ service_url @}}/receivers/xxxxxx-{{@ datatype @}}-event/entities"
-        }
-      }],
-      "supports_since": true
-    },
-    "transform": {
-      "type": "rest",
-      "system": "xxxxxx",
-      "trace": true,
-      "allowed_status_codes": "200,201",
-      "operation": "webhook-insert",
-      "payload": {
-        "Events": ["{{@ datatype @}}.created", "{{@ datatype @}}.changed", "{{@ datatype @}}.deleted"],
-        "State": "Active",
-        "TargetUrl": "{{ properties.targetUrl }}",
-        "Type": "webhook"
-      },
-      "replace_entity": false,
-      "side_effects": true
-    },
-    "namespaced_identifiers": false
   }
 ]
