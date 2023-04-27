@@ -10,6 +10,8 @@
       "label": "Contact",
       "parameters": {
         "base_url": "Contact",
+        "list_url": "contactId",
+        "primary_key": "ContactId",
         "updated_param": "updatedDate"
       },
       "template": "templates/contact.json"
@@ -107,6 +109,8 @@
       "label": "Person",
       "parameters": {
         "base_url": "Person",
+        "list_url": "personId",
+        "primary_key": "PersonId",
         "updated_param": "personUpdatedDate"
       },
       "template": "templates/contact.json"
@@ -135,6 +139,8 @@
       "label": "Project",
       "parameters": {
         "base_url": "Project",
+        "list_url": "projectId",
+        "primary_key": "ProjectId",
         "updated_param": "updatedDate"
       },
       "template": "templates/contact.json"
@@ -166,6 +172,8 @@
       "label": "Sale",
       "parameters": {
         "base_url": "Sale",
+        "list_url": "saleId",
+        "primary_key": "SaleId",
         "updated_param": "updatedDate"
       },
       "template": "templates/contact.json"
@@ -174,6 +182,8 @@
       "label": "Ticket",
       "parameters": {
         "base_url": "Ticket",
+        "list_url": "ticketId",
+        "primary_key": "TicketId",
         "updated_param": "lastChanged"
       },
       "template": "templates/contact.json"
