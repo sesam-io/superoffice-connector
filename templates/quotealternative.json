@@ -15,8 +15,8 @@
           ],
           [
             "add",
-            "$sale_id",
-            "_R._S.$sale_id"
+            "sesam_SaleId",
+            "_R._S.sesam_SaleId"
           ],
           [
             "add",
@@ -127,11 +127,6 @@
                   ],
                   [
                     [
-                      "rename",
-                      "$sale_id",
-                      "sale_id"
-                    ],
-                    [
                       "add",
                       "$operation",
                       "lookup-quote"
@@ -151,7 +146,7 @@
               }
             },
             "payload": {
-              "SaleId": "{{ entity.sale_id }}"
+              "SaleId": "{{ entity.sesam_SaleId }}"
             },
             "side_effects": false,
             "system": "{{@ system @}}",
@@ -179,7 +174,7 @@
                   [
                     [
                       "comment",
-                      "See if the sale_id has a corresponding quote or not. If there isn't then one needs to be created. If there is, move on to checking the quote version"
+                      "See if the sesam_SaleId has a corresponding quote or not. If there isn't then one needs to be created. If there is, move on to checking the quote version"
                     ],
                     [
                       "if",
@@ -219,7 +214,7 @@
             },
             "payload": {
               "ConnectionId": 1,
-              "SaleId": "{{ entity.sale_id }}"
+              "SaleId": "{{ entity.sesam_SaleId }}"
             },
             "system": "{{@ system @}}",
             "trigger_on": {
