@@ -5,7 +5,7 @@
     "source": {
       "datasets": [
         "{{@ system @}}-{{@ datatype @}}-event",
-        "{{@ system @}}-{{@ datatype @}}-salelist"
+        "{{@ system @}}-{{@ datatype @}}-all"
       ],
       "type": "union_datasets"
     },
@@ -160,7 +160,7 @@
     "type": "pipe"
   },
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-salelist",
+    "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "metadata": {
       "supports_since": true
     },
