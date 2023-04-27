@@ -81,7 +81,7 @@
       },
       "id_expression": "PrimaryKey",
       "method": "GET",
-      "url": "{{ properties.base_url }}/{{ entity['PrimaryKey'] }}"
+      "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
     },
     "person-webhook-insert": {
       "method": "POST",
