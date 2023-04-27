@@ -65,7 +65,7 @@
             [
               "default",
               "{{@ list_url @}}",
-              "PrimaryKey"
+              "_S.PrimaryKey"
             ]
           ]
         },
