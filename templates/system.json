@@ -297,6 +297,11 @@
       "method": "PUT",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     },
+    "webhook-delete": {
+      "method": "DELETE",
+      "payload-type": "json",
+      "url": "Webhook/{{ entity['WebhookId'] }}"
+    },
     "webhook-insert": {
       "method": "POST",
       "payload-type": "json",
@@ -306,6 +311,11 @@
       "id_expression": "{{ WebhookId }}",
       "method": "GET",
       "url": "Webhook"
+    },
+    "webhook-lookup": {
+      "method": "GET",
+      "payload-type": "json",
+      "url": "Webhook/{{ entity['WebhookId'] }}"
     }
   },
   "rate_limiting_delay": 60,
