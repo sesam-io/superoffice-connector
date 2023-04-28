@@ -273,6 +273,10 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-registerwebhook",
     "namespaced_identifiers": false,
+    "sink": {
+      "deletion_tracking": false,
+      "set_initial_offset": "onload"
+    },
     "source": {
       "entities": [
         {
