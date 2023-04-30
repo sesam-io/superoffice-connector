@@ -294,7 +294,7 @@
       "url": "Webhook"
     },
     "update": {
-      "method": "PUT",
+      "method": "PATCH",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     },
     "webhook-delete": {
