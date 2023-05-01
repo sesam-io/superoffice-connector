@@ -91,7 +91,7 @@
       "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
     },
     "put-update": {
-      "method": "PATCH",
+      "method": "PUT",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
      },
     "person-webhook-insert": {
