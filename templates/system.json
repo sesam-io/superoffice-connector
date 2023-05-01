@@ -20,10 +20,25 @@
       ],
       "params": {
         "$orderby": "{{ properties.primary_key }}",
-        "$skip": "{{ 20|int*page }}",
-        "$top": "20"
+        "$skip": "{{ 1000|int*page }}",
+        "$top": "1000"
       },
       "url": "{{ properties.base_url }}"
+    },
+    "contact-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "contact.created",
+          "contact.changed",
+          "contact.deleted"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-contact-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
     },
     "defaults": {
       "headers": {
@@ -54,8 +69,8 @@
       "params": {
         "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} afterTime '{{ since }}'){% else %}({{ properties.updated_param }} afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "{{ properties.primary_key }}",
-        "$skip": "{{ 20|int*page }}",
-        "$top": "20"
+        "$skip": "{{ 1000|int*page }}",
+        "$top": "1000"
       },
       "payload_property": "value",
       "url": "{{ properties.base_url }}"
@@ -82,6 +97,38 @@
     "put-update": {
       "method": "PATCH",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+     },
+    "person-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "person.created",
+          "person.changed",
+          "person.deleted",
+          "person.consented",
+          "person.unconsented"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-person-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
+    "project-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "project.created",
+          "project.changed",
+          "project.deleted"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-project-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
     },
     "quote-lookup": {
       "headers": {
@@ -93,7 +140,23 @@
       },
       "url": "Agents/Quote/GetQuoteEntity"
     },
-    "quotealternative-lookup": {
+    "quote-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "quote.approved",
+          "quote.rejected",
+          "quote.sent",
+          "quote.ordered"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-quote-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
+    "quotealternative-create": {
       "headers": {
         "Accept": "application/json"
       },
@@ -101,7 +164,28 @@
       "payload": {
         "QuoteVersionId": "{{ entity['QuoteVersionId'] }}"
       },
-      "url": "Agents/Quote/GetQuoteAlternatives"
+      "url": "Agents/Quote/CreateQuoteAlternative"
+    },
+    "quotealternative-default": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/CreateDefaultQuoteAlternative"
+    },
+    "quotealternative-lookup": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/GetQuoteAlternative?quoteAlternativeId={{ entity['QuoteAlternativeId'] }}"
+    },
+    "quotealternative-save": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/SaveQuoteAlternative"
     },
     "quoteline-delete": {
       "headers": {
@@ -164,6 +248,24 @@
       },
       "url": "Agents/Quote/GetQuoteVersions"
     },
+    "sale-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "sale.created",
+          "sale.changed",
+          "sale.deleted",
+          "sale.completed",
+          "sale.lost",
+          "sale.sold"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-sale-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
     "salequote-list": {
       "headers": {
         "Accept": "application/json",
@@ -185,9 +287,43 @@
       "payload_property": "value",
       "url": "archive/Sale?$select=quote/quoteId,updatedDate"
     },
+    "ticket-webhook-insert": {
+      "method": "POST",
+      "payload": {
+        "Events": [
+          "ticket.created",
+          "ticket.changed"
+        ],
+        "State": "Active",
+        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-ticket-event/entities",
+        "Type": "webhook"
+      },
+      "payload-type": "json",
+      "url": "Webhook"
+    },
     "update": {
       "method": "PATCH",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+    },
+    "webhook-delete": {
+      "method": "DELETE",
+      "payload-type": "json",
+      "url": "Webhook/{{ entity['WebhookId'] }}"
+    },
+    "webhook-insert": {
+      "method": "POST",
+      "payload-type": "json",
+      "url": "Webhook"
+    },
+    "webhook-list": {
+      "id_expression": "{{ WebhookId }}",
+      "method": "GET",
+      "url": "Webhook"
+    },
+    "webhook-lookup": {
+      "method": "GET",
+      "payload-type": "json",
+      "url": "Webhook/{{ entity['WebhookId'] }}"
     }
   },
   "rate_limiting_delay": 60,
