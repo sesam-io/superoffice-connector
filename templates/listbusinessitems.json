@@ -91,6 +91,7 @@
             "base_url": "{{@ base_url @}}",
             "lookup_id": "{{@ lookup_id @}}"
           },
+          "operation_update": "put-update",
           "operation_update_properties": {
             "base_url": "{{@ base_url @}}",
             "lookup_id": "{{@ lookup_id @}}"

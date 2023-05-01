@@ -90,6 +90,10 @@
       "method": "GET",
       "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
     },
+    "put-update": {
+      "method": "PUT",
+      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+     },
     "person-webhook-insert": {
       "method": "POST",
       "payload": {
