@@ -3,13 +3,33 @@
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
     "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-salelist",
-      "type": "dataset"
+      "datasets": [
+        "{{@ system @}}-{{@ datatype @}}-event",
+        "{{@ system @}}-{{@ datatype @}}-all"
+      ],
+      "type": "merge_datasets"
     },
     "transform": [
       {
+        "rules": {
+          "default": [
+            [
+              "comment",
+              "Aligning the full run and the webhook source."
+            ],
+            [
+              "default",
+              "{{@ datatype @}}/{{@ datatype @}}Id",
+              "_S.PrimaryKey"
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
         "operation": "{{@ datatype @}}-lookup",
         "replace_entity": false,
+        "side_effects": false,
         "system": "{{@ system @}}",
         "type": "rest"
       },
@@ -17,13 +37,21 @@
         "rules": {
           "default": [
             [
-              "add",
-              "$original_id",
-              "_S._id"
-            ],
-            [
               "merge",
               "_S.response"
+            ],
+            [
+              "comment",
+              "TODO: Why do we need sesam_SaleId when it's already part of the {{@ datatype @}}."
+            ],
+            [
+              "add",
+              "sesam_SaleId",
+              "_T.SaleId"
+            ],
+            [
+              "comment",
+              "Deletes won't work properly because we are rewriting the _id from something that we can't lookup. Assuming that {{@ datatype @}}s can't be deleted for now."
             ],
             [
               "add",
@@ -53,7 +81,86 @@
     "type": "pipe"
   },
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-salelist",
+    "_id": "{{@ system @}}-{{@ datatype @}}-event",
+    "compaction": {
+      "keep_versions": 0,
+      "time_threshold_hours": 168
+    },
+    "namespaced_identifiers": false,
+    "permissions": [
+      [
+        "allow",
+        [
+          "group:Anonymous"
+        ],
+        [
+          "write_data"
+        ]
+      ]
+    ],
+    "source": {
+      "type": "http_endpoint"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "add",
+              "_id",
+              [
+                "string",
+                "_S.PrimaryKey"
+              ]
+            ],
+            [
+              "comment",
+              "When we register a webhook in SO, they send a test event to this pipe instantly, with an Event: test property, these we want to get rid of."
+            ],
+            [
+              "discard",
+              [
+                "neq",
+                "_S.Event",
+                "test"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-registerwebhook",
+    "namespaced_identifiers": false,
+    "source": {
+      "entities": [
+        {
+          "_id": "{{@ datatype @}}",
+          "_updated": 0
+        }
+      ],
+      "supports_since": true,
+      "type": "embedded"
+    },
+    "transform": {
+      "allowed_status_codes": "200,201",
+      "operation": "{{@ datatype @}}-webhook-insert",
+      "replace_entity": false,
+      "side_effects": true,
+      "system": "{{@ system @}}",
+      "type": "rest"
+    },
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "metadata": {
       "supports_since": true
     },
