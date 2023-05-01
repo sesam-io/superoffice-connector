@@ -186,8 +186,7 @@
             "lookup_id": "{{@ base_url @}}Id"
           },
           "operation_insert_properties": {
-            "base_url": "{{@ base_url @}}",
-            "lookup_id": "Id"
+            "base_url": "{{@ base_url @}}"
           },
           "operation_lookup_properties": {
             "base_url": "{{@ base_url @}}",

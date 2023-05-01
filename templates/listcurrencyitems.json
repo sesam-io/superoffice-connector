@@ -84,7 +84,6 @@
             "base_url": "{{@ base_url @}}",
             "lookup_id": "{{@ lookup_id @}}"
           },
-
           "primary_key": "{{@ lookup_id @}}",
           "rest_system": "{{@ system @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
