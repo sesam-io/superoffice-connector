@@ -8,16 +8,16 @@
     "source": {
       "operation": "list",
       "properties": {
-        "base_url": "",
-        "primary_key": "",
-        "updated_param": ""
+        "base_url": "{{@ base_url @}}",
+        "primary_key": "{{@ list_url @}}",
+        "updated_param": "{{@ updated_param @}}"
       },
       "since_property_location": "manual",
       "since_property_name": "since",
       "supports_since": true,
       "system": "{{@ system @}}",
       "type": "rest",
-      "updated_expression": "{{  }}"
+      "updated_expression": "{{ {{@ updated_param @}} }}"
     },
     "type": "pipe"
   },
@@ -53,11 +53,11 @@
             [
               "add",
               "tmp-lastmodified",
-              "_S."
+              "_S.{{@ updated_param @}"
             ],
             [
               "copy",
-              ""
+              "{{@ list_url @}}"
             ]
           ]
         },
@@ -66,9 +66,9 @@
       {
         "operation": "lookup-from-list",
         "properties": {
-          "base_url": "",
-          "list_id": "",
-          "primary_key": "Id"
+          "base_url": "{{@ base_url @}",
+          "list_id": "{{@ list_url @}}",
+          "primary_key": "{{@ base_url @}}Id"
         },
         "replace_entity": false,
         "system": "{{@ system @}}",
@@ -115,7 +115,7 @@
       },
       {
         "properties": {
-          "primary_key": "Id",
+          "primary_key": "{{@ base_url @}}Id",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-collect-rest",
@@ -148,9 +148,9 @@
         "properties": {
           "operation": "defaults",
           "operation_properties": {
-            "base_url": "/default"
+            "base_url": "{{@ base_url @}}/default"
           },
-          "primary_key": "Id",
+          "primary_key": "{{@ base_url @}}Id",
           "rest_system": "{{@ system @}}"
         },
         "template": "transform-defaults-rest",
@@ -171,7 +171,7 @@
           "operation_update_properties": {
             "lookup_id": "Id"
           },
-          "primary_key": "Id",
+          "primary_key": "{{@ base_url @}}Id",
           "rest_system": "{{@ system @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },

@@ -8,7 +8,7 @@
     "source": {
       "operation": "alternate_list",
       "properties": {
-        "base_url": "",
+        "base_url": "{{@ base_url @}}",
         "primary_key": "Id"
       },
       "system": "{{@ system @}}",
@@ -27,7 +27,7 @@
               "_id",
               [
                 "string",
-                "_S."
+                "_S.{{@ lookup_id @}}"
               ]
             ]
           ]
@@ -36,7 +36,7 @@
       },
       {
         "properties": {
-          "primary_key": "",
+          "primary_key": "{{@ lookup_id @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-collect-rest",
