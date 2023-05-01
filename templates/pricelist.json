@@ -53,7 +53,7 @@
             [
               "add",
               "tmp-lastmodified",
-              "_S.{{@ updated_param @}"
+              "_S.{{@ updated_param @}}"
             ],
             [
               "copy",
@@ -66,7 +66,7 @@
       {
         "operation": "lookup-from-list",
         "properties": {
-          "base_url": "{{@ base_url @}",
+          "base_url": "{{@ base_url @}}",
           "list_id": "{{@ list_url @}}",
           "primary_key": "{{@ base_url @}}Id"
         },

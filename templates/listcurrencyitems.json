@@ -71,7 +71,7 @@
           "operation_insert": "insert",
           "operation_lookup": "lookup",
           "operation_update": "put-update",
-          "primary_key": "",
+          "primary_key": "{{@ lookup_id @}}",
           "rest_system": "{{@ system @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
