@@ -60,6 +60,10 @@
       "payload_property": "value",
       "url": "{{ properties.base_url }}"
     },
+    "listbusinessitems-update": {
+      "method": "PUT",
+      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+    },
     "lookup": {
       "headers": {
         "Accept": "application/json"
@@ -74,6 +78,10 @@
       "id_expression": "{{ properties.primary_key|string }}",
       "method": "GET",
       "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
+    },
+    "put-update": {
+      "method": "PATCH",
+      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     },
     "quote-lookup": {
       "headers": {

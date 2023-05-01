@@ -17,39 +17,66 @@
     },
     "listbusinessitems": {
       "label": "Business Items List",
-      "sync_frequency": "slow",
       "parameters": {
         "base_url": "List/Business/Items",
         "lookup_id": "Id"
       },
+      "sync_frequency": "slow",
       "template": "templates/listbusinessitems.json"
     },
     "listcategoryitems": {
       "label": "Category Items List",
-      "sync_frequency": "slow",
       "parameters": {
         "base_url": "List/Category/Items",
         "lookup_id": "Id"
       },
+      "sync_frequency": "slow",
       "template": "templates/listbusinessitems.json"
     },
     "listcountryitems": {
       "label": "Country Items List",
-      "sync_frequency": "slow",
       "parameters": {
         "base_url": "List/Country/Items",
         "lookup_id": "CountryId"
       },
+      "sync_frequency": "slow",
       "template": "templates/listbusinessitems.json"
     },
     "listcurrencyitems": {
       "label": "Currency Items List",
-      "sync_frequency": "slow",
       "parameters": {
         "base_url": "List/Currency/Items",
         "lookup_id": "CurrencyId"
       },
+      "sync_frequency": "slow",
       "template": "templates/listcurrencyitems.json"
+    },
+    "listproductcategoryitems": {
+      "label": "Product Category Items List",
+      "parameters": {
+        "base_url": "List/ProductCategory/Items",
+        "lookup_id": "Id"
+      },
+      "sync_frequency": "slow",
+      "template": "templates/listbusinessitems.json"
+    },
+    "listproductfamilyitems": {
+      "label": "Product Family Items List",
+      "parameters": {
+        "base_url": "List/ProductFamily/Items",
+        "lookup_id": "Id"
+      },
+      "sync_frequency": "slow",
+      "template": "templates/listbusinessitems.json"
+    },
+    "listproducttypeitems": {
+      "label": "Product Type Items List",
+      "parameters": {
+        "base_url": "List/ProductType/Items",
+        "lookup_id": "Id"
+      },
+      "sync_frequency": "slow",
+      "template": "templates/listbusinessitems.json"
     },
     "listprojectstatusitems": {
       "label": "Product Status Items List",
@@ -59,49 +86,22 @@
       },
       "template": "templates/listbusinessitems.json"
     },
-    "listproductcategoryitems": {
-      "label": "Product Category Items List",
-      "sync_frequency": "slow",
-      "parameters": {
-        "base_url": "List/ProductCategory/Items",
-        "lookup_id": "Id"
-      },
-      "template": "templates/listbusinessitems.json"
-    },
-    "listproductfamilyitems": {
-      "label": "Product Family Items List",
-      "sync_frequency": "slow",
-      "parameters": {
-        "base_url": "List/ProductFamily/Items",
-        "lookup_id": "Id"
-      },
-      "template": "templates/listbusinessitems.json"
-    },
-    "listproducttypeitems": {
-      "label": "Product Type Items List",
-      "sync_frequency": "slow",
-      "parameters": {
-        "base_url": "List/ProductType/Items",
-        "lookup_id": "Id"
-      },
-      "template": "templates/listbusinessitems.json"
-    },
     "listprojecttypeitems": {
       "label": "Project Type Items List",
-      "sync_frequency": "slow",
       "parameters": {
         "base_url": "List/ProjectType/Items",
         "lookup_id": "Id"
       },
+      "sync_frequency": "slow",
       "template": "templates/listbusinessitems.json"
     },
     "listsaletypeitems": {
       "label": "Sale Type Items List",
-      "sync_frequency": "slow",
       "parameters": {
         "base_url": "List/SaleType/Items",
         "lookup_id": "SaleTypeId"
       },
+      "sync_frequency": "slow",
       "template": "templates/listbusinessitems.json"
     },
     "person": {
