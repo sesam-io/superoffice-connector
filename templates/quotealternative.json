@@ -74,14 +74,56 @@
       "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
       "type": "dataset"
     },
-    "transform": {
-      "properties": {
-        "primary_key": "QuoteAlternativeId",
-        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+    "transform": [
+      {
+        "operation": "{{@ datatype @}}-sale-lookup",
+        "side_effects": false,
+        "system": "{{@ system @}}",
+        "trace": true,
+        "type": "rest"
       },
-      "template": "transform-collect-rest",
-      "type": "template"
-    },
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "if",
+              [
+                "eq",
+                "_S.QuoteAlternativeId",
+                "_S.response.AcceptedQuoteAlternativeId"
+              ],
+              [
+                "add",
+                "sesam_Accepted",
+                true
+              ],
+              [
+                "add",
+                "sesam_Accepted",
+                false
+              ]
+            ],
+            [
+              "remove",
+              "response"
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "primary_key": "QuoteAlternativeId",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-collect-rest",
+        "type": "template"
+      }
+    ],
     "type": "pipe"
   },
   {
@@ -116,7 +158,7 @@
                 ],
                 [
                   "comment",
-                  "Rename necessary because jinja can't handle $"
+                  "first step is to check if there is an active quote for the sale"
                 ],
                 [
                   "if",
@@ -132,6 +174,15 @@
                       "lookup-quote"
                     ]
                   ]
+                ],
+                [
+                  "add",
+                  "payload",
+                  [
+                    "dict",
+                    "SaleId",
+                    "_S.sesam_SaleId"
+                  ]
                 ]
               ]
             },
@@ -139,18 +190,8 @@
           },
           {
             "operation": "{{@ datatype @}}-sale-lookup",
-            "operations": {
-              "{{@ datatype @}}-sale-lookup": {
-                "method": "POST",
-                "url": "Agents/Quote/GetQuoteFromSaleId"
-              }
-            },
-            "payload": {
-              "SaleId": "{{ entity.sesam_SaleId }}"
-            },
             "side_effects": false,
             "system": "{{@ system @}}",
-            "trace": true,
             "trigger_on": {
               "key": "$operation",
               "value": "lookup-quote"
@@ -162,7 +203,8 @@
               "default": [
                 [
                   "copy",
-                  "*"
+                  "*",
+                  "payload"
                 ],
                 [
                   "if",
@@ -240,7 +282,38 @@
                   [
                     [
                       "comment",
+                      "Add a boolean if we inserted a quote and use the new quoteAlternativeId to avoid blank alternatives"
+                    ],
+                    [
+                      "if",
+                      [
+                        "eq",
+                        "_S.$operation",
+                        "create-quote"
+                      ],
+                      [
+                        [
+                          "add",
+                          "sesam_InsertedAbove",
+                          true
+                        ],
+                        [
+                          "add",
+                          "sesam_QuoteAlternativeId",
+                          [
+                            "first",
+                            "_S.response.QuoteVersions.QuoteAlternatives.QuoteAlternativeId"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "comment",
                       "At this point there should be a quote entity in response. Need to pull ActiveQuoteVersionId out of response in order to be accessible by the jinja 'entity'"
+                    ],
+                    [
+                      "comment",
+                      "TODO: I'm pretty sure we can get rid of the sesam_ActiveQuoteVersionId but need to actually look at it again and be sure"
                     ],
                     [
                       "add",
@@ -304,7 +377,7 @@
                   [
                     [
                       "comment",
-                      "If the quote version is locked then we need a new one, otherwise mopve on to process the quote alternative"
+                      "If the quote version is locked then we need a new one, otherwise move on to process the quote alternative"
                     ],
                     [
                       "if",
@@ -359,7 +432,7 @@
               "default": [
                 [
                   "comment",
-                  "We need to use the new {{@ parent @}}Id from the insert now"
+                  "If new version inserted we need to use the new quote version ID, new quote alternative ID, and say that the insert happened"
                 ],
                 [
                   "if",
@@ -379,111 +452,28 @@
                       [
                         "list",
                         "response_body",
-                        "payload"
+                        "QuoteVersionId"
                       ]
                     ],
                     [
                       "add",
-                      "payload",
+                      "QuoteVersionId",
                       [
-                        "apply",
-                        "default-values",
-                        [
-                          "dict",
-                          "a",
-                          "_S.payload",
-                          "b",
-                          [
-                            "first",
-                            "_S.response_body"
-                          ]
-                        ]
+                        "first",
+                        "_S.response_body.QuoteVersionId"
                       ]
-                    ]
-                  ]
-                ]
-              ],
-              "default-values": [
-                [
-                  "merge",
-                  [
-                    "dict",
+                    ],
                     [
-                      "map",
+                      "add",
+                      "sesam_InsertedAbove",
+                      true
+                    ],
+                    [
+                      "add",
+                      "sesam_QuoteAlternativeId",
                       [
-                        "list",
-                        "_.",
-                        [
-                          "sorted",
-                          [
-                            "if",
-                            [
-                              "is-dict",
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ]
-                            ],
-                            [
-                              "apply",
-                              "default-values",
-                              [
-                                "dict",
-                                "a",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.a"
-                                ],
-                                "b",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.b"
-                                ]
-                              ]
-                            ],
-                            [
-                              "if",
-                              [
-                                "eq",
-                                "_.",
-                                "QuoteVersionId"
-                              ],
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ],
-                              [
-                                "if",
-                                [
-                                  "is-not-null",
-                                  [
-                                    "path",
-                                    "_.",
-                                    "_S.a"
-                                  ]
-                                ],
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.a"
-                                ],
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.b"
-                                ]
-                              ]
-                            ]
-                          ]
-                        ]
-                      ],
-                      [
-                        "keys",
-                        "_S.b"
+                        "first",
+                        "_S.response_body.LikelyQuoteAlternativeId"
                       ]
                     ]
                   ]
@@ -1301,13 +1291,9 @@
               ],
               "update": [
                 [
-                  "comment",
-                  "Because of SO's archiving functionality, an update should behave the same way as an insert"
-                ],
-                [
                   "add",
                   "$operation",
-                  "insert"
+                  "update"
                 ],
                 [
                   "add",
@@ -1336,6 +1322,97 @@
             "type": "dtl"
           },
           {
+            "rules": {
+              "default": [
+                [
+                  "comment",
+                  "Moved non-template DTL into own transform"
+                ],
+                [
+                  "comment",
+                  "This checks if the alternative needs to be inserted or updated because the same behavior applies to both. If a new quote or quote version has been created earlier, use the quote alternative from there."
+                ],
+                [
+                  "copy",
+                  "*"
+                ],
+                [
+                  "if",
+                  [
+                    "or",
+                    [
+                      "eq",
+                      "_S.$operation",
+                      "insert"
+                    ],
+                    [
+                      "eq",
+                      "_S.$operation",
+                      "update"
+                    ]
+                  ],
+                  [
+                    "if",
+                    "_S.$source.sesam_InsertedAbove",
+                    [
+                      [
+                        "comment",
+                        "skip the create quote alternative step and set QuoteAlternativeID to be the previously created quote alternative"
+                      ],
+                      [
+                        "add",
+                        "$operation",
+                        "insert"
+                      ],
+                      [
+                        "add",
+                        "payload",
+                        [
+                          "apply",
+                          "newQuoteAlternative",
+                          "_S.payload"
+                        ]
+                      ]
+                    ],
+                    [
+                      [
+                        "comment",
+                        "Otherwise, need to reformat the payload in order to create a Quote Alternative first. Payload will be handled by the operation"
+                      ],
+                      [
+                        "add",
+                        "$operation",
+                        "create"
+                      ],
+                      [
+                        "rename",
+                        "payload",
+                        "_payload"
+                      ],
+                      [
+                        "remove",
+                        "payload"
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "newQuoteAlternative": [
+                [
+                  "copy",
+                  "*",
+                  "QuoteAlternativeID"
+                ],
+                [
+                  "add",
+                  "QuoteAlternativeId",
+                  "_S.sesam_QuoteAlternativeId"
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
             "allowed_status_codes": "100-599",
             "operation": "{{@ datatype @}}-create",
             "replace_entity": false,
@@ -1345,7 +1422,7 @@
             "system": "{{@ system @}}",
             "trigger_on": {
               "key": "$operation",
-              "value": "insert"
+              "value": "create"
             },
             "type": "rest"
           },
@@ -1354,14 +1431,14 @@
               "default": [
                 [
                   "comment",
-                  "transform for inserts where we add the QuoteAlternativeId from the rpevious insert operation to the payload in order to populate the remaining metadata"
+                  "transform for inserts where we add the QuoteAlternativeId from the previous insert operation to the payload in order to populate the remaining metadata"
                 ],
                 [
                   "if",
                   [
                     "neq",
                     "_S.$operation",
-                    "insert"
+                    "create"
                   ],
                   [
                     "copy",
@@ -1374,7 +1451,7 @@
                       [
                         "list",
                         "response_body",
-                        "payload"
+                        "_payload"
                       ]
                     ],
                     [
@@ -1386,7 +1463,7 @@
                         [
                           "dict",
                           "a",
-                          "_S.payload",
+                          "_S._payload",
                           "b",
                           [
                             "first",
@@ -1394,6 +1471,11 @@
                           ]
                         ]
                       ]
+                    ],
+                    [
+                      "add",
+                      "$operation",
+                      "insert"
                     ]
                   ]
                 ]
@@ -1502,6 +1584,221 @@
             "type": "rest"
           },
           {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*",
+                  "payload"
+                ],
+                [
+                  "rename",
+                  "payload",
+                  "payload_actual"
+                ],
+                [
+                  "add",
+                  "payload",
+                  [
+                    "dict",
+                    "SaleId",
+                    "_S.$source.sesam_SaleId"
+                  ]
+                ],
+                [
+                  "if",
+                  "_S.$source.sesam_Accepted",
+                  [
+                    "add",
+                    "$operation",
+                    "update-quote"
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "allowed_status_codes": "100-599",
+            "operation": "{{@ datatype @}}-sale-lookup",
+            "replace_entity": false,
+            "response_property": "response_body_quote",
+            "response_status_property": "response_status",
+            "side_effects": true,
+            "system": "{{@ system @}}",
+            "trace": true,
+            "trigger_on": {
+              "key": "$operation",
+              "value": "update-quote"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S.$operation",
+                    "update-quote"
+                  ],
+                  [
+                    [
+                      "copy",
+                      "*",
+                      [
+                        "list",
+                        "response_body_quote",
+                        "payload"
+                      ]
+                    ],
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "dict",
+                        "quote",
+                        [
+                          "apply",
+                          "update-AcceptedQuoteAlternativeId",
+                          [
+                            "dict",
+                            "a",
+                            [
+                              "first",
+                              "_S.response_body_quote"
+                            ],
+                            "b",
+                            [
+                              "dict",
+                              "AcceptedQuoteAlternativeId",
+                              "_S.payload_actual.QuoteAlternativeId"
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "copy",
+                    "*"
+                  ]
+                ]
+              ],
+              "update-AcceptedQuoteAlternativeId": [
+                [
+                  "merge",
+                  [
+                    "dict",
+                    [
+                      "map",
+                      [
+                        "list",
+                        "_.",
+                        [
+                          "sorted",
+                          [
+                            "if",
+                            [
+                              "is-dict",
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ]
+                            ],
+                            [
+                              "apply",
+                              "update-AcceptedQuoteAlternativeId",
+                              [
+                                "dict",
+                                "a",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ],
+                                "b",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ],
+                            [
+                              "if",
+                              [
+                                "eq",
+                                "_.",
+                                "AcceptedQuoteAlternativeId"
+                              ],
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ],
+                              [
+                                "path",
+                                "_.",
+                                "_S.a"
+                              ]
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "keys",
+                        "_S.a"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "allowed_status_codes": "100-599",
+            "operation": "{{@ datatype @}}-save-quote",
+            "replace_entity": false,
+            "response_property": "response_body_quote",
+            "response_status_property": "response_status",
+            "side_effects": true,
+            "system": "{{@ system @}}",
+            "trace": true,
+            "trigger_on": {
+              "key": "$operation",
+              "value": "update-quote"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S.$operation",
+                    "update-quote"
+                  ],
+                  [
+                    "copy",
+                    "*",
+                    "response_body_quote"
+                  ],
+                  [
+                    "copy",
+                    "*"
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
             "allowed_status_codes": "100-599",
             "operation": "{{@ datatype @}}-delete",
             "replace_entity": false,
@@ -1518,6 +1815,11 @@
           {
             "rules": {
               "default": [
+                [
+                  "rename",
+                  "payload-actual",
+                  "payload"
+                ],
                 [
                   "copy",
                   [
