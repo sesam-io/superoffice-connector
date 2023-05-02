@@ -90,10 +90,6 @@
       "method": "GET",
       "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
     },
-    "put-update": {
-      "method": "PUT",
-      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
-     },
     "person-webhook-insert": {
       "method": "POST",
       "payload": {
@@ -125,6 +121,10 @@
       },
       "payload-type": "json",
       "url": "Webhook"
+    },
+    "put-update": {
+      "method": "PUT",
+      "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     },
     "quote-lookup": {
       "headers": {
@@ -183,6 +183,17 @@
       "method": "POST",
       "url": "Agents/Quote/SaveQuoteAlternative"
     },
+    "quoteline-default": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "ERPProductKey": "{{ entity['$source']['ERPProductKey'] }}",
+        "QuoteAlternativeId": "{{ entity['$source']['QuoteAlternativeId'] }}"
+      },
+      "url": "Agents/Quote/CreateQuoteLine"
+    },
     "quoteline-delete": {
       "headers": {
         "Accept": "application/json"
@@ -199,10 +210,9 @@
       },
       "method": "POST",
       "payload": {
-        "ERPProductKey": "{{ entity['payload']['ERPProductKey'] }}",
-        "QuoteAlternativeId": "{{ entity['payload']['QuoteAlternativeId'] }}"
+        "QuoteLine": "{{ entity['payload'] }}"
       },
-      "url": "Agents/Quote/CreateQuoteLine"
+      "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteline-list": {
       "headers": {
