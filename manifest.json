@@ -41,7 +41,7 @@
         "lookup_id": "CountryId"
       },
       "sync_frequency": "slow",
-      "template": "templates/listcurrencyitems.json"
+      "template": "templates/listcountryitems.json"
     },
     "listcurrencyitems": {
       "label": "Currency Items List",
