@@ -154,7 +154,7 @@
       },
       "method": "POST",
       "payload": {
-        "QuoteVersionId": "{{ entity['QuoteVersionId'] }}"
+        "QuoteVersionId": "{{ entity['$source']['QuoteVersionId'] }}"
       },
       "url": "Agents/Quote/CreateQuoteAlternative"
     },
