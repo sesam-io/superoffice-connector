@@ -1420,9 +1420,6 @@
             "response_status_property": "response_status",
             "side_effects": true,
             "system": "{{@ system @}}",
-            "trace": {
-              "log_request_body_maxsize": 10000
-            },
             "trigger_on": {
               "key": "$operation",
               "value": "create"
@@ -1449,21 +1446,12 @@
                   ],
                   [
                     [
-                      "comment",
-                      "First we have to put payload back"
-                    ],
-                    [
-                      "rename",
-                      "_payload",
-                      "payload"
-                    ],
-                    [
                       "copy",
                       "*",
                       [
                         "list",
                         "response_body",
-                        "payload"
+                        "_payload"
                       ]
                     ],
                     [
@@ -1589,9 +1577,6 @@
             "response_status_property": "response_status",
             "side_effects": true,
             "system": "{{@ system @}}",
-            "trace": {
-              "log_request_body_maxsize": 10000
-            },
             "trigger_on": {
               "key": "$operation",
               "value": "insert"
