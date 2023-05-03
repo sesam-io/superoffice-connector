@@ -180,6 +180,9 @@
       "headers": {
         "Accept": "application/json"
       },
+      "payload":{
+        "SaleId":"entity['sesam_SaleId']"
+      },
       "method": "POST",
       "url": "Agents/Quote/GetQuoteFromSaleId"
     },
