@@ -232,6 +232,9 @@
         ]
       ]
     ],
+    "sink": {
+      "set_initial_offset": "onload"
+    },
     "source": {
       "type": "http_endpoint"
     },
