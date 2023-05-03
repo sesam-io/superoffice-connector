@@ -2,7 +2,8 @@
   "additional_parameters": {
     "account_id": {},
     "service_url": {},
-    "token_url": {}
+    "token_url": {},
+    "base_url": {}
   },
   "auth": "oauth2",
   "datatypes": {
