@@ -1,4 +1,5 @@
-[{
+[
+  {
     "_id": "{{@ system @}}-{{@ datatype @}}-all",
     "metadata": {
       "supports_since": true
@@ -474,4 +475,5 @@
       }
     ],
     "type": "pipe"
-  }]
+  }
+]
