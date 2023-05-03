@@ -142,6 +142,54 @@
                   "add",
                   "$payload",
                   [
+                    "dict",
+                    "Quoteline",
+                    [
+                      "map-dict",
+                      [
+                        "filter",
+                        [
+                          "and",
+                          [
+                            "neq",
+                            "$",
+                            [
+                              "substring",
+                              0,
+                              1,
+                              "_."
+                            ]
+                          ],
+                          [
+                            "neq",
+                            "_",
+                            [
+                              "substring",
+                              0,
+                              1,
+                              "_."
+                            ]
+                          ]
+                        ],
+                        "_."
+                      ],
+                      "_.",
+                      "_T."
+                    ]
+                  ]
+                ],
+                [
+                  "remove",
+                  "QuoteLineId"
+                ]
+              ],
+              [
+                "add",
+                "$payload",
+                [
+                  "dict",
+                  "Quoteline",
+                  [
                     "map-dict",
                     [
                       "filter",
@@ -171,12 +219,8 @@
                       "_."
                     ],
                     "_.",
-                    "_T."
+                    "_S."
                   ]
-                ],
-                [
-                  "remove",
-                  "QuoteLineId"
                 ]
               ]
             ]
@@ -186,6 +230,7 @@
       },
       {
         "properties": {
+          "enable_deletes": true,
           "operation_delete": "{{@ datatype @}}-delete",
           "operation_insert": "{{@ datatype @}}-insert",
           "operation_lookup": "{{@ datatype @}}-lookup",
