@@ -209,9 +209,6 @@
         "Accept": "application/json"
       },
       "method": "POST",
-      "payload": {
-        "QuoteLine": "{{ entity['payload'] }}"
-      },
       "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteline-list": {
@@ -239,9 +236,6 @@
         "Accept": "application/json"
       },
       "method": "POST",
-      "payload": {
-        "QuoteLine": "{{ entity['payload'] }}"
-      },
       "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteversion-lookup": {
