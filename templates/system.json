@@ -180,10 +180,10 @@
       "headers": {
         "Accept": "application/json"
       },
-      "payload":{
-        "SaleId":"entity['sesam_SaleId']"
-      },
       "method": "POST",
+      "payload": {
+        "SaleId": "{{ entity['sesam_SaleId'] }}"
+      },
       "url": "Agents/Quote/GetQuoteFromSaleId"
     },
     "quotealternative-save": {
