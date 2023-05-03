@@ -1,5 +1,21 @@
 [
   {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "metadata": {
+      "supports_since": true
+    },
+    "namespaced_identifiers": false,
+    "source": {
+      "operation": "sale{{@ datatype @}}-list",
+      "since_property_name": "updatedDate",
+      "supports_since": true,
+      "system": "{{@ system @}}",
+      "type": "rest",
+      "updated_expression": "{{ updatedDate }}"
+    },
+    "type": "pipe"
+  },
+  {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
     "namespaced_identifiers": false,
     "source": {
@@ -98,6 +114,9 @@
         ]
       ]
     ],
+    "sink": {
+      "set_initial_offset": "onload"
+    },
     "source": {
       "type": "http_endpoint"
     },
@@ -156,22 +175,6 @@
       "side_effects": true,
       "system": "{{@ system @}}",
       "type": "rest"
-    },
-    "type": "pipe"
-  },
-  {
-    "_id": "{{@ system @}}-{{@ datatype @}}-all",
-    "metadata": {
-      "supports_since": true
-    },
-    "namespaced_identifiers": false,
-    "source": {
-      "operation": "sale{{@ datatype @}}-list",
-      "since_property_name": "updatedDate",
-      "supports_since": true,
-      "system": "{{@ system @}}",
-      "type": "rest",
-      "updated_expression": "{{ updatedDate }}"
     },
     "type": "pipe"
   }
