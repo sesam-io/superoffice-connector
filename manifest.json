@@ -14,8 +14,8 @@
         "primary_key": "ContactId",
         "updated_param": "updatedDate"
       },
-      "webhook": true,
-      "template": "templates/contact.json"
+      "template": "templates/contact.json",
+      "webhook": true
     },
     "listbusinessitems": {
       "label": "Business Items List",
@@ -114,8 +114,8 @@
         "primary_key": "PersonId",
         "updated_param": "personUpdatedDate"
       },
-      "webhook": true,
-      "template": "templates/contact.json"
+      "template": "templates/contact.json",
+      "webhook": true
     },
     "pricelist": {
       "label": "Price",
@@ -135,7 +135,7 @@
         "primary_key": "ProductId",
         "updated_param": "updatedDate"
       },
-      "template": "templates/pricelist.json"
+      "template": "templates/product.json"
     },
     "project": {
       "label": "Project",
@@ -145,13 +145,13 @@
         "primary_key": "ProjectId",
         "updated_param": "updatedDate"
       },
-      "webhook": true,
-      "template": "templates/contact.json"
+      "template": "templates/contact.json",
+      "webhook": true
     },
     "quote": {
       "label": "Quote",
-      "webhook": true,
-      "template": "templates/quote.json"
+      "template": "templates/quote.json",
+      "webhook": true
     },
     "quotealternative": {
       "label": "Quote Alternative",
@@ -180,8 +180,8 @@
         "primary_key": "SaleId",
         "updated_param": "updatedDate"
       },
-      "webhook": true,
-      "template": "templates/contact.json"
+      "template": "templates/contact.json",
+      "webhook": true
     },
     "ticket": {
       "label": "Ticket",
@@ -191,8 +191,8 @@
         "primary_key": "TicketId",
         "updated_param": "lastChanged"
       },
-      "webhook": true,
-      "template": "templates/contact.json"
+      "template": "templates/contact.json",
+      "webhook": true
     },
     "user": {
       "label": "User",
