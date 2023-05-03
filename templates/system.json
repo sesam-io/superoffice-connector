@@ -197,6 +197,17 @@
       "method": "POST",
       "url": "Agents/Quote/SaveQuote"
     },
+    "quoteline-default": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "payload": {
+        "ERPProductKey": "{{ entity['$source']['ERPProductKey'] }}",
+        "QuoteAlternativeId": "{{ entity['$source']['QuoteAlternativeId'] }}"
+      },
+      "url": "Agents/Quote/CreateQuoteLine"
+    },
     "quoteline-delete": {
       "headers": {
         "Accept": "application/json"
@@ -212,11 +223,7 @@
         "Accept": "application/json"
       },
       "method": "POST",
-      "payload": {
-        "ERPProductKey": "{{ entity['payload']['ERPProductKey'] }}",
-        "QuoteAlternativeId": "{{ entity['payload']['QuoteAlternativeId'] }}"
-      },
-      "url": "Agents/Quote/CreateQuoteLine"
+      "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteline-list": {
       "headers": {
@@ -243,9 +250,6 @@
         "Accept": "application/json"
       },
       "method": "POST",
-      "payload": {
-        "QuoteLine": "{{ entity['payload'] }}"
-      },
       "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteversion-lookup": {
