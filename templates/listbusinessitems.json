@@ -79,6 +79,7 @@
       },
       {
         "properties": {
+          "client_side_patching": true,
           "operation_delete_properties": {
             "base_url": "{{@ base_url @}}",
             "lookup_id": "{{@ lookup_id @}}"
