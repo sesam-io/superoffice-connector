@@ -107,6 +107,15 @@
       "sync_frequency": "slow",
       "template": "templates/listbusinessitems.json"
     },
+    "listticketcategoryitems": {
+      "label": "Ticket Category Items List",
+      "parameters": {
+        "base_url": "List/TicketCategory/Items",
+        "lookup_id": "TicketCategoryId"
+      },
+      "sync_frequency": "slow",
+      "template": "templates/listbusinessitems.json"
+    },
     "person": {
       "label": "Person",
       "parameters": {
