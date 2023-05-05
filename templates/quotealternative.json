@@ -158,30 +158,51 @@
                 ],
                 [
                   "comment",
-                  "first step is to check if there is an active quote for the sale"
+                  "Can't do anything without a saleId so don't process this entity (this really shouldn't be hitting the share pipe, but just in case)"
                 ],
                 [
                   "if",
                   [
-                    "eq",
-                    "_S._deleted",
-                    false
+                    "not",
+                    [
+                      "is-integer",
+                      "_S.sesam_SaleId"
+                    ]
+                  ],
+                  [
+                    "add",
+                    "$operation",
+                    "discard-no-saleId"
                   ],
                   [
                     [
+                      "comment",
+                      "first step is to check if there is an active quote for the sale"
+                    ],
+                    [
+                      "if",
+                      [
+                        "eq",
+                        "_S._deleted",
+                        false
+                      ],
+                      [
+                        [
+                          "add",
+                          "$operation",
+                          "lookup-quote"
+                        ]
+                      ]
+                    ],
+                    [
                       "add",
-                      "$operation",
-                      "lookup-quote"
+                      "payload",
+                      [
+                        "dict",
+                        "SaleId",
+                        "_S.sesam_SaleId"
+                      ]
                     ]
-                  ]
-                ],
-                [
-                  "add",
-                  "payload",
-                  [
-                    "dict",
-                    "SaleId",
-                    "_S.sesam_SaleId"
                   ]
                 ]
               ]
@@ -209,9 +230,17 @@
                 [
                   "if",
                   [
-                    "eq",
-                    "_S._deleted",
-                    false
+                    "and",
+                    [
+                      "eq",
+                      "_S._deleted",
+                      false
+                    ],
+                    [
+                      "neq",
+                      "_S.$operation",
+                      "discard-no-saleId"
+                    ]
                   ],
                   [
                     [
@@ -275,9 +304,17 @@
                 [
                   "if",
                   [
-                    "eq",
-                    "_S._deleted",
-                    false
+                    "and",
+                    [
+                      "eq",
+                      "_S._deleted",
+                      false
+                    ],
+                    [
+                      "neq",
+                      "_S.$operation",
+                      "discard-no-saleId"
+                    ]
                   ],
                   [
                     [
@@ -370,9 +407,17 @@
                 [
                   "if",
                   [
-                    "eq",
-                    "_S._deleted",
-                    false
+                    "and",
+                    [
+                      "eq",
+                      "_S._deleted",
+                      false
+                    ],
+                    [
+                      "neq",
+                      "_S.$operation",
+                      "discard-no-saleId"
+                    ]
                   ],
                   [
                     [
@@ -515,160 +560,186 @@
                   "$replaced"
                 ],
                 [
+                  "comment",
+                  "NON-STANDARD: If we want to discard the entity, don't do other processing besides formatting the entity the way we want"
+                ],
+                [
                   "if",
                   [
-                    "and",
-                    [
-                      "eq",
-                      "_S.$replaced",
-                      true
-                    ],
-                    [
-                      "eq",
-                      "_S._deleted",
-                      true
-                    ]
-                  ],
-                  [
-                    "merge",
-                    [
-                      "apply",
-                      "discard-replaced",
-                      "_S."
-                    ]
+                    "neq",
+                    "_S.$operation",
+                    "discard-no-saleId"
                   ],
                   [
                     "if",
                     [
-                      "all",
+                      "and",
                       [
-                        "is-not-null",
-                        "_."
+                        "eq",
+                        "_S.$replaced",
+                        true
                       ],
                       [
-                        "map",
-                        [
-                          "path",
-                          "_.",
-                          "_S."
-                        ],
-                        [
-                          "literal",
-                          "QuoteAlternativeId"
-                        ]
+                        "eq",
+                        "_S._deleted",
+                        true
+                      ]
+                    ],
+                    [
+                      "merge",
+                      [
+                        "apply",
+                        "discard-replaced",
+                        "_S."
                       ]
                     ],
                     [
                       "if",
                       [
-                        "eq",
-                        "_S._deleted",
-                        true
-                      ],
-                      [
+                        "all",
                         [
-                          "comment",
-                          "Entity is deleted and it does have a system specific id."
+                          "is-not-null",
+                          "_."
                         ],
                         [
-                          "merge",
+                          "map",
                           [
-                            "apply",
-                            "delete",
+                            "path",
+                            "_.",
                             "_S."
+                          ],
+                          [
+                            "literal",
+                            "QuoteAlternativeId"
                           ]
                         ]
                       ],
                       [
+                        "if",
                         [
-                          "comment",
-                          "Entity is not deleted and it does have a system specific id."
+                          "eq",
+                          "_S._deleted",
+                          true
                         ],
                         [
-                          "merge",
                           [
-                            "apply",
-                            "lookup",
-                            "_S."
-                          ]
-                        ]
-                      ]
-                    ],
-                    [
-                      "if",
-                      [
-                        "eq",
-                        "_S._deleted",
-                        true
-                      ],
-                      [
-                        "merge",
-                        [
-                          "apply",
-                          "discard-delete-non-existent",
-                          "_S."
-                        ]
-                      ],
-                      [
-                        [
-                          "comment",
-                          "At this point there is no primary key, so we should do an insert unless there are sink entity ids in $ids with $generated_id in them."
-                        ],
-                        [
-                          "if",
-                          [
-                            "is-not-empty",
-                            [
-                              "filter",
-                              [
-                                "is-not-null",
-                                "_."
-                              ],
-                              [
-                                "hops",
-                                {
-                                  "datasets": [
-                                    "{{@ system @}}-{{@ datatype @}}-share st"
-                                  ],
-                                  "return": "st.$generated_id",
-                                  "track-dependencies": false,
-                                  "where": [
-                                    [
-                                      "eq",
-                                      "_S.$ids",
-                                      [
-                                        "ni",
-                                        "st._id"
-                                      ]
-                                    ]
-                                  ]
-                                }
-                              ]
-                            ]
+                            "comment",
+                            "Entity is deleted and it does have a system specific id."
                           ],
                           [
                             "merge",
                             [
                               "apply",
-                              "discard-already-inserted",
+                              "delete",
                               "_S."
                             ]
+                          ]
+                        ],
+                        [
+                          [
+                            "comment",
+                            "Entity is not deleted and it does have a system specific id."
                           ],
                           [
+                            "merge",
                             [
-                              "comment",
-                              "Entity is not deleted, it does not have a system specific id and it does not exist in sink dataset."
+                              "apply",
+                              "lookup",
+                              "_S."
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "if",
+                        [
+                          "eq",
+                          "_S._deleted",
+                          true
+                        ],
+                        [
+                          "merge",
+                          [
+                            "apply",
+                            "discard-delete-non-existent",
+                            "_S."
+                          ]
+                        ],
+                        [
+                          [
+                            "comment",
+                            "At this point there is no primary key, so we should do an insert unless there are sink entity ids in $ids with $generated_id in them."
+                          ],
+                          [
+                            "if",
+                            [
+                              "is-not-empty",
+                              [
+                                "filter",
+                                [
+                                  "is-not-null",
+                                  "_."
+                                ],
+                                [
+                                  "hops",
+                                  {
+                                    "datasets": [
+                                      "{{@ system @}}-{{@ datatype @}}-share st"
+                                    ],
+                                    "return": "st.$generated_id",
+                                    "track-dependencies": false,
+                                    "where": [
+                                      [
+                                        "eq",
+                                        "_S.$ids",
+                                        [
+                                          "ni",
+                                          "st._id"
+                                        ]
+                                      ]
+                                    ]
+                                  }
+                                ]
+                              ]
                             ],
                             [
                               "merge",
                               [
                                 "apply",
-                                "insert",
+                                "discard-already-inserted",
                                 "_S."
+                              ]
+                            ],
+                            [
+                              [
+                                "comment",
+                                "Entity is not deleted, it does not have a system specific id and it does not exist in sink dataset."
+                              ],
+                              [
+                                "merge",
+                                [
+                                  "apply",
+                                  "insert",
+                                  "_S."
+                                ]
                               ]
                             ]
                           ]
                         ]
+                      ]
+                    ]
+                  ],
+                  [
+                    [
+                      "comment",
+                      "NON-STANDARD: Add the discard reason to the root level"
+                    ],
+                    [
+                      "merge",
+                      [
+                        "apply",
+                        "discard-no-saleId",
+                        "_S."
                       ]
                     ]
                   ]
@@ -693,6 +764,13 @@
                   "add",
                   "$operation",
                   "discard-delete-non-existent"
+                ]
+              ],
+              "discard-no-saleId": [
+                [
+                  "add",
+                  "$operation",
+                  "discard-no-saleId"
                 ]
               ],
               "discard-replaced": [
@@ -1587,6 +1665,10 @@
             "rules": {
               "default": [
                 [
+                  "comment",
+                  "reformat payload for potential future operations"
+                ],
+                [
                   "copy",
                   "*",
                   "payload"
@@ -1604,6 +1686,10 @@
                     "SaleId",
                     "_S.$source.sesam_SaleId"
                   ]
+                ],
+                [
+                  "comment",
+                  "check if we need to update the quote with a new preferred quote alternative"
                 ],
                 [
                   "if",
@@ -1636,6 +1722,10 @@
           {
             "rules": {
               "default": [
+                [
+                  "comment",
+                  "Build payload to be quote object with new preferred quote alternative"
+                ],
                 [
                   "if",
                   [
@@ -1778,6 +1868,10 @@
             "rules": {
               "default": [
                 [
+                  "comment",
+                  "we don't care about the response from the update quote operation so drop it"
+                ],
+                [
                   "if",
                   [
                     "eq",
@@ -1815,6 +1909,10 @@
           {
             "rules": {
               "default": [
+                [
+                  "comment",
+                  "NON-STANDARD: put the payload back in order to be processed by the rest of the share template."
+                ],
                 [
                   "rename",
                   "payload-actual",
