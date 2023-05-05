@@ -110,6 +110,10 @@
         "rules": {
           "default": [
             [
+              "comment",
+              "first if clause here where the $operation discard-QuoteAlternativeId-missing is set, is a workaround for now. (IS-14730) will implement robust fix"
+            ],
+            [
               "if",
               [
                 "and",
@@ -477,6 +481,10 @@
             [
               "copy",
               "$replaced"
+            ],
+            [
+              "comment",
+              "if clause here where the $operation discard-QuoteAlternativeId-missing is set, is a workaround for now. (IS-14730) will implement robust fix"
             ],
             [
               "if",
