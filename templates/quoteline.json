@@ -119,43 +119,9 @@
                   true
                 ],
                 [
-                  "all",
-                  [
-                    "is-null",
-                    "_."
-                  ],
-                  [
-                    "map",
-                    [
-                      "path",
-                      "_.",
-                      "_S."
-                    ],
-                    [
-                      "literal",
-                      "QuoteLineId"
-                    ]
-                  ]
+                  "is-null",
+                  "_S.QuoteAlternativeId"
                 ]
-              ],
-              [
-                [
-                  "add",
-                  "$source",
-                  "_S."
-                ],
-                [
-                  "add",
-                  "$operation",
-                  "lookup-defaults"
-                ]
-              ]
-            ],
-            [
-              "if",
-              [
-                "is-null",
-                "_S.QuoteAlternativeId"
               ],
               [
                 [
@@ -170,8 +136,46 @@
                 ]
               ],
               [
-                "copy",
-                "*"
+                "if",
+                [
+                  "and",
+                  [
+                    "neq",
+                    "_S._deleted",
+                    true
+                  ],
+                  [
+                    "all",
+                    [
+                      "is-null",
+                      "_."
+                    ],
+                    [
+                      "map",
+                      [
+                        "path",
+                        "_.",
+                        "_S."
+                      ],
+                      [
+                        "literal",
+                        "QuoteLineId"
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  [
+                    "add",
+                    "$source",
+                    "_S."
+                  ],
+                  [
+                    "add",
+                    "$operation",
+                    "lookup-defaults"
+                  ]
+                ]
               ]
             ]
           ]
