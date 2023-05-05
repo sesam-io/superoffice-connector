@@ -124,7 +124,7 @@
             ],
             [
               "comment",
-              "below logic has been added to support inserts for this datatype"
+              "below logic has been added to support inserts and updates for this datatype"
             ],
             [
               "if",
@@ -133,6 +133,14 @@
                 "_R._S.QuoteLineId"
               ],
               [
+                [
+                  "comment",
+                  "on inserts QuoteAlternativeId must be set and ERPProductKey must also be set to at least an empty string. It does not however require a foreign key relation of type product+pricelist"
+                ],
+                [
+                  "comment",
+                  "on inserts Rank must be set to 1."
+                ],
                 [
                   "add",
                   "QuoteLineId",
