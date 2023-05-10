@@ -23,7 +23,6 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
-    
     "exclude_completeness": [
       "{{@ system @}}-{{@ datatype @}}-share"
     ],
@@ -32,94 +31,103 @@
       "dataset": "{{@ system @}}-{{@ datatype @}}-all",
       "type": "dataset"
     },
-    "transform": [
-      {
-        "rules": {
-          "default": [
-            [
-              "comment",
-              "TODO we should do lookup on deletes to verify that they are actually deletes and not just bugs in the pagination (IS-14656)"
-            ],
-            [
-              "if",
-              [
-                "eq",
-                "_S._deleted",
-                true
-              ],
-              [
-                "filter"
-              ]
-            ],
-            [
-              "add",
-              "tmp-lastmodified",
-              "_S.{{@ updated_param @}}"
-            ],
-            [
-              "copy",
-              "{{@ datatype @}}Id"
-            ]
-          ]
+    "transform": {
+      "transforms": [
+        {
+          "allowed_status_codes": "200,404",
+          "operation": "lookup-from-list",
+          "properties": {
+            "base_url": "{{@ base_url @}}",
+            "list_id": "{{@ datatype @}}Id",
+            "primary_key": "{{@ base_url @}}Id"
+          },
+          "replace_entity": false,
+          "response_property": "response_body",
+          "response_status_property": "response_status",
+          "side_effects": false,
+          "system": "{{@ system @}}",
+          "type": "rest"
         },
-        "type": "dtl"
-      },
-      {
-        "operation": "lookup-from-list",
-        "properties": {
-          "base_url": "{{@ base_url @}}",
-          "list_id": "{{@ datatype @}}Id",
-          "primary_key": "{{@ base_url @}}Id"
-        },
-        "replace_entity": false,
-        "side_effects": false,
-        "system": "{{@ system @}}",
-        "type": "rest"
-      },
-      {
-        "rules": {
-          "default": [
-            [
-              "merge",
-              "_S.response"
-            ],
-            [
-              "comment",
-              "*** This transform needs to be here since we need replace_entity to be false in order for us to grab $last-modified which is only part of the first transform. ***"
-            ],
-            [
-              "comment",
-              "TODO are we sure there is an UpdatedDate on the response? couldn't find one when testing the price list type"
-            ],
-            [
-              "add",
-              "$last-modified",
+        {
+          "rules": {
+            "default": [
               [
-                "datetime-parse",
-                "%Y-%m-%dT%H:%M:%S",
+                "case-eq",
+                "_S.response_status",
+                200,
                 [
-                  "coalesce",
                   [
-                    "list",
-                    "_T.UpdatedDate",
-                    "_S.tmp-lastmodified"
+                    "merge",
+                    [
+                      "first",
+                      "_S.response_body"
+                    ]
+                  ]
+                ],
+                404,
+                [
+                  [
+                    "if",
+                    [
+                      "eq",
+                      "_S._deleted",
+                      true
+                    ],
+                    [
+                      "copy",
+                      "*",
+                      [
+                        "list",
+                        "response_body",
+                        "response_status"
+                      ]
+                    ],
+                    [
+                      "discard"
+                    ]
                   ]
                 ]
+              ],
+              [
+                "add-if",
+                "$origin",
+                [
+                  "first",
+                  [
+                    "hops",
+                    {
+                      "datasets": [
+                        "{{@ system @}}-{{@ datatype @}}-share st"
+                      ],
+                      "return": "st.$origin",
+                      "track-dependencies": false,
+                      "where": [
+                        [
+                          "eq",
+                          "_S.{{@ base_url @}}Id",
+                          "st.$generated_id"
+                        ]
+                      ]
+                    }
+                  ]
+                ]
+              ],
+              [
+                "comment",
+                "NON-STANDARD: adding last modified from the source. Can be removed once source is available after the template."
+              ],
+              [
+                "add",
+                "$last-modified",
+                "_S.{{@ updated_param @}}"
               ]
             ]
-          ]
-        },
-        "type": "dtl"
-      },
-      {
-        "properties": {
-          "primary_key": "{{@ base_url @}}Id",
-          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
-        },
-        "template": "transform-collect-rest",
-        "type": "template"
-      }
-    ],
+          },
+          "type": "dtl"
+        }
+      ],
+      "type": "chained"
+    },
     "type": "pipe"
   },
   {
