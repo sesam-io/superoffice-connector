@@ -9,7 +9,7 @@
       "operation": "list",
       "properties": {
         "base_url": "{{@ base_url @}}",
-        "primary_key": "{{@ datatype @}}Id",
+        "primary_key": "{{@ list_url @}}",
         "updated_param": "{{@ updated_param @}}"
       },
       "since_property_location": "manual",
@@ -48,7 +48,7 @@
             ],
             [
               "default",
-              "{{@ datatype @}}Id",
+              "{{@ list_url @}}",
               "_S.PrimaryKey"
             ]
           ]
@@ -60,7 +60,7 @@
           "operation_lookup": "lookup-from-list",
           "operation_lookup_properties": {
             "base_url": "{{@ base_url @}}",
-            "list_id": "{{@ datatype @}}Id",
+            "list_id": "{{@ list_url @}}",
             "primary_key": "{{@ base_url @}}Id"
           },
           "primary_key": "{{@ base_url @}}Id",
