@@ -13,7 +13,7 @@ Note that the system, token_url and login_url currently points to the `sod` (dev
     - Project
     - Sale
     - Ticket
-- Supports Webhooks, Continuation, and Writing
+- Supports Continuation, and Writing
   - Master template: **product.json**
   - Datatypes:
     - Product
