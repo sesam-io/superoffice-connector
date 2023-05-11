@@ -53,7 +53,8 @@
           "default": [
             [
               "copy",
-              "*"
+              "*",
+              "$source"
             ],
             [
               "add",
