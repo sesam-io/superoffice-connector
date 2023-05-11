@@ -372,9 +372,12 @@
                       ]
                     ],
                     [
-                      "add",
-                      "$operation",
-                      "lookup-version"
+                      "comment",
+                      "Don't lookup version for now. This likely needs to be moved into the share template (see TODO comment in the next DTL transform)"
+                    ],
+                    [
+                      "comment",
+                      "[add, $operation, lookup-version]"
                     ]
                   ]
                 ]
@@ -420,7 +423,8 @@
                       "neq",
                       "_S.$operation",
                       "discard-no-saleId"
-                    ]
+                    ],
+                    false
                   ],
                   [
                     [
