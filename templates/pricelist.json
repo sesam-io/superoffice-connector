@@ -33,99 +33,36 @@
     },
     "transform": [
       {
-        "transforms": [
-          {
-            "allowed_status_codes": "200,404",
-            "operation": "lookup-from-list",
-            "properties": {
-              "base_url": "{{@ base_url @}}",
-              "list_id": "{{@ list_url @}}",
-              "primary_key": "{{@ base_url @}}Id"
-            },
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": false,
-            "system": "{{@ system @}}",
-            "type": "rest"
+        "properties": {
+          "operation_lookup": "lookup-from-list",
+          "operation_lookup_properties": {
+            "base_url": "{{@ base_url @}}",
+            "list_id": "{{@ list_url @}}",
+            "primary_key": "{{@ base_url @}}Id"
           },
-          {
-            "rules": {
-              "default": [
-                [
-                  "case-eq",
-                  "_S.response_status",
-                  200,
-                  [
-                    "merge",
-                    [
-                      "first",
-                      "_S.response_body"
-                    ]
-                  ],
-                  404,
-                  [
-                    [
-                      "if",
-                      [
-                        "eq",
-                        "_S._deleted",
-                        true
-                      ],
-                      [
-                        "copy",
-                        "*",
-                        [
-                          "list",
-                          "response_body",
-                          "response_status"
-                        ]
-                      ],
-                      [
-                        "discard"
-                      ]
-                    ]
-                  ]
-                ],
-                [
-                  "add-if",
-                  "$origin",
-                  [
-                    "first",
-                    [
-                      "hops",
-                      {
-                        "datasets": [
-                          "{{@ system @}}-{{@ datatype @}}-share st"
-                        ],
-                        "return": "st.$origin",
-                        "track-dependencies": false,
-                        "where": [
-                          [
-                            "eq",
-                            "_S.{{@ base_url @}}Id",
-                            "st.$generated_id"
-                          ]
-                        ]
-                      }
-                    ]
-                  ]
-                ],
-                [
-                  "comment",
-                  "NON-STANDARD: adding last modified from the source. Can be removed once source is available after the template."
-                ],
-                [
-                  "add",
-                  "$last-modified",
-                  "_S.{{@ updated_param @}}"
-                ]
-              ]
-            },
-            "type": "dtl"
-          }
-        ],
-        "type": "chained"
+          "original_property": "$source",
+          "primary_key": "{{@ base_url @}}Id",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-collect-rest",
+        "type": "template"
+      },
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "add",
+              "$last-modified",
+              "_S.$source.{{@ updated_param @}}"
+            ]
+          ]
+        },
+        "type": "dtl"
       }
     ],
     "type": "pipe"
