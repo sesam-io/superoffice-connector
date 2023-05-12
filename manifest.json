@@ -1,9 +1,9 @@
 {
   "additional_parameters": {
     "account_id": {},
+    "base_url": {},
     "service_url": {},
-    "token_url": {},
-    "base_url": {}
+    "token_url": {}
   },
   "auth": "oauth2",
   "datatypes": {
@@ -115,6 +115,11 @@
       },
       "sync_frequency": "slow",
       "template": "templates/listbusinessitems.json"
+    },
+    "ownercontactlink": {
+      "label": "Owner Contact Link",
+      "sync_frequency": "slow",
+      "template": "templates/ownercontactlink.json"
     },
     "person": {
       "label": "Person",

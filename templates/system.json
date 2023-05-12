@@ -90,6 +90,14 @@
       "method": "GET",
       "url": "{{ properties.base_url }}/{{ entity[properties.list_id] }}"
     },
+    "ownercontactlink-list": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "GET",
+      "payload_property": "value",
+      "url": "archive/dynamic?$select=ownercontactlink.contact_id,ownercontactlink.contact_id.name"
+    },
     "person-webhook-insert": {
       "method": "POST",
       "payload": {
