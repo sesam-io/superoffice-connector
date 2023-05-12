@@ -551,6 +551,41 @@
             "rules": {
               "default": [
                 [
+                  "comment",
+                  "Need to remove sesam prefixed properties from based_on_properties. Can be removed when this ability is added to the template, or the transfrom doesn't add these types of variables to the field."
+                ],
+                [
+                  "copy",
+                  "*",
+                  "$based_on_properties"
+                ],
+                [
+                  "add",
+                  "$based_on_properties",
+                  [
+                    "filter",
+                    [
+                      "not",
+                      [
+                        "matches",
+                        "sesam*",
+                        [
+                          "first",
+                          "_."
+                        ]
+                      ]
+                    ],
+                    "_S.$based_on_properties"
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "rules": {
+              "default": [
+                [
                   "copy",
                   [
                     "literal",
@@ -853,6 +888,14 @@
                               "first",
                               "_."
                             ]
+                          ],
+                          [
+                            "matches",
+                            "sesam*",
+                            [
+                              "first",
+                              "_."
+                            ]
                           ]
                         ]
                       ],
@@ -966,9 +1009,26 @@
               ],
               "based-on-source": [
                 [
+                  "comment",
+                  "NON-STANDARD: We don't normally send the source through remove-unmapped-properties. Can be remvoed when there is a way to handle sesam_ variables in the basedOn"
+                ],
+                [
                   "add",
                   "$based_on_source",
-                  "_S.$source.$based_on"
+                  [
+                    "apply",
+                    "remove-unmapped-properties",
+                    [
+                      "dict",
+                      "prefix",
+                      "",
+                      "data",
+                      [
+                        "first",
+                        "_S.$source.$based_on"
+                      ]
+                    ]
+                  ]
                 ]
               ],
               "based-on-update": [
@@ -1167,6 +1227,14 @@
                           [
                             "matches",
                             "$*",
+                            [
+                              "first",
+                              "_."
+                            ]
+                          ],
+                          [
+                            "matches",
+                            "sesam*",
                             [
                               "first",
                               "_."
