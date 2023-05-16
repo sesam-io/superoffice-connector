@@ -10,8 +10,14 @@
     "rules": {
       "default": [
         [
-          "copy",
-          "*"
+          "rename",
+          "{{@ datatype @}}.contact_id",
+          "contact_id"
+        ],
+        [
+          "rename",
+          "{{@ datatype @}}.contact_id.name",
+          "name"
         ],
         [
           "add",
