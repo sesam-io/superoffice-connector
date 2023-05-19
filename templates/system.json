@@ -355,6 +355,5 @@
   "rate_limiting_retries": 3,
   "type": "system:rest",
   "url_pattern": "{{@ base_url @}}/{{@ account_id @}}/api/v1/%s",
-  "verify_ssl": true,
-  "worker_threads": 1
+  "verify_ssl": true
 }
