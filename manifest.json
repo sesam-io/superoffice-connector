@@ -145,7 +145,7 @@
     "product": {
       "label": "Product",
       "parameters": {
-        "base_url": "product",
+        "base_url": "Product",
         "list_url": "productId",
         "primary_key": "productId",
         "updated_param": "updatedDate"
