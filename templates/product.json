@@ -41,7 +41,7 @@
             "primary_key": "{{@ base_url @}}Id"
           },
           "original_property": "$source",
-          "primary_key": "{{@ datatype @}}Id",
+          "primary_key": "{{@ base_url @}}Id",
           "rest_system": "{{@ system @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
