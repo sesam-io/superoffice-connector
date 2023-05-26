@@ -161,7 +161,7 @@
                 ],
                 [
                   "comment",
-                  "Can't do anything without a saleId so don't process this entity (this really shouldn't be hitting the share pipe, but just in case)"
+                  "Can't do anything without a saleId so don't process this entity"
                 ],
                 [
                   "if",
@@ -176,34 +176,81 @@
                     "add",
                     "$operation",
                     "discard-no-saleId"
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "lookup",
+            "properties": {
+              "base_url": "Sale",
+              "lookup_id": "sesam_SaleId"
+            },
+            "side_effects": false,
+            "system": "{{@ system @}}",
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*",
+                  "response"
+                ],
+                [
+                  "comment",
+                  "Don't do anything if the sale is sold"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S._deleted",
+                    false
                   ],
                   [
+                    "if",
                     [
-                      "comment",
-                      "first step is to check if there is an active quote for the sale"
-                    ],
-                    [
-                      "if",
-                      [
-                        "eq",
-                        "_S._deleted",
-                        false
-                      ],
-                      [
-                        [
-                          "add",
-                          "$operation",
-                          "lookup-quote"
-                        ]
-                      ]
+                      "eq",
+                      "_S.response.Status",
+                      "Sold"
                     ],
                     [
                       "add",
-                      "payload",
+                      "$operation",
+                      "discard-sale-is-sold"
+                    ],
+                    [
                       [
-                        "dict",
-                        "SaleId",
-                        "_S.sesam_SaleId"
+                        "comment",
+                        "Else, first step is to check if there is an active quote for the sale"
+                      ],
+                      [
+                        "if",
+                        [
+                          "eq",
+                          "_S._deleted",
+                          false
+                        ],
+                        [
+                          [
+                            "add",
+                            "$operation",
+                            "lookup-quote"
+                          ]
+                        ]
+                      ],
+                      [
+                        "add",
+                        "payload",
+                        [
+                          "dict",
+                          "SaleId",
+                          "_S.sesam_SaleId"
+                        ]
                       ]
                     ]
                   ]
@@ -240,9 +287,12 @@
                       false
                     ],
                     [
-                      "neq",
-                      "_S.$operation",
-                      "discard-no-saleId"
+                      "not",
+                      [
+                        "matches",
+                        "discard*",
+                        "_S.$operation"
+                      ]
                     ]
                   ],
                   [
@@ -314,9 +364,12 @@
                       false
                     ],
                     [
-                      "neq",
-                      "_S.$operation",
-                      "discard-no-saleId"
+                      "not",
+                      [
+                        "matches",
+                        "discard*",
+                        "_S.$operation"
+                      ]
                     ]
                   ],
                   [
@@ -372,6 +425,19 @@
                       ]
                     ],
                     [
+                      "add",
+                      "sesam_QuoteId",
+                      [
+                        "first",
+                        "_S.response.QuoteId"
+                      ]
+                    ],
+                    [
+                      "add",
+                      "sesam_QuoteVersion",
+                      "_S.response.ActiveQuoteVersion"
+                    ],
+                    [
                       "comment",
                       "Don't lookup version for now. This likely needs to be moved into the share template (see TODO comment in the next DTL transform)"
                     ],
@@ -420,9 +486,12 @@
                       false
                     ],
                     [
-                      "neq",
-                      "_S.$operation",
-                      "discard-no-saleId"
+                      "not",
+                      [
+                        "matches",
+                        "discard*",
+                        "_S.$operation"
+                      ]
                     ],
                     false
                   ],
@@ -533,10 +602,275 @@
                       ]
                     ]
                   ]
+                ],
+                [
+                  "comment",
+                  "If sesam_Accepted=true && there is at least one quote line, add an acceptedQuoteAlternative ID to the quote and mark the quote version as sold"
+                ],
+                [
+                  "if",
+                  [
+                    "and",
+                    [
+                      "eq",
+                      "_S._deleted",
+                      false
+                    ],
+                    [
+                      "not",
+                      [
+                        "matches",
+                        "discard*",
+                        "_S.$operation"
+                      ]
+                    ]
+                  ],
+                  [
+                    "if",
+                    "_S.sesam_Accepted",
+                    [
+                      "add",
+                      "$operation",
+                      "lookup-quotelines"
+                    ]
+                  ]
                 ]
               ]
             },
             "type": "dtl"
+          },
+          {
+            "operation": "quoteline-list",
+            "response_property": "response_body",
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "lookup-quotelines"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "build-payload": [
+                [
+                  "add",
+                  "Quote",
+                  [
+                    "dict",
+                    "QuoteId",
+                    "_S.sesam_QuoteId",
+                    "SaleId",
+                    "_S.sesam_SaleId",
+                    "QuoteConnectionId",
+                    1,
+                    "AcceptedQuoteAlternativeId",
+                    "_S.QuoteAlternativeId"
+                  ]
+                ]
+              ],
+              "default": [
+                [
+                  "copy",
+                  "*",
+                  "response_body"
+                ],
+                [
+                  "if",
+                  [
+                    "is-not-empty",
+                    "_S.response_body"
+                  ],
+                  [
+                    [
+                      "add",
+                      "$operation",
+                      "mark-as-sold"
+                    ],
+                    [
+                      "comment",
+                      "payload for marking quote as sold"
+                    ],
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "apply",
+                        "build-payload",
+                        "_S."
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "{{@ datatype @}}-save-quote",
+            "response_property": "response_body",
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "mark-as-sold"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "if",
+                  [
+                    "neq",
+                    "_S.$operation",
+                    "mark-as-sold"
+                  ],
+                  [
+                    "copy",
+                    "*"
+                  ],
+                  [
+                    [
+                      "copy",
+                      "*",
+                      [
+                        "list",
+                        "response_body",
+                        "payload"
+                      ]
+                    ],
+                    [
+                      "comment",
+                      "payload for marking {{@ parent @}} as sold"
+                    ],
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "apply",
+                        "default-values",
+                        [
+                          "dict",
+                          "a",
+                          [
+                            "first",
+                            "_S.sesam_QuoteVersion"
+                          ],
+                          "b",
+                          [
+                            "dict",
+                            "State",
+                            "Sold"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "add",
+                      "$c",
+                      "_S.sesam.QuoteVersion"
+                    ]
+                  ]
+                ]
+              ],
+              "default-values": [
+                [
+                  "merge",
+                  [
+                    "dict",
+                    [
+                      "map",
+                      [
+                        "list",
+                        "_.",
+                        [
+                          "sorted",
+                          [
+                            "if",
+                            [
+                              "is-dict",
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ]
+                            ],
+                            [
+                              "apply",
+                              "default-values",
+                              [
+                                "dict",
+                                "a",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ],
+                                "b",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ],
+                            [
+                              "if",
+                              [
+                                "eq",
+                                "_.",
+                                "State"
+                              ],
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ],
+                              [
+                                "if",
+                                [
+                                  "is-not-null",
+                                  [
+                                    "path",
+                                    "_.",
+                                    "_S.a"
+                                  ]
+                                ],
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ],
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "keys",
+                        "_S.a"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "{{@ datatype @}}-save-{{@ parent @}}",
+            "response_property": "response_body",
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "mark-as-sold"
+            },
+            "type": "rest"
           },
           {
             "properties": {
@@ -607,14 +941,17 @@
                 ],
                 [
                   "comment",
-                  "NON-STANDARD: If we want to discard the entity, don't do other processing besides formatting the entity the way we want"
+                  "NON-STANDARD: If we want to discard the entity, don't do other processing besides formatting the entity the way we want, can be removed if a native of handling incoming discards is added."
                 ],
                 [
                   "if",
                   [
-                    "neq",
-                    "_S.$operation",
-                    "discard-no-saleId"
+                    "not",
+                    [
+                      "matches",
+                      "discard*",
+                      "_S.$operation"
+                    ]
                   ],
                   [
                     "if",
@@ -1561,12 +1898,12 @@
                 [
                   "copy",
                   "*",
-                  "QuoteAlternativeID"
+                  "QuoteAlternativeId"
                 ],
                 [
                   "add",
                   "QuoteAlternativeId",
-                  "_S.sesam_QuoteAlternativeId"
+                  "_R._S.$source.sesam_QuoteAlternativeId"
                 ]
               ]
             },
