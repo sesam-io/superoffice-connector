@@ -10,14 +10,14 @@
       "properties": {
         "base_url": "{{@ base_url @}}",
         "primary_key": "{{@ datatype @}}Id",
-        "updated_param": ""
+        "updated_param": "{{@ updated_param @}}"
       },
       "since_property_location": "manual",
       "since_property_name": "since",
       "supports_since": true,
       "system": "{{@ system @}}",
       "type": "rest",
-      "updated_expression": "{{  }}"
+      "updated_expression": "{{@ updated_param @}}"
     },
     "type": "pipe"
   },
@@ -59,7 +59,7 @@
             [
               "add",
               "$last-modified",
-              "_S.$source"
+              "_S.$source.{{@ updated_param @}}"
             ]
           ]
         },
