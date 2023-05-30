@@ -59,7 +59,7 @@
             [
               "add",
               "$last-modified",
-              "_S.$source."
+              "_S.$source"
             ]
           ]
         },
