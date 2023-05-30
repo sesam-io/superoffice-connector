@@ -17,7 +17,7 @@
       "supports_since": true,
       "system": "{{@ system @}}",
       "type": "rest",
-      "updated_expression": "{{@ updated_param @}}"
+      "updated_expression": "{{ {{@ updated_param @}} }}"
     },
     "type": "pipe"
   },
