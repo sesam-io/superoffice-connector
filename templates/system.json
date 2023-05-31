@@ -208,6 +208,13 @@
       "method": "POST",
       "url": "Agents/Quote/SaveQuote"
     },
+    "quotealternative-save-quoteversion": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/SaveQuoteVersion"
+    },
     "quoteline-default": {
       "headers": {
         "Accept": "application/json"
