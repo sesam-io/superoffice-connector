@@ -7,6 +7,31 @@
       "system": "{{@ system @}}",
       "type": "rest"
     },
+    "transform": {
+      "rules": {
+        "default": [
+          [
+            "copy",
+            "*"
+          ],
+          [
+            "add",
+            "$healthy",
+            [
+              "if",
+              [
+                "eq",
+                "_S.State",
+                "Active"
+              ],
+              true,
+              false
+            ]
+          ]
+        ]
+      },
+      "type": "dtl"
+    },
     "type": "pipe"
   },
   {
