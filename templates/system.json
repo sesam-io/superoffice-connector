@@ -57,7 +57,8 @@
     },
     "list": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "SO-TimeZone": "includeTZOffset"
       },
       "id_expression": "{{ PrimaryKey }}",
       "method": "GET",
@@ -77,14 +78,16 @@
     },
     "lookup": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "SO-TimeZone": "includeTZOffset"
       },
       "method": "GET",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     },
     "lookup-from-list": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "SO-TimeZone": "includeTZOffset"
       },
       "id_expression": "{{ properties.primary_key|string }}",
       "method": "GET",
