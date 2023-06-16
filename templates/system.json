@@ -13,16 +13,6 @@
         "Accept": "application/json"
       },
       "method": "GET",
-      "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
-      "next_page_termination_strategy": [
-        "same-next-page-request",
-        "empty-result"
-      ],
-      "params": {
-        "$orderby": "{{ properties.primary_key }}",
-        "$skip": "{{ 1000|int*page }}",
-        "$top": "1000"
-      },
       "url": "{{ properties.base_url }}"
     },
     "contact-webhook-insert": {
@@ -339,6 +329,23 @@
     "update": {
       "method": "PATCH",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+    },
+    "user_list": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "GET",
+      "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
+      "next_page_termination_strategy": [
+        "same-next-page-request",
+        "empty-result"
+      ],
+      "params": {
+        "$orderby": "{{ properties.primary_key }}",
+        "$skip": "{{ 1000|int*page }}",
+        "$top": "1000"
+      },
+      "url": "{{ properties.base_url }}"
     },
     "webhook-delete": {
       "method": "DELETE",
