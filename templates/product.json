@@ -59,7 +59,11 @@
             [
               "add",
               "$last-modified",
-              "_S.$source.{{@ updated_param @}}"
+              [
+                "datetime-parse",
+                "%Y-%m-%dT%H:%M:%S",
+                "_S.$source.{{@ updated_param @}}"
+              ]
             ]
           ]
         },
