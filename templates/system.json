@@ -301,8 +301,8 @@
       "method": "GET",
       "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
       "next_page_termination_strategy": [
-        "same-next-page-request",
-        "not-full-page"
+        "not-full-page",
+        "empty-result"
       ],
       "page_size": 100,
       "params": {
@@ -339,8 +339,8 @@
       "method": "GET",
       "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
-        "same-next-page-request",
-        "not-full-page"
+        "not-full-page",
+        "empty-result"
       ],
       "page_size": 100,
       "params": {
