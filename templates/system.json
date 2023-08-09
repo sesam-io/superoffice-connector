@@ -54,14 +54,15 @@
       "method": "GET",
       "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
-        "same-next-page-request",
+        "not-full-page",
         "empty-result"
       ],
+      "page_size": 100,
       "params": {
         "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} afterTime '{{ since }}'){% else %}({{ properties.updated_param }} afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "{{ properties.primary_key }}",
-        "$skip": "{{ 1000|int*page }}",
-        "$top": "1000"
+        "$skip": "{{ page_size|int*page }}",
+        "$top": "{{ page_size }}"
       },
       "payload_property": "value",
       "url": "{{ properties.base_url }}"
@@ -300,14 +301,15 @@
       "method": "GET",
       "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
       "next_page_termination_strategy": [
-        "same-next-page-request",
+        "not-full-page",
         "empty-result"
       ],
+      "page_size": 100,
       "params": {
         "$filter": "{% if since is defined and since is not none %}(updatedDate afterTime '{{ since }}'){% else %}(updatedDate afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "PrimaryKey asc",
-        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ 1000|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
-        "$top": "1000"
+        "$skip": "{% if (previous_request_headers['X-Sesam-Page'] is defined) %}{{ page_size|int*(headers['X-Sesam-Page']|int-1) }}{% else %}0{% endif %}sesam:markjson",
+        "$top": "{{ page_size }}"
       },
       "payload_property": "value",
       "url": "archive/Sale?$select=quote/quoteId,updatedDate"
@@ -337,13 +339,14 @@
       "method": "GET",
       "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
-        "same-next-page-request",
+        "not-full-page",
         "empty-result"
       ],
+      "page_size": 100,
       "params": {
         "$orderby": "{{ properties.primary_key }}",
-        "$skip": "{{ 1000|int*page }}",
-        "$top": "1000"
+        "$skip": "{{ page_size|int*page }}",
+        "$top": "{{ page_size }}"
       },
       "url": "{{ properties.base_url }}"
     },
