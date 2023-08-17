@@ -105,6 +105,7 @@
     },
     "user": {
       "label": "User",
+      "sync_frequency": "weekly",
       "template": "templates/user.json"
     },
     "webhook": {
