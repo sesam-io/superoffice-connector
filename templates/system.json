@@ -25,7 +25,8 @@
         ],
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-contact-event/entities",
-        "Type": "webhook"
+        "Type": "webhook",
+        "Name": "Sesam Talk Contact events"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -104,7 +105,8 @@
         ],
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-person-event/entities",
-        "Type": "webhook"
+        "Type": "webhook",
+        "Name": "Sesam Talk Person events"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -119,7 +121,8 @@
         ],
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-project-event/entities",
-        "Type": "webhook"
+        "Type": "webhook",
+        "Name": "Sesam Talk Project events"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -149,7 +152,8 @@
         ],
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-quote-event/entities",
-        "Type": "webhook"
+        "Type": "webhook",
+        "Name": "Sesam Talk Quote events"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -287,7 +291,8 @@
         ],
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-sale-event/entities",
-        "Type": "webhook"
+        "Type": "webhook",
+        "Name": "Sesam Talk Sale events"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -323,7 +328,8 @@
         ],
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-ticket-event/entities",
-        "Type": "webhook"
+        "Type": "webhook",
+        "Name": "Sesam Talk Ticket events"
       },
       "payload-type": "json",
       "url": "Webhook"
