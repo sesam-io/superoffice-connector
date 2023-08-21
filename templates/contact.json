@@ -314,6 +314,11 @@
               "*"
             ],
             [
+              "add",
+              "$original_source",
+              "_S.$source"
+            ],
+            [
               "comment",
               "Workaround for IS-14640"
             ],

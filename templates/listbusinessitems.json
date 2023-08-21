@@ -66,6 +66,22 @@
     },
     "transform": [
       {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "add",
+              "$original_source",
+              "_S.$source"
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
         "properties": {
           "operation": "defaults",
           "operation_properties": {
