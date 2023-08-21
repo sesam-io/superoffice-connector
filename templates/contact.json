@@ -312,7 +312,7 @@
             [
               "copy",
               "*"
-            ],            
+            ],
             [
               "comment",
               "Workaround for IS-14640"
