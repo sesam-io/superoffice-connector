@@ -160,6 +160,11 @@
                   "*"
                 ],
                 [
+                  "add",
+                  "$original_source",
+                  "_S.$source"
+                ],
+                [
                   "comment",
                   "Can't do anything without a saleId so don't process this entity"
                 ],
