@@ -8,7 +8,7 @@
   "auth": "oauth2",
   "datatypes": {
     "contact": {
-      "label": "Contact",
+      "label": "Company",
       "parameters": {
         "base_url": "Contact",
         "list_url": "contactId",
@@ -42,7 +42,7 @@
       "template": "templates/ownercontactlink.json"
     },
     "person": {
-      "label": "Person",
+      "label": "Contact Person",
       "parameters": {
         "base_url": "Person",
         "list_url": "personId",
