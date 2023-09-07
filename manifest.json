@@ -170,17 +170,23 @@
     },
     "quotealternative": {
       "label": "Quote Alternative",
-      "parent": "quoteversion",
-      "template": "templates/quotealternative.json"
+      "parameters": {
+        "updated_param": "QuoteAlternative"
+      },
+      "template": "templates/quoteversion.json"
     },
     "quoteline": {
       "label": "Quote Line",
-      "parent": "quotealternative",
-      "template": "templates/quoteline.json"
+      "parameters": {
+        "updated_param": "QuoteLine"
+      },
+      "template": "templates/quoteversion.json"
     },
     "quoteversion": {
       "label": "Quote Version",
-      "parent": "quote",
+      "parameters": {
+        "updated_param": "QuoteVersion"
+      },
       "template": "templates/quoteversion.json"
     },
     "role": {

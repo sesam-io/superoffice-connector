@@ -23,10 +23,10 @@
           "contact.changed",
           "contact.deleted"
         ],
+        "Name": "Sesam Talk Contact events",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-contact-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Contact events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -103,10 +103,10 @@
           "person.consented",
           "person.unconsented"
         ],
+        "Name": "Sesam Talk Person events",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-person-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Person events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -119,10 +119,10 @@
           "project.changed",
           "project.deleted"
         ],
+        "Name": "Sesam Talk Project events",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-project-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Project events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -150,10 +150,10 @@
           "quote.sent",
           "quote.ordered"
         ],
+        "Name": "Sesam Talk Quote events",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-quote-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Quote events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -174,6 +174,20 @@
       },
       "method": "POST",
       "url": "Agents/Quote/CreateDefaultQuoteAlternative"
+    },
+    "quotealternative-list": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "id_expression": "{{ PrimaryKey }}",
+      "method": "GET",
+      "params": {
+        "$filter": "{% if since is defined and since is not none %}(QuoteAlternative.updated afterTime '{{ since }}'){% endif %}",
+        "$orderby": "PrimaryKey asc",
+        "$select": "QuoteAlternative.quotealternative_id,QuoteAlternative.ERPQuoteAlternativeKey,QuoteAlternative.QuoteVersionId,QuoteAlternative.Name,QuoteAlternative.Description,QuoteAlternative.Status,QuoteAlternative.Reason,QuoteAlternative.ERPDiscountPercent,QuoteAlternative.ERPDiscountAmount,QuoteAlternative.DiscountPercent,QuoteAlternative.DiscountAmount,QuoteAlternative.UserValueOverride,QuoteAlternative.VATInfo,QuoteAlternative.VAT,QuoteAlternative.EarningPercent,QuoteAlternative.EarningAmount,QuoteAlternative.TotalPrice,QuoteAlternative.extraField1,QuoteAlternative.extraField2,QuoteAlternative.extraField3,QuoteAlternative.extraField4,QuoteAlternative.extraField5,QuoteAlternative.registered,QuoteAlternative.registered_associate_id,QuoteAlternative.updated,QuoteAlternative.updated_associate_id,QuoteAlternative.updatedCount"
+      },
+      "payload_property": "value",
+      "url": "archive/Dynamic"
     },
     "quotealternative-lookup": {
       "headers": {
@@ -245,11 +259,15 @@
       "headers": {
         "Accept": "application/json"
       },
-      "method": "POST",
-      "payload": {
-        "QuoteAlternativeId": "{{ entity['QuoteAlternativeId'] }}"
+      "id_expression": "{{ PrimaryKey }}",
+      "method": "GET",
+      "params": {
+        "$filter": "{% if since is defined and since is not none %}(QuoteLine.updated afterTime '{{ since }}'){% endif %}",
+        "$orderby": "PrimaryKey asc",
+        "$select": "QuoteLine.quoteline_id,QuoteLine.ERPQuoteLineKey,QuoteLine.QuoteAlternativeId,QuoteLine.ERPProductKey,QuoteLine.Status,QuoteLine.Reason,QuoteLine.Quantity,QuoteLine.DeliveredQuantity,QuoteLine.Rank,QuoteLine.Name,QuoteLine.Description,QuoteLine.Code,QuoteLine.QuantityUnit,QuoteLine.PriceUnit,QuoteLine.IsSubscription,QuoteLine.SubscriptionUnit,QuoteLine.SubscriptionQuantity,QuoteLine.SubscriptionStart,QuoteLine.ItemNumber,QuoteLine.Url,QuoteLine.ProductCategoryKey,QuoteLine.ProductFamilyKey,QuoteLine.ProductTypeKey,QuoteLine.Supplier,QuoteLine.SupplierCode,QuoteLine.VATInfo,QuoteLine.VAT,QuoteLine.UnitCost,QuoteLine.UnitMinimumPrice,QuoteLine.UnitListPrice,QuoteLine.ExtraInfo,QuoteLine.ERPDiscountPercent,QuoteLine.ERPDiscountAmount,QuoteLine.DiscountPercent,QuoteLine.DiscountAmount,QuoteLine.UserValueOverride,QuoteLine.EarningPercent,QuoteLine.EarningAmount,QuoteLine.TotalPrice,QuoteLine.Rights,QuoteLine.Rule,QuoteLine.extraField1,QuoteLine.extraField2,QuoteLine.extraField3,QuoteLine.extraField4,QuoteLine.extraField5,QuoteLine.registered,QuoteLine.registered_associate_id,QuoteLine.updated,QuoteLine.updated_associate_id,QuoteLine.updatedCount"
       },
-      "url": "Agents/Quote/GetQuoteLines"
+      "payload_property": "value",
+      "url": "archive/Dynamic"
     },
     "quoteline-lookup": {
       "headers": {
@@ -267,6 +285,20 @@
       },
       "method": "POST",
       "url": "Agents/Quote/SaveQuoteLine"
+    },
+    "quoteversion-list": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "id_expression": "{{ PrimaryKey }}",
+      "method": "GET",
+      "params": {
+        "$filter": "{% if since is defined and since is not none %}(QuoteVersion.updated afterTime '{{ since }}'){% endif %}",
+        "$orderby": "PrimaryKey asc",
+        "$select": "QuoteVersion.quoteversion_id,QuoteVersion.ERPQuoteVersionKey,QuoteVersion.QuoteId,QuoteVersion.Description,QuoteVersion.Number,QuoteVersion.State,QuoteVersion.ArchivedState,QuoteVersion.Status,QuoteVersion.Reason,QuoteVersion.LikelyQuoteAlternativeId,QuoteVersion.SentDate,QuoteVersion.FollowupId,QuoteVersion.ExpirationDate,QuoteVersion.DeliveryCountryId,QuoteVersion.HasOwnDeliveryAddress,QuoteVersion.InvoiceCountryId,QuoteVersion.HasOwnInvoiceAddress,QuoteVersion.ERPPaymentTermsKey,QuoteVersion.ERPPaymentTypeKey,QuoteVersion.ERPDeliveryTermsKey,QuoteVersion.ERPDeliveryTypeKey,QuoteVersion.Rank,QuoteVersion.ApprovedBy,QuoteVersion.ApprovedText,QuoteVersion.ApprovedRegisteredBy,QuoteVersion.ApprovedRegisteredDate,QuoteVersion.extraField1,QuoteVersion.extraField2,QuoteVersion.extraField3,QuoteVersion.extraField4,QuoteVersion.extraField5,QuoteVersion.LastRecalculated,QuoteVersion.registered,QuoteVersion.registered_associate_id,QuoteVersion.updated,QuoteVersion.updated_associate_id,QuoteVersion.updatedCount,QuoteVersion.request_associate_id,QuoteVersion.request_comment"
+      },
+      "payload_property": "value",
+      "url": "archive/Dynamic"
     },
     "quoteversion-lookup": {
       "headers": {
@@ -289,10 +321,10 @@
           "sale.lost",
           "sale.sold"
         ],
+        "Name": "Sesam Talk Sale events",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-sale-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Sale events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -326,10 +358,10 @@
           "ticket.created",
           "ticket.changed"
         ],
+        "Name": "Sesam Talk Ticket events",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-ticket-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Ticket events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"

@@ -110,17 +110,6 @@
       "time_threshold_hours": 168
     },
     "namespaced_identifiers": false,
-    "permissions": [
-      [
-        "allow",
-        [
-          "group:Anonymous"
-        ],
-        [
-          "write_data"
-        ]
-      ]
-    ],
     "sink": {
       "set_initial_offset": "onload"
     },

@@ -1,93 +1,110 @@
 [
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "metadata": {
+      "supports_since": true
+    },
     "namespaced_identifiers": false,
     "source": {
-      "dataset": "{{@ system @}}-{{@ parent @}}-collect",
-      "type": "dataset"
-    },
-    "transform": {
-      "rules": {
-        "create_versions": [
-          [
-            "copy",
-            "*"
-          ],
-          [
-            "add",
-            "sesam_SaleId",
-            "_R._S.SaleId"
-          ],
-          [
-            "add",
-            "_id",
-            [
-              "string",
-              "_S.QuoteVersionId"
-            ]
-          ],
-          [
-            "add",
-            "$original_id",
-            "_R._S._id"
-          ]
-        ],
-        "default": [
-          [
-            "create-child",
-            [
-              "apply",
-              "create_versions",
-              "_S.QuoteVersions"
-            ]
-          ]
-        ]
-      },
-      "type": "dtl"
-    },
-    "type": "pipe"
-  },
-  {
-    "_id": "{{@ system @}}-{{@ datatype @}}-all2",
-    "namespaced_identifiers": false,
-    "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
-      "type": "dataset"
+      "operation": "{{@ datatype @}}-list",
+      "since_property_name": "updated",
+      "supports_since": true,
+      "system": "{{@ system @}}",
+      "type": "rest",
+      "updated_expression": "{{ entity['{{@ updated_param @}}.updated'] }}"
     },
     "transform": [
       {
-        "type": "emit_children"
+        "rules": {
+          "default": [
+            [
+              "merge",
+              [
+                "apply",
+                "remove-entity-name",
+                [
+                  "key-values",
+                  "_S."
+                ]
+              ]
+            ],
+            [
+              "add",
+              "$last-modified",
+              [
+                "datetime-parse",
+                "%Y-%m-%dT%H:%M:%S",
+                "_T.updated"
+              ]
+            ]
+          ],
+          "remove-entity-name": [
+            [
+              "add",
+              [
+                "replace",
+                [
+                  "concat",
+                  "_P._S.EntityName",
+                  "."
+                ],
+                "",
+                "_S.key"
+              ],
+              "_S.value"
+            ]
+          ]
+        },
+        "type": "dtl"
       }
     ],
     "type": "pipe"
   },
   {
-    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "add_namespaces": false,
+    "batch_size": 1,
+    "compaction": {
+      "keep_versions": 100
+    },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
     "namespaced_identifiers": false,
+    "sink": {
+      "deletion_tracking": false,
+      "set_initial_offset": "onload"
+    },
     "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
+      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
       "type": "dataset"
     },
-    "transform": {
-      "rules": {
-        "default": [
-          [
-            "copy",
-            "*"
-          ],
-          [
-            "add",
-            "$last-modified",
+    "transform": [
+      {
+        "rules": {
+          "default": [
             [
-              "datetime-parse",
-              "%Y-%m-%dT%H:%M:%S",
-              "_S.Updated"
+              "copy",
+              "*"
             ]
           ]
-        ]
+        },
+        "type": "dtl"
       },
-      "type": "dtl"
-    },
+      {
+        "properties": {
+          "operation_delete_properties": {},
+          "operation_insert_properties": {},
+          "operation_lookup_properties": {},
+          "operation_update_properties": {},
+          "primary_key": "",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-share-rest",
+        "type": "template"
+      }
+    ],
     "type": "pipe"
   }
 ]
