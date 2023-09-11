@@ -57,7 +57,7 @@
         "not-full-page",
         "empty-result"
       ],
-      "page_size": 5000,
+      "page_size": 1000,
       "params": {
         "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} afterTime '{{ since }}'){% else %}({{ properties.updated_param }} afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "{{ properties.primary_key }}",
