@@ -58,7 +58,7 @@
         "not-full-page",
         "empty-result"
       ],
-      "page_size": 100,
+      "page_size": 10000,
       "params": {
         "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} afterTime '{{ since }}'){% else %}({{ properties.updated_param }} afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "{{ properties.primary_key }}",
@@ -309,7 +309,7 @@
         "not-full-page",
         "empty-result"
       ],
-      "page_size": 100,
+      "page_size": 10000,
       "params": {
         "$filter": "{% if since is defined and since is not none %}(updatedDate afterTime '{{ since }}'){% else %}(updatedDate afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "PrimaryKey asc",
@@ -348,7 +348,7 @@
         "not-full-page",
         "empty-result"
       ],
-      "page_size": 100,
+      "page_size": 1000,
       "params": {
         "$orderby": "{{ properties.primary_key }}",
         "$skip": "{{ page_size|int*page }}",
