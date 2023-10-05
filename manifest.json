@@ -6,6 +6,7 @@
     "token_url": {}
   },
   "auth": "oauth2",
+  "auth_variant": "superoffice-ticket",
   "datatypes": {
     "contact": {
       "label": "Company",
