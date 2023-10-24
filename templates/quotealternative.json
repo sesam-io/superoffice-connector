@@ -141,9 +141,7 @@
     ],
     "namespaced_identifiers": false,
     "sink": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-share",
-      "set-initial-offset": "onload",
-      "type": "dataset"
+      "set-initial-offset": "onload"
     },
     "source": {
       "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
