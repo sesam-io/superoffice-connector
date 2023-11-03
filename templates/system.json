@@ -1,21 +1,20 @@
 {
   "_id": "{{@ system @}}",
-  "oauth2": {
-    "access_token": "$SECRET(oauth_access_token)",
-    "client_id": "$SECRET(oauth_client_id)",
-    "client_secret": "$SECRET(oauth_client_secret)",
-    "refresh_token": "$SECRET(oauth_refresh_token)",
-    "token_url": "{{@ token_url @}}"
-  },
   "operations": {
     "alternate_list": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "GET",
       "url": "{{ properties.base_url }}"
     },
     "contact-webhook-insert": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "POST",
       "payload": {
         "Events": [
@@ -33,22 +32,34 @@
     },
     "defaults": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "GET",
       "url": "{{ properties.base_url }}"
     },
     "delete": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "DELETE",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     },
     "insert": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "POST",
       "url": "{{ properties.base_url }}"
     },
     "list": {
       "headers": {
         "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)",
         "SO-TimeZone": "includeTZOffset"
       },
       "id_expression": "{{ PrimaryKey }}",
@@ -58,7 +69,7 @@
         "not-full-page",
         "empty-result"
       ],
-      "page_size": 100,
+      "page_size": 10000,
       "params": {
         "$filter": "{% if since is defined and since is not none %}({{ properties.updated_param }} afterTime '{{ since }}'){% else %}({{ properties.updated_param }} afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "{{ properties.primary_key }}",
@@ -71,6 +82,8 @@
     "lookup": {
       "headers": {
         "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)",
         "SO-TimeZone": "includeTZOffset"
       },
       "method": "GET",
@@ -79,6 +92,8 @@
     "lookup-from-list": {
       "headers": {
         "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)",
         "SO-TimeZone": "includeTZOffset"
       },
       "id_expression": "{{ properties.primary_key|string }}",
@@ -87,13 +102,19 @@
     },
     "ownercontactlink-list": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "GET",
       "payload_property": "value",
       "url": "archive/dynamic?$select=ownercontactlink.contact_id,ownercontactlink.contact_id.name"
     },
     "person-webhook-insert": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "POST",
       "payload": {
         "Events": [
@@ -112,6 +133,10 @@
       "url": "Webhook"
     },
     "project-webhook-insert": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "POST",
       "payload": {
         "Events": [
@@ -128,12 +153,18 @@
       "url": "Webhook"
     },
     "put-update": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "PUT",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     },
     "quote-lookup": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "payload": {
@@ -142,6 +173,10 @@
       "url": "Agents/Quote/GetQuoteEntity"
     },
     "quote-webhook-insert": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "POST",
       "payload": {
         "Events": [
@@ -160,7 +195,9 @@
     },
     "quotealternative-create": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "payload": {
@@ -170,21 +207,27 @@
     },
     "quotealternative-default": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "url": "Agents/Quote/CreateDefaultQuoteAlternative"
     },
     "quotealternative-lookup": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "url": "Agents/Quote/GetQuoteAlternative?quoteAlternativeId={{ entity['QuoteAlternativeId'] }}"
     },
     "quotealternative-sale-lookup": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "payload": {
@@ -194,28 +237,36 @@
     },
     "quotealternative-save": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "url": "Agents/Quote/SaveQuoteAlternative"
     },
     "quotealternative-save-quote": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "url": "Agents/Quote/SaveQuote"
     },
     "quotealternative-save-quoteversion": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "url": "Agents/Quote/SaveQuoteVersion"
     },
     "quoteline-default": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "payload": {
@@ -226,7 +277,9 @@
     },
     "quoteline-delete": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "payload": {
@@ -236,14 +289,18 @@
     },
     "quoteline-insert": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteline-list": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "payload": {
@@ -253,7 +310,9 @@
     },
     "quoteline-lookup": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "payload": {
@@ -263,14 +322,18 @@
     },
     "quoteline-update": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "url": "Agents/Quote/SaveQuoteLine"
     },
     "quoteversion-lookup": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
       "payload": {
@@ -279,6 +342,10 @@
       "url": "Agents/Quote/GetQuoteVersions"
     },
     "sale-webhook-insert": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "POST",
       "payload": {
         "Events": [
@@ -300,6 +367,8 @@
     "salequote-list": {
       "headers": {
         "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)",
         "X-Sesam-Page": "{% if (previous_request_headers is defined and previous_request_headers['X-Sesam-Page'] is defined) %}{{ previous_request_headers['X-Sesam-Page']|int + 1 }}{% else %}1{% endif %}"
       },
       "id_expression": "{{ PrimaryKey }}",
@@ -309,7 +378,7 @@
         "not-full-page",
         "empty-result"
       ],
-      "page_size": 100,
+      "page_size": 10000,
       "params": {
         "$filter": "{% if since is defined and since is not none %}(updatedDate afterTime '{{ since }}'){% else %}(updatedDate afterTime '1970-01-01T00:00:00'){% endif %}",
         "$orderby": "PrimaryKey asc",
@@ -320,6 +389,10 @@
       "url": "archive/Sale?$select=quote/quoteId,updatedDate"
     },
     "ticket-webhook-insert": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "POST",
       "payload": {
         "Events": [
@@ -335,12 +408,18 @@
       "url": "Webhook"
     },
     "update": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "PATCH",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
     },
     "user_list": {
       "headers": {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "GET",
       "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
@@ -348,7 +427,7 @@
         "not-full-page",
         "empty-result"
       ],
-      "page_size": 100,
+      "page_size": 1000,
       "params": {
         "$orderby": "{{ properties.primary_key }}",
         "$skip": "{{ page_size|int*page }}",
@@ -357,21 +436,37 @@
       "url": "{{ properties.base_url }}"
     },
     "webhook-delete": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "DELETE",
       "payload-type": "json",
       "url": "Webhook/{{ entity['WebhookId'] }}"
     },
     "webhook-insert": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "POST",
       "payload-type": "json",
       "url": "Webhook"
     },
     "webhook-list": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "id_expression": "{{ WebhookId }}",
       "method": "GET",
       "url": "Webhook"
     },
     "webhook-lookup": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
       "method": "GET",
       "payload-type": "json",
       "url": "Webhook/{{ entity['WebhookId'] }}"
