@@ -115,7 +115,9 @@
       "set_initial_offset": "onload"
     },
     "source": {
-      "type": "http_endpoint"
+      "system": "{{@ system @}}",
+      "type": "http_endpoint",
+      "validation_expression": "{% if request_headers['X-Superoffice-Signature'] == b64encode(hmacsha256digest(secret('webhook_secret'), request_body)) %}{% else %}FAIL!{% endif %}"
     },
     "transform": [
       {

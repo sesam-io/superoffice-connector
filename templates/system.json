@@ -22,10 +22,11 @@
           "contact.changed",
           "contact.deleted"
         ],
+        "Name": "Sesam Talk Contact events",
+        "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-contact-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Contact events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -124,10 +125,11 @@
           "person.consented",
           "person.unconsented"
         ],
+        "Name": "Sesam Talk Person events",
+        "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-person-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Person events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -144,10 +146,11 @@
           "project.changed",
           "project.deleted"
         ],
+        "Name": "Sesam Talk Project events",
+        "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-project-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Project events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -185,10 +188,11 @@
           "quote.sent",
           "quote.ordered"
         ],
+        "Name": "Sesam Talk Quote events",
+        "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-quote-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Quote events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -356,10 +360,11 @@
           "sale.lost",
           "sale.sold"
         ],
+        "Name": "Sesam Talk Sale events",
+        "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-sale-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Sale events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
@@ -399,10 +404,11 @@
           "ticket.created",
           "ticket.changed"
         ],
+        "Name": "Sesam Talk Ticket events",
+        "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
         "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-ticket-event/entities",
-        "Type": "webhook",
-        "Name": "Sesam Talk Ticket events"
+        "Type": "webhook"
       },
       "payload-type": "json",
       "url": "Webhook"
