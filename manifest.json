@@ -2,8 +2,7 @@
   "additional_parameters": {
     "account_id": {},
     "base_url": {},
-    "service_url": {},
-    "token_url": {}
+    "service_url": {}
   },
   "auth": "oauth2",
   "auth_variant": "superoffice-ticket",
@@ -98,10 +97,9 @@
       "parameters": {
         "base_url": "Sale",
         "list_url": "saleId",
-        "primary_key": "SaleId",
         "updated_param": "updatedDate"
       },
-      "template": "templates/contact.json",
+      "template": "templates/sale.json",
       "webhook": true
     },
     "user": {
