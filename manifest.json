@@ -79,9 +79,6 @@
     },
     "quotealternative": {
       "label": "Quote Alternative",
-      "parameters": {
-        "primary_key": "saleIdQuoteAlternativeId"
-      },
       "parent": "quoteversion",
       "template": "templates/quotealternative.json"
     },
@@ -98,7 +95,7 @@
     "sale": {
       "label": "Sale",
       "parameters": {
-        "base_url": "sale",
+        "base_url": "Sale",
         "list_url": "saleId",
         "updated_param": "updatedDate"
       },

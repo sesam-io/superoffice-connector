@@ -1,7 +1,6 @@
 [
   {
     "_id": "{{@ system @}}-{{@ base_url @}}-all",
-    "comment": "WARNING! This pipe is generated from the template of the 'contact' datatype and changes will be silently ignored during collapse. For more information see the connectorpy README.",
     "metadata": {
       "supports_since": true
     },
@@ -108,7 +107,6 @@
   },
   {
     "_id": "{{@ system @}}-{{@ base_url @}}-event",
-    "comment": "WARNING! This pipe is generated from the template of the 'contact' datatype and changes will be silently ignored during collapse. For more information see the connectorpy README.",
     "compaction": {
       "keep_versions": 1
     },
