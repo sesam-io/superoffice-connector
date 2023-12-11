@@ -31,6 +31,15 @@
       "payload-type": "json",
       "url": "Webhook"
     },
+    "create-quote": {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/CreateAndSaveQuote"
+    },
     "defaults": {
       "headers": {
         "Accept": "application/json",
