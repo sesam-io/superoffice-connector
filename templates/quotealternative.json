@@ -160,25 +160,30 @@
                 [
                   "add",
                   "$original_source",
-                  "_S.$source"
-                ],
-                [
-                  "comment",
-                  "Can't do anything without a saleId so don't process this entity"
+                  "_S."
                 ],
                 [
                   "if",
                   [
-                    "not",
+                    "is-empty",
+                    "_S.sesam_SaleId"
+                  ],
+                  [
                     [
-                      "is-integer",
-                      "_S.sesam_SaleId"
+                      "add",
+                      "sesam_Accepted",
+                      true
+                    ],
+                    [
+                      "add",
+                      "$operation",
+                      "insert-sale-lookup-default"
                     ]
                   ],
                   [
                     "add",
                     "$operation",
-                    "discard-no-saleId"
+                    "lookup-sale"
                   ]
                 ]
               ]
@@ -186,13 +191,238 @@
             "type": "dtl"
           },
           {
+            "allowed_status_codes": "200",
+            "operation": "defaults",
+            "properties": {
+              "base_url": "Sale/default"
+            },
+            "response_property": "response_body",
+            "response_status_property": "response_status",
+            "side_effects": false,
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "insert-sale-lookup-default"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "comment",
+                  "merging default sale data with current object"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S.$operation",
+                    "insert-sale-lookup-default"
+                  ],
+                  [
+                    [
+                      "copy",
+                      "*",
+                      [
+                        "list",
+                        "properties",
+                        "response*"
+                      ]
+                    ],
+                    [
+                      "add",
+                      "$operation",
+                      "insert-sale"
+                    ],
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "apply",
+                        "default-values",
+                        [
+                          "dict",
+                          "a",
+                          [
+                            "apply",
+                            "remove_sesam_properties",
+                            [
+                              "apply",
+                              "remove-primary-key",
+                              [
+                                "first",
+                                "_S.$original_source"
+                              ]
+                            ]
+                          ],
+                          "b",
+                          [
+                            "apply",
+                            "remove-visibility",
+                            [
+                              "first",
+                              "_S.response_body"
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "copy",
+                    "*"
+                  ]
+                ]
+              ],
+              "default-values": [
+                [
+                  "merge",
+                  [
+                    "dict",
+                    [
+                      "map",
+                      [
+                        "list",
+                        "_.",
+                        [
+                          "sorted",
+                          [
+                            "if",
+                            [
+                              "is-dict",
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ]
+                            ],
+                            [
+                              "apply",
+                              "default-values",
+                              [
+                                "dict",
+                                "a",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ],
+                                "b",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ],
+                            [
+                              "if",
+                              [
+                                "eq",
+                                "_.",
+                                "QuoteAlternativeId"
+                              ],
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ],
+                              [
+                                "if",
+                                [
+                                  "is-not-null",
+                                  [
+                                    "path",
+                                    "_.",
+                                    "_S.a"
+                                  ]
+                                ],
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ],
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "keys",
+                        "_S.b"
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "remove-primary-key": [
+                [
+                  "copy",
+                  "*",
+                  [
+                    "literal",
+                    "SaleId"
+                  ]
+                ]
+              ],
+              "remove-visibility": [
+                [
+                  "copy",
+                  "*",
+                  "VisibleFor"
+                ]
+              ],
+              "remove_sesam_properties": [
+                [
+                  "copy",
+                  "*",
+                  [
+                    "list",
+                    "_*",
+                    "$*"
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "allowed_status_codes": "100-428,430-599",
+            "operation": "insert",
+            "properties": {
+              "base_url": "Sale"
+            },
+            "replace_entity": false,
+            "response_property": "response_body",
+            "response_status_property": "response_status",
+            "side_effects": true,
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "insert-sale"
+            },
+            "type": "rest"
+          },
+          {
             "operation": "lookup",
             "properties": {
               "base_url": "Sale",
               "lookup_id": "sesam_SaleId"
             },
+            "response_property": "response_body",
+            "response_status_property": "response_status",
             "side_effects": false,
             "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "lookup-sale"
+            },
             "type": "rest"
           },
           {
@@ -201,24 +431,61 @@
                 [
                   "copy",
                   "*",
-                  "response"
-                ],
-                [
-                  "comment",
-                  "Don't do anything if the sale is sold"
+                  [
+                    "list",
+                    "response*",
+                    "properties"
+                  ]
                 ],
                 [
                   "if",
                   [
                     "eq",
-                    "_S._deleted",
-                    false
+                    "_S.$operation",
+                    "insert-sale"
+                  ],
+                  [
+                    "add",
+                    "sesam_SaleId",
+                    [
+                      "first",
+                      "_S.response_body.SaleId"
+                    ]
+                  ],
+                  [
+                    "if",
+                    [
+                      "neq",
+                      "_S.sesam_SaleId",
+                      "_S.response_body.SaleId"
+                    ],
+                    [
+                      "add",
+                      "$operation",
+                      "discard-SaleId-mismatch"
+                    ]
+                  ]
+                ],
+                [
+                  "if",
+                  [
+                    "and",
+                    [
+                      "eq",
+                      "_S._deleted",
+                      false
+                    ],
+                    [
+                      "neq",
+                      "_T.$operation",
+                      "discard-SaleId-mismatch"
+                    ]
                   ],
                   [
                     "if",
                     [
                       "eq",
-                      "_S.response.Status",
+                      "_S.response_body.Status",
                       "Sold"
                     ],
                     [
@@ -239,11 +506,9 @@
                           false
                         ],
                         [
-                          [
-                            "add",
-                            "$operation",
-                            "lookup-quote"
-                          ]
+                          "add",
+                          "$operation",
+                          "lookup-quote"
                         ]
                       ],
                       [
@@ -252,7 +517,7 @@
                         [
                           "dict",
                           "SaleId",
-                          "_S.sesam_SaleId"
+                          "_T.sesam_SaleId"
                         ]
                       ]
                     ]
@@ -310,35 +575,19 @@
                         "_S.response"
                       ],
                       [
-                        "merge",
-                        [
-                          "apply",
-                          "no-quote",
-                          "_S."
-                        ]
+                        "add",
+                        "$operation",
+                        "create-quote"
                       ]
                     ]
                   ]
-                ]
-              ],
-              "no-quote": [
-                [
-                  "add",
-                  "$operation",
-                  "create-quote"
                 ]
               ]
             },
             "type": "dtl"
           },
           {
-            "operation": "{{@ datatype @}}-create-quote",
-            "operations": {
-              "{{@ datatype @}}-create-quote": {
-                "method": "POST",
-                "url": "Agents/Quote/CreateAndSaveQuote"
-              }
-            },
+            "operation": "create-quote",
             "payload": {
               "ConnectionId": 1,
               "SaleId": "{{ entity.sesam_SaleId }}"
@@ -355,7 +604,8 @@
               "default": [
                 [
                   "copy",
-                  "*"
+                  "*",
+                  "response"
                 ],
                 [
                   "if",
@@ -395,7 +645,7 @@
                         ],
                         [
                           "add",
-                          "sesam_QuoteAlternativeId",
+                          "QuoteAlternativeId",
                           [
                             "first",
                             "_S.response.QuoteVersions.QuoteAlternatives.QuoteAlternativeId"
@@ -557,6 +807,23 @@
           },
           {
             "rules": {
+              "build-payload": [
+                [
+                  "add",
+                  "Quote",
+                  [
+                    "dict",
+                    "QuoteId",
+                    "_S.sesam_QuoteId",
+                    "SaleId",
+                    "_S.sesam_SaleId",
+                    "QuoteConnectionId",
+                    1,
+                    "AcceptedQuoteAlternativeId",
+                    "_R._T.QuoteAlternativeId"
+                  ]
+                ]
+              ],
               "default": [
                 [
                   "comment",
@@ -593,12 +860,7 @@
                     ],
                     [
                       "add",
-                      "sesam_InsertedAbove",
-                      true
-                    ],
-                    [
-                      "add",
-                      "sesam_QuoteAlternativeId",
+                      "QuoteAlternativeId",
                       [
                         "first",
                         "_S.response_body.LikelyQuoteAlternativeId"
@@ -632,10 +894,56 @@
                     "if",
                     "_S.sesam_Accepted",
                     [
-                      "add",
-                      "$operation",
-                      "lookup-quotelines"
+                      [
+                        "add",
+                        "$operation",
+                        "mark-as-accepted"
+                      ],
+                      [
+                        "add",
+                        "payload",
+                        [
+                          "apply",
+                          "build-payload",
+                          "_S."
+                        ]
+                      ]
                     ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "{{@ datatype @}}-save-quote",
+            "response_property": "response_body",
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "mark-as-accepted"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*",
+                  "response_body"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S.$operation",
+                    "mark-as-accepted"
+                  ],
+                  [
+                    "add",
+                    "$operation",
+                    "lookup-quotelines"
                   ]
                 ]
               ]
@@ -654,93 +962,28 @@
           },
           {
             "rules": {
-              "build-payload": [
-                [
-                  "add",
-                  "Quote",
-                  [
-                    "dict",
-                    "QuoteId",
-                    "_S.sesam_QuoteId",
-                    "SaleId",
-                    "_S.sesam_SaleId",
-                    "QuoteConnectionId",
-                    1,
-                    "AcceptedQuoteAlternativeId",
-                    "_S.QuoteAlternativeId"
-                  ]
-                ]
-              ],
               "default": [
                 [
                   "copy",
                   "*",
-                  "response_body"
+                  [
+                    "list",
+                    "response_body",
+                    "payload"
+                  ]
                 ],
                 [
                   "if",
                   [
-                    "is-not-empty",
-                    "_S.response_body"
+                    "eq",
+                    "_S.$operation",
+                    "lookup-quotelines"
                   ],
                   [
                     [
                       "add",
                       "$operation",
-                      "mark-as-sold"
-                    ],
-                    [
-                      "comment",
-                      "payload for marking quote as sold"
-                    ],
-                    [
-                      "add",
-                      "payload",
-                      [
-                        "apply",
-                        "build-payload",
-                        "_S."
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "{{@ datatype @}}-save-quote",
-            "response_property": "response_body",
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "mark-as-sold"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "if",
-                  [
-                    "neq",
-                    "_S.$operation",
-                    "mark-as-sold"
-                  ],
-                  [
-                    "copy",
-                    "*"
-                  ],
-                  [
-                    [
-                      "copy",
-                      "*",
-                      [
-                        "list",
-                        "response_body",
-                        "payload"
-                      ]
+                      "close-{{@ parent @}}"
                     ],
                     [
                       "comment",
@@ -767,11 +1010,6 @@
                           ]
                         ]
                       ]
-                    ],
-                    [
-                      "add",
-                      "$c",
-                      "_S.sesam.QuoteVersion"
                     ]
                   ]
                 ]
@@ -871,22 +1109,82 @@
             "system": "{{@ system @}}",
             "trigger_on": {
               "key": "$operation",
-              "value": "mark-as-sold"
+              "value": "close-{{@ parent @}}-foo"
             },
             "type": "rest"
           },
           {
-            "properties": {
-              "operation": "{{@ datatype @}}-default",
-              "primary_key": "QuoteAlternativeId",
-              "rest_system": "{{@ system @}}"
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*",
+                  [
+                    "list",
+                    "response_body",
+                    "payload"
+                  ]
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S.$operation",
+                    "close-{{@ parent @}}"
+                  ],
+                  [
+                    [
+                      "add",
+                      "$operation",
+                      "close-sale"
+                    ],
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "dict",
+                        "SaleId",
+                        "_S.sesam_SaleId",
+                        "Status",
+                        "Sold"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
             },
-            "template": "transform-defaults-rest",
-            "type": "template"
+            "type": "dtl"
+          },
+          {
+            "operation": "update",
+            "properties": {
+              "base_url": "Sale",
+              "lookup_id": "sesam_SaleId"
+            },
+            "response_property": "response_body",
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "close-sale"
+            },
+            "type": "rest"
           },
           {
             "rules": {
               "default": [
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S.$operation",
+                    "close-sale"
+                  ],
+                  [
+                    "add",
+                    "$operation",
+                    "discard-sale-now-closed"
+                  ]
+                ],
                 [
                   "comment",
                   "Need to remove sesam prefixed properties from based_on_properties. Can be removed when this ability is added to the template, or the transfrom doesn't add these types of variables to the field."
@@ -924,10 +1222,7 @@
               "default": [
                 [
                   "copy",
-                  [
-                    "literal",
-                    "QuoteAlternativeId"
-                  ]
+                  "*"
                 ],
                 [
                   "add",
@@ -982,23 +1277,8 @@
                     [
                       "if",
                       [
-                        "all",
-                        [
-                          "is-not-null",
-                          "_."
-                        ],
-                        [
-                          "map",
-                          [
-                            "path",
-                            "_.",
-                            "_S."
-                          ],
-                          [
-                            "literal",
-                            "QuoteAlternativeId"
-                          ]
-                        ]
+                        "is-null",
+                        "sesam_InsertedAbove"
                       ],
                       [
                         "if",
@@ -1112,20 +1392,6 @@
                             ]
                           ]
                         ]
-                      ]
-                    ]
-                  ],
-                  [
-                    [
-                      "comment",
-                      "NON-STANDARD: Add the discard reason to the root level"
-                    ],
-                    [
-                      "merge",
-                      [
-                        "apply",
-                        "discard-no-saleId",
-                        "_S."
                       ]
                     ]
                   ]
@@ -1790,7 +2056,7 @@
                 [
                   "add",
                   "$operation",
-                  "update"
+                  "discard-update"
                 ],
                 [
                   "add",
@@ -1823,126 +2089,18 @@
               "default": [
                 [
                   "comment",
-                  "Moved non-template DTL into own transform"
-                ],
-                [
-                  "comment",
-                  "If a new quote or quote version has been created earlier, use the quote alternative from there."
-                ],
-                [
-                  "copy",
-                  "*"
-                ],
-                [
-                  "if",
-                  [
-                    "or",
-                    [
-                      "eq",
-                      "_S.$operation",
-                      "insert"
-                    ],
-                    [
-                      "eq",
-                      "_S.$operation",
-                      "update"
-                    ]
-                  ],
-                  [
-                    "if",
-                    "_S.$source.sesam_InsertedAbove",
-                    [
-                      [
-                        "comment",
-                        "skip the create quote alternative step and set QuoteAlternativeID to be the previously created quote alternative"
-                      ],
-                      [
-                        "add",
-                        "payload",
-                        [
-                          "apply",
-                          "newQuoteAlternative",
-                          "_S.payload"
-                        ]
-                      ]
-                    ],
-                    [
-                      "if",
-                      [
-                        "eq",
-                        "_S.$operation",
-                        "insert"
-                      ],
-                      [
-                        [
-                          "comment",
-                          "Otherwise, need to reformat the payload in order to create a Quote Alternative first. Payload will be handled by the operation"
-                        ],
-                        [
-                          "add",
-                          "$operation",
-                          "create"
-                        ],
-                        [
-                          "rename",
-                          "payload",
-                          "_payload"
-                        ],
-                        [
-                          "remove",
-                          "payload"
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "newQuoteAlternative": [
-                [
-                  "copy",
-                  "*",
-                  "QuoteAlternativeId"
-                ],
-                [
-                  "add",
-                  "QuoteAlternativeId",
-                  "_R._S.$source.sesam_QuoteAlternativeId"
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-create",
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "create"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "comment",
                   "transform for inserts where we add the QuoteAlternativeId from the previous insert operation to the payload in order to populate the remaining metadata"
                 ],
                 [
                   "if",
                   [
-                    "neq",
-                    "_S.$operation",
-                    "create"
-                  ],
-                  [
-                    "copy",
-                    "*"
+                    "and",
+                    [
+                      "eq",
+                      "_S.$operation",
+                      "insert"
+                    ],
+                    "_S.sesam_InsertedAbove"
                   ],
                   [
                     [
@@ -1951,7 +2109,7 @@
                       [
                         "list",
                         "response_body",
-                        "_payload"
+                        "payload"
                       ]
                     ],
                     [
@@ -1959,108 +2117,64 @@
                       "payload",
                       [
                         "apply",
-                        "default-values",
-                        [
-                          "dict",
-                          "a",
-                          "_S._payload",
-                          "b",
-                          [
-                            "first",
-                            "_S.response_body"
-                          ]
-                        ]
+                        "payload",
+                        "_T."
                       ]
-                    ],
-                    [
-                      "add",
-                      "$operation",
-                      "insert"
                     ]
+                  ],
+                  [
+                    "copy",
+                    "*"
                   ]
                 ]
               ],
-              "default-values": [
+              "payload": [
                 [
                   "merge",
                   [
                     "dict",
                     [
-                      "map",
+                      "filter",
                       [
-                        "list",
-                        "_.",
+                        "not",
                         [
-                          "sorted",
+                          "or",
                           [
-                            "if",
+                            "matches",
+                            "_*",
                             [
-                              "is-dict",
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ]
-                            ],
+                              "first",
+                              "_."
+                            ]
+                          ],
+                          [
+                            "matches",
+                            "$*",
                             [
-                              "apply",
-                              "default-values",
-                              [
-                                "dict",
-                                "a",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.a"
-                                ],
-                                "b",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.b"
-                                ]
-                              ]
-                            ],
+                              "first",
+                              "_."
+                            ]
+                          ],
+                          [
+                            "matches",
+                            "sesam*",
                             [
-                              "if",
-                              [
-                                "eq",
-                                "_.",
-                                "QuoteAlternativeId"
-                              ],
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ],
-                              [
-                                "if",
-                                [
-                                  "is-not-null",
-                                  [
-                                    "path",
-                                    "_.",
-                                    "_S.a"
-                                  ]
-                                ],
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.a"
-                                ],
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.b"
-                                ]
-                              ]
+                              "first",
+                              "_."
+                            ]
+                          ],
+                          [
+                            "is-null",
+                            [
+                              "last",
+                              "_."
                             ]
                           ]
                         ]
                       ],
                       [
-                        "keys",
-                        "_S.b"
+                        "items",
+                        "_S."
                       ]
                     ]
                   ]
@@ -2222,7 +2336,7 @@
                         "$generated_id",
                         [
                           "first",
-                          "_S.response_body.QuoteAlternativeId"
+                          "_S.QuoteAlternativeId"
                         ]
                       ],
                       [
