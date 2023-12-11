@@ -1186,11 +1186,6 @@
                   ]
                 ],
                 [
-                  "add",
-                  "foo2",
-                  "_S."
-                ],
-                [
                   "comment",
                   "Need to remove sesam prefixed properties from based_on_properties. Can be removed when this ability is added to the template, or the transfrom doesn't add these types of variables to the field."
                 ],
