@@ -218,6 +218,15 @@
       },
       "url": "Agents/Quote/CreateQuoteAlternative"
     },
+    "quotealternative-create-version": {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/CreateAndSaveQuoteVersion"
+    },
     "quotealternative-default": {
       "headers": {
         "Accept": "application/json",
