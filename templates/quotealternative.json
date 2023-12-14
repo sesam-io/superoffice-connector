@@ -2261,11 +2261,14 @@
                     ],
                     [
                       [
-                        "add",
-                        "$generated_id",
+                        "merge-union",
                         [
-                          "first",
-                          "_S.QuoteAlternativeId"
+                          "dict",
+                          "$generated_id",
+                          [
+                            "first",
+                            "_S.QuoteAlternativeId"
+                          ]
                         ]
                       ],
                       [
@@ -2277,6 +2280,39 @@
                         [
                           "fail!",
                           "Generated primary key not found"
+                        ]
+                      ],
+                      [
+                        "if",
+                        "_S.$source.sesam_InsertedAbove",
+                        [
+                          "merge-union",
+                          [
+                            "dict",
+                            "$generated_id",
+                            [
+                              "first",
+                              "_S.$source.sesam_SaleId"
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "if",
+                        [
+                          "and",
+                          "_S.$source.sesam_InsertedAbove",
+                          [
+                            "is-null",
+                            [
+                              "first",
+                              "_S.$source.sesam_SaleId"
+                            ]
+                          ]
+                        ],
+                        [
+                          "fail!",
+                          "Generated sale id not found"
                         ]
                       ]
                     ]
