@@ -17,6 +17,9 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}alternative-{{@ datatype @}}-share"
+    ],
     "namespaced_identifiers": false,
     "pump": {
       "rescan_cron_expression": "*/30 * * * *"
@@ -28,79 +31,193 @@
       ],
       "type": "merge_datasets"
     },
-    "transform": [
-      {
-        "rules": {
-          "default": [
-            [
-              "comment",
-              "Aligning the full run and the webhook source."
-            ],
-            [
-              "copy",
-              "*"
-            ],
-            [
-              "default",
-              "{{@ datatype @}}/{{@ datatype @}}Id",
-              "_S.PrimaryKey"
-            ]
-          ]
-        },
-        "type": "dtl"
-      },
-      {
-        "operation": "{{@ datatype @}}-lookup",
-        "replace_entity": false,
-        "side_effects": false,
-        "system": "{{@ system @}}",
-        "type": "rest"
-      },
-      {
-        "rules": {
-          "default": [
-            [
-              "merge",
-              "_S.response"
-            ],
-            [
-              "comment",
-              "TODO: Why do we need sesam_SaleId when it's already part of the {{@ datatype @}}."
-            ],
-            [
-              "add",
-              "sesam_SaleId",
-              "_T.SaleId"
-            ],
-            [
-              "comment",
-              "Deletes won't work properly because we are rewriting the _id from something that we can't lookup. Assuming that {{@ datatype @}}s can't be deleted for now."
-            ],
-            [
-              "add",
-              "_id",
+    "transform": {
+      "transforms": [
+        {
+          "rules": {
+            "default": [
               [
-                "string",
-                "_T.QuoteId"
+                "comment",
+                "Aligning the full run and the webhook source."
+              ],
+              [
+                "copy",
+                "*"
+              ],
+              [
+                "default",
+                "QuoteId",
+                "_S.{{@ datatype @}}/{{@ datatype @}}Id"
+              ],
+              [
+                "add",
+                "payload",
+                [
+                  "dict",
+                  "QuoteId",
+                  "_T.QuoteId"
+                ]
               ]
-            ],
-            [
-              "if",
+            ]
+          },
+          "type": "dtl"
+        },
+        {
+          "allowed_status_codes": "200,403",
+          "operation": "{{@ datatype @}}-lookup",
+          "replace_entity": false,
+          "response_property": "response_body",
+          "response_status_property": "response_status",
+          "side_effects": false,
+          "system": "{{@ system @}}",
+          "type": "rest"
+        },
+        {
+          "rules": {
+            "default": [
               [
-                "eq",
-                "_T.AcceptedQuoteAlternativeId",
-                0
+                "case-eq",
+                "_S.response_status",
+                200,
+                [
+                  [
+                    "merge",
+                    [
+                      "first",
+                      "_S.response_body"
+                    ]
+                  ],
+                  [
+                    "if",
+                    [
+                      "eq",
+                      "_S._deleted",
+                      true
+                    ],
+                    [
+                      "add",
+                      "_deleted",
+                      false
+                    ]
+                  ]
+                ],
+                404,
+                [
+                  [
+                    "if",
+                    [
+                      "eq",
+                      "_S._deleted",
+                      true
+                    ],
+                    [
+                      "copy",
+                      "*",
+                      [
+                        "list",
+                        "response_body",
+                        "response_status"
+                      ]
+                    ],
+                    [
+                      "discard"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "add",
+                "_id",
+                [
+                  "string",
+                  "_T.QuoteId"
+                ]
+              ],
+              [
+                "comment",
+                "TODO: Why do we need sesam_SaleId when it's already part of the {{@ datatype @}}."
+              ],
+              [
+                "add",
+                "sesam_SaleId",
+                "_T.SaleId"
+              ],
+              [
+                "comment",
+                "Deletes won't work properly because we are rewriting the _id from something that we can't lookup. Assuming that {{@ datatype @}}s can't be deleted for now."
+              ],
+              [
+                "if",
+                [
+                  "eq",
+                  "_T.AcceptedQuoteAlternativeId",
+                  0
+                ],
+                [
+                  "remove",
+                  "AcceptedQuoteAlternativeId"
+                ]
+              ]
+            ]
+          },
+          "type": "dtl"
+        },
+        {
+          "rules": {
+            "default": [
+              [
+                "copy",
+                "*"
+              ],
+              [
+                "add",
+                "_origin_entity",
+                [
+                  "coalesce",
+                  [
+                    "is-not-empty",
+                    "_."
+                  ],
+                  [
+                    "list",
+                    [
+                      "first",
+                      [
+                        "hops",
+                        {
+                          "datasets": [
+                            "{{@ system @}}-{{@ datatype @}}alternative-{{@ datatype @}}-share st"
+                          ],
+                          "track-dependencies": false,
+                          "where": [
+                            [
+                              "eq",
+                              "_S.QuoteId",
+                              "st.$generated_id"
+                            ]
+                          ]
+                        }
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "add-if",
+                "$origin",
+                "_T._origin_entity.$origin"
               ],
               [
                 "remove",
-                "AcceptedQuoteAlternativeId"
+                "_origin_entity"
               ]
             ]
-          ]
-        },
-        "type": "dtl"
-      }
-    ],
+          },
+          "type": "dtl"
+        }
+      ],
+      "type": "chained"
+    },
     "type": "pipe"
   },
   {

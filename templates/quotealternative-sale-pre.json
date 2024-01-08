@@ -1,0 +1,216 @@
+{
+  "_id": "{{@ system @}}-{{@ datatype @}}-share",
+  "namespaced_identifiers": false,
+  "rescan_when_config_changes": false,
+  "source": {
+    "dataset": "{{@ system @}}-quotealternative-transform",
+    "type": "dataset"
+  },
+  "transform": [
+    {
+      "rules": {
+        "default": [
+          [
+            "copy",
+            "*"
+          ],
+          [
+            "add-if",
+            "SaleId",
+            [
+              "coalesce",
+              [
+                "list",
+                "_S.sesam_SaleId",
+                [
+                  "first",
+                  [
+                    "hops",
+                    {
+                      "datasets": [
+                        "{{@ system @}}-quotealternative-sale-share ss"
+                      ],
+                      "return": "ss.$generated_id",
+                      "where": [
+                        [
+                          "eq",
+                          "_S.$ids",
+                          "ss.$ids"
+                        ]
+                      ]
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "if",
+            [
+              "not",
+              "_S.sesam_Accepted"
+            ],
+            [
+              "if",
+              [
+                "is-not-empty",
+                "_T.SaleId"
+              ],
+              [
+                "add",
+                "$discard",
+                "already inserted"
+              ]
+            ],
+            [
+              "if",
+              [
+                "is-not-empty",
+                "_T.SaleId"
+              ],
+              [
+                [
+                  "add-if",
+                  "_QuoteId",
+                  [
+                    "first",
+                    [
+                      "hops",
+                      {
+                        "datasets": [
+                          "{{@ system @}}-quote-collect qc"
+                        ],
+                        "return": "qc.QuoteId",
+                        "where": [
+                          [
+                            "eq",
+                            "_S.sesam_SaleId",
+                            "qc.sesam_SaleId"
+                          ]
+                        ]
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "if",
+                  [
+                    "is-not-empty",
+                    "_T._QuoteId"
+                  ],
+                  [
+                    [
+                      "add",
+                      "$operation",
+                      "lookup-quote"
+                    ],
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "dict",
+                        "QuoteId",
+                        "_T._QuoteId"
+                      ]
+                    ]
+                  ],
+                  [
+                    "add",
+                    "$discard",
+                    "missing QuoteId"
+                  ]
+                ]
+              ],
+              [
+                "add",
+                "payload",
+                "_S."
+              ]
+            ]
+          ]
+        ]
+      },
+      "type": "dtl"
+    },
+    {
+      "operation": "quote-lookup",
+      "response_property": "$trace-pre-lookup-quote",
+      "side_effects": false,
+      "system": "{{@ system @}}",
+      "trigger_on": {
+        "key": "$operation",
+        "value": "lookup-quote"
+      },
+      "type": "rest"
+    },
+    {
+      "rules": {
+        "default": [
+          [
+            "if",
+            [
+              "is-empty",
+              "_S.$discard"
+            ],
+            [
+              [
+                "if",
+                [
+                  "eq",
+                  "_S.$operation",
+                  "lookup-quote"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "map",
+                      "_.State",
+                      [
+                        "filter",
+                        [
+                          "eq",
+                          [
+                            "first",
+                            "_.ActiveQuoteVersionId"
+                          ],
+                          [
+                            "first",
+                            "_S.$trace-pre-lookup-quote.QuoteVersionId"
+                          ]
+                        ],
+                        "_S.$trace-pre-lookup-quote.QuoteVersions"
+                      ]
+                    ],
+                    "Sold"
+                  ],
+                  [
+                    "merge",
+                    [
+                      "dict",
+                      "SaleId",
+                      "_S.SaleId",
+                      "Status",
+                      "Sold"
+                    ]
+                  ]
+                ],
+                [
+                  "merge",
+                  "_S.payload"
+                ]
+              ]
+            ],
+            [
+              "copy",
+              "*"
+            ]
+          ]
+        ]
+      },
+      "type": "dtl"
+    }
+  ],
+  "type": "pipe"
+}

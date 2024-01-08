@@ -2,8 +2,7 @@
   "additional_parameters": {
     "account_id": {},
     "base_url": {},
-    "service_url": {},
-    "token_url": {}
+    "service_url": {}
   },
   "auth": "oauth2",
   "auth_variant": "superoffice-ticket",
@@ -82,6 +81,24 @@
       "label": "Quote Alternative",
       "parent": "quoteversion",
       "template": "templates/quotealternative.json"
+    },
+    "quotealternative-quote": {
+      "template": "templates/quotealternative-quote.json"
+    },
+    "quotealternative-quote-pre": {
+      "template": "templates/quotealternative-quote-pre.json"
+    },
+    "quotealternative-quoteversion": {
+      "template": "templates/quotealternative-quoteversion.json"
+    },
+    "quotealternative-quoteversion-pre": {
+      "template": "templates/quotealternative-quoteversion-pre.json"
+    },
+    "quotealternative-sale": {
+      "template": "templates/quotealternative-sale.json"
+    },
+    "quotealternative-sale-pre": {
+      "template": "templates/quotealternative-sale-pre.json"
     },
     "quoteline": {
       "label": "Quote Line",
