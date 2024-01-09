@@ -6,8 +6,14 @@
     },
     "namespaced_identifiers": false,
     "source": {
-      "operation": "sale{{@ datatype @}}-list",
-      "since_property_name": "updatedDate",
+      "operation": "list",
+      "properties": {
+        "base_url": "Sale",
+        "primary_key": "{{@ datatype @}}Id",
+        "updated_param": "updatedDate"
+      },
+      "since_property_location": "manual",
+      "since_property_name": "since",
       "supports_since": true,
       "system": "{{@ system @}}",
       "type": "rest",
@@ -18,12 +24,10 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
     "exclude_completeness": [
-      "{{@ system @}}-{{@ datatype @}}alternative-{{@ datatype @}}-share"
+      "{{@ system @}}-{{@ datatype @}}-share",
+      "{{@ system @}}-quotealternative-{{@ datatype @}}-share"
     ],
     "namespaced_identifiers": false,
-    "pump": {
-      "rescan_cron_expression": "*/30 * * * *"
-    },
     "source": {
       "datasets": [
         "{{@ system @}}-{{@ datatype @}}-event",
@@ -37,34 +41,30 @@
           "rules": {
             "default": [
               [
-                "comment",
-                "Aligning the full run and the webhook source."
-              ],
-              [
                 "copy",
                 "*"
               ],
               [
-                "default",
-                "QuoteId",
-                "_S.{{@ datatype @}}/{{@ datatype @}}Id"
+                "comment",
+                "In the case of webhook events, we only have the PrimaryKey available."
               ],
               [
-                "add",
-                "payload",
-                [
-                  "dict",
-                  "QuoteId",
-                  "_T.QuoteId"
-                ]
+                "default",
+                "{{@ datatype @}}Id",
+                "_S.PrimaryKey"
               ]
             ]
           },
           "type": "dtl"
         },
         {
-          "allowed_status_codes": "200,403",
-          "operation": "{{@ datatype @}}-lookup",
+          "allowed_status_codes": "200,404",
+          "operation": "lookup-from-list",
+          "properties": {
+            "base_url": "Sale",
+            "list_id": "{{@ datatype @}}Id",
+            "primary_key": "SaleId"
+          },
           "replace_entity": false,
           "response_property": "response_body",
           "response_status_property": "response_status",
@@ -124,39 +124,6 @@
                     ]
                   ]
                 ]
-              ],
-              [
-                "add",
-                "_id",
-                [
-                  "string",
-                  "_T.QuoteId"
-                ]
-              ],
-              [
-                "comment",
-                "TODO: Why do we need sesam_SaleId when it's already part of the {{@ datatype @}}."
-              ],
-              [
-                "add",
-                "sesam_SaleId",
-                "_T.SaleId"
-              ],
-              [
-                "comment",
-                "Deletes won't work properly because we are rewriting the _id from something that we can't lookup. Assuming that {{@ datatype @}}s can't be deleted for now."
-              ],
-              [
-                "if",
-                [
-                  "eq",
-                  "_T.AcceptedQuoteAlternativeId",
-                  0
-                ],
-                [
-                  "remove",
-                  "AcceptedQuoteAlternativeId"
-                ]
               ]
             ]
           },
@@ -186,13 +153,32 @@
                         "hops",
                         {
                           "datasets": [
-                            "{{@ system @}}-{{@ datatype @}}alternative-{{@ datatype @}}-share st"
+                            "{{@ system @}}-{{@ datatype @}}-share st"
                           ],
                           "track-dependencies": false,
                           "where": [
                             [
                               "eq",
-                              "_S.QuoteId",
+                              "_S.SaleId",
+                              "st.$generated_id"
+                            ]
+                          ]
+                        }
+                      ]
+                    ],
+                    [
+                      "first",
+                      [
+                        "hops",
+                        {
+                          "datasets": [
+                            "{{@ system @}}-quotealternative-{{@ datatype @}}-share st"
+                          ],
+                          "track-dependencies": false,
+                          "where": [
+                            [
+                              "eq",
+                              "_S.SaleId",
                               "st.$generated_id"
                             ]
                           ]
@@ -210,6 +196,63 @@
               [
                 "remove",
                 "_origin_entity"
+              ],
+              [
+                "add-if",
+                "$truncation",
+                [
+                  "max",
+                  "_._updated",
+                  [
+                    "hops",
+                    {
+                      "datasets": [
+                        "{{@ system @}}-{{@ datatype @}}-share st"
+                      ],
+                      "return": "st.$truncation",
+                      "track-dependencies": false,
+                      "where": [
+                        [
+                          "eq",
+                          "_S.SaleId",
+                          "st.SaleId"
+                        ]
+                      ]
+                    }
+                  ]
+                ]
+              ]
+            ]
+          },
+          "type": "dtl"
+        },
+        {
+          "rules": {
+            "default": [
+              [
+                "copy",
+                "*"
+              ],
+              [
+                "comment",
+                "_S.updatedDate handles the case where the entity has been deleted"
+              ],
+              [
+                "add",
+                "$last-modified",
+                [
+                  "max",
+                  [
+                    "datetime-parse",
+                    "%Y-%m-%dT%H:%M:%S%z",
+                    [
+                      "list",
+                      "_T.UpdatedDate",
+                      "_T.CreatedDate",
+                      "_S.updatedDate"
+                    ]
+                  ]
+                ]
               ]
             ]
           },
@@ -222,6 +265,7 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-event",
+    "comment": "WARNING! This pipe is generated from the template of the 'contact' datatype and changes will be silently ignored during collapse. For more information see the connectorpy README.",
     "compaction": {
       "keep_versions": 1
     },
@@ -271,6 +315,7 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-registerwebhook",
+    "comment": "WARNING! This pipe is generated from the template of the 'contact' datatype and changes will be silently ignored during collapse. For more information see the connectorpy README.",
     "namespaced_identifiers": false,
     "sink": {
       "deletion_tracking": false,
@@ -387,6 +432,91 @@
         "side_effects": true,
         "system": "{{@ system @}}",
         "type": "rest"
+      }
+    ],
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "add_namespaces": false,
+    "batch_size": 1,
+    "compaction": {
+      "keep_versions": 100
+    },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
+    "namespaced_identifiers": false,
+    "sink": {
+      "deletion_tracking": false,
+      "set_initial_offset": "onload"
+    },
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
+      "type": "dataset"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "comment",
+              "Workaround for IS-14640"
+            ],
+            [
+              "if",
+              [
+                "is-null",
+                "_S.SaleId"
+              ],
+              [
+                "remove",
+                "SaleId"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "operation": "defaults",
+          "operation_properties": {
+            "base_url": "Sale/default"
+          },
+          "primary_key": "SaleId",
+          "rest_system": "{{@ system @}}"
+        },
+        "template": "transform-defaults-rest",
+        "type": "template"
+      },
+      {
+        "properties": {
+          "operation_delete_properties": {
+            "base_url": "Sale",
+            "lookup_id": "SaleId"
+          },
+          "operation_insert_properties": {
+            "base_url": "Sale"
+          },
+          "operation_lookup_properties": {
+            "base_url": "Sale",
+            "lookup_id": "SaleId"
+          },
+          "operation_update_properties": {
+            "base_url": "Sale",
+            "lookup_id": "SaleId"
+          },
+          "primary_key": "SaleId",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-share-rest",
+        "type": "template"
       }
     ],
     "type": "pipe"

@@ -67,6 +67,7 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
     "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-quote-share",
       "{{@ system @}}-{{@ datatype @}}-share"
     ],
     "namespaced_identifiers": false,
@@ -74,2285 +75,69 @@
       "dataset": "{{@ system @}}-{{@ datatype @}}-all2",
       "type": "dataset"
     },
-    "transform": [
-      {
-        "operation": "{{@ datatype @}}-sale-lookup",
-        "side_effects": false,
-        "system": "{{@ system @}}",
-        "type": "rest"
-      },
-      {
-        "rules": {
-          "default": [
-            [
-              "comment",
-              "Now that updates are updates instead of inserts this can probably be removed. Leaving for now because it doesn't hurt to have it included."
-            ],
-            [
-              "copy",
-              "*"
-            ],
-            [
-              "if",
+    "transform": {
+      "transforms": [
+        {
+          "operation": "{{@ datatype @}}-sale-lookup",
+          "side_effects": false,
+          "system": "{{@ system @}}",
+          "type": "rest"
+        },
+        {
+          "rules": {
+            "default": [
               [
-                "eq",
-                "_S.QuoteAlternativeId",
-                "_S.response.AcceptedQuoteAlternativeId"
+                "comment",
+                "Now that updates are updates instead of inserts this can probably be removed. Leaving for now because it doesn't hurt to have it included."
               ],
               [
-                "add",
-                "sesam_Accepted",
-                true
+                "copy",
+                "*"
               ],
               [
-                "add",
-                "sesam_Accepted",
-                false
+                "if",
+                [
+                  "eq",
+                  "_S.QuoteAlternativeId",
+                  "_S.response.AcceptedQuoteAlternativeId"
+                ],
+                [
+                  "add",
+                  "sesam_Accepted",
+                  true
+                ],
+                [
+                  "add",
+                  "sesam_Accepted",
+                  false
+                ]
+              ],
+              [
+                "remove",
+                "response"
               ]
-            ],
-            [
-              "remove",
-              "response"
             ]
-          ]
+          },
+          "type": "dtl"
         },
-        "type": "dtl"
-      },
-      {
-        "properties": {
-          "primary_key": "QuoteAlternativeId",
-          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
-        },
-        "template": "transform-collect-rest",
-        "type": "template"
-      }
-    ],
-    "type": "pipe"
-  },
-  {
-    "_id": "{{@ system @}}-{{@ datatype @}}-share",
-    "add_namespaces": false,
-    "batch_size": 1,
-    "compaction": {
-      "keep_versions": 100
-    },
-    "exclude_completeness": [
-      "{{@ system @}}-{{@ datatype @}}-share"
-    ],
-    "namespaced_identifiers": false,
-    "sink": {
-      "set-initial-offset": "onload"
-    },
-    "source": {
-      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
-      "type": "dataset"
-    },
-    "transform": [
-      {
-        "transforms": [
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*"
-                ],
-                [
-                  "if",
-                  "_S._deleted",
-                  [
-                    "add",
-                    "$operation",
-                    "discard-deleted"
-                  ],
-                  [
-                    [
-                      "add",
-                      "$original_source",
-                      "_S."
-                    ],
-                    [
-                      "if",
-                      [
-                        "is-empty",
-                        "_S.sesam_SaleId"
-                      ],
-                      [
-                        [
-                          "add",
-                          "sesam_Accepted",
-                          true
-                        ],
-                        [
-                          "add",
-                          "$operation",
-                          "insert-sale-lookup-default"
-                        ]
-                      ],
-                      [
-                        "add",
-                        "$operation",
-                        "lookup-sale"
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "allowed_status_codes": "200",
-            "operation": "defaults",
-            "properties": {
-              "base_url": "Sale/default"
-            },
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": false,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "insert-sale-lookup-default"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "comment",
-                  "merging default sale data with current object"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "not",
-                      [
-                        "matches",
-                        "discard*",
-                        "_S.$operation"
-                      ]
-                    ],
-                    [
-                      "eq",
-                      "_S.$operation",
-                      "insert-sale-lookup-default"
-                    ]
-                  ],
-                  [
-                    [
-                      "copy",
-                      "*",
-                      [
-                        "list",
-                        "properties",
-                        "response*"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "$operation",
-                      "insert-sale"
-                    ],
-                    [
-                      "add",
-                      "payload",
-                      [
-                        "apply",
-                        "default-values",
-                        [
-                          "dict",
-                          "a",
-                          [
-                            "apply",
-                            "remove_sesam_properties",
-                            [
-                              "apply",
-                              "remove-primary-key",
-                              [
-                                "first",
-                                "_S.$original_source"
-                              ]
-                            ]
-                          ],
-                          "b",
-                          [
-                            "apply",
-                            "remove-visibility",
-                            [
-                              "first",
-                              "_S.response_body"
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                  ],
-                  [
-                    "copy",
-                    "*"
-                  ]
-                ]
+        {
+          "rules": {
+            "default": [
+              [
+                "copy",
+                "*"
               ],
-              "default-values": [
+              [
+                "add",
+                "_origin_entity",
                 [
-                  "merge",
-                  [
-                    "dict",
-                    [
-                      "map",
-                      [
-                        "list",
-                        "_.",
-                        [
-                          "sorted",
-                          [
-                            "if",
-                            [
-                              "is-dict",
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ]
-                            ],
-                            [
-                              "apply",
-                              "default-values",
-                              [
-                                "dict",
-                                "a",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.a"
-                                ],
-                                "b",
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.b"
-                                ]
-                              ]
-                            ],
-                            [
-                              "if",
-                              [
-                                "eq",
-                                "_.",
-                                "QuoteAlternativeId"
-                              ],
-                              [
-                                "path",
-                                "_.",
-                                "_S.b"
-                              ],
-                              [
-                                "if",
-                                [
-                                  "is-not-null",
-                                  [
-                                    "path",
-                                    "_.",
-                                    "_S.a"
-                                  ]
-                                ],
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.a"
-                                ],
-                                [
-                                  "path",
-                                  "_.",
-                                  "_S.b"
-                                ]
-                              ]
-                            ]
-                          ]
-                        ]
-                      ],
-                      [
-                        "keys",
-                        "_S.b"
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "remove-primary-key": [
-                [
-                  "copy",
-                  "*",
-                  [
-                    "literal",
-                    "SaleId"
-                  ]
-                ]
-              ],
-              "remove-visibility": [
-                [
-                  "copy",
-                  "*",
-                  "VisibleFor"
-                ]
-              ],
-              "remove_sesam_properties": [
-                [
-                  "copy",
-                  "*",
-                  [
-                    "list",
-                    "_*",
-                    "$*"
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "allowed_status_codes": "100-428,430-599",
-            "operation": "insert",
-            "properties": {
-              "base_url": "Sale"
-            },
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "insert-sale"
-            },
-            "type": "rest"
-          },
-          {
-            "operation": "lookup",
-            "properties": {
-              "base_url": "Sale",
-              "lookup_id": "sesam_SaleId"
-            },
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": false,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "lookup-sale"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*",
-                  [
-                    "list",
-                    "response*",
-                    "properties"
-                  ]
-                ],
-                [
-                  "if",
-                  [
-                    "eq",
-                    "_S.$operation",
-                    "insert-sale"
-                  ],
-                  [
-                    "add",
-                    "sesam_SaleId",
-                    [
-                      "first",
-                      "_S.response_body.SaleId"
-                    ]
-                  ],
-                  [
-                    "if",
-                    [
-                      "neq",
-                      "_S.sesam_SaleId",
-                      "_S.response_body.SaleId"
-                    ],
-                    [
-                      "add",
-                      "$operation",
-                      "discard-SaleId-mismatch"
-                    ]
-                  ]
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S._deleted",
-                      false
-                    ],
-                    [
-                      "neq",
-                      "_T.$operation",
-                      "discard-SaleId-mismatch"
-                    ]
-                  ],
-                  [
-                    "if",
-                    [
-                      "eq",
-                      "_S.response_body.Status",
-                      "Sold"
-                    ],
-                    [
-                      "add",
-                      "$operation",
-                      "discard-sale-is-sold"
-                    ],
-                    [
-                      [
-                        "comment",
-                        "Else, first step is to check if there is an active quote for the sale"
-                      ],
-                      [
-                        "if",
-                        [
-                          "eq",
-                          "_S._deleted",
-                          false
-                        ],
-                        [
-                          "add",
-                          "$operation",
-                          "lookup-quote"
-                        ]
-                      ],
-                      [
-                        "add",
-                        "payload",
-                        [
-                          "dict",
-                          "SaleId",
-                          "_T.sesam_SaleId"
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "{{@ datatype @}}-sale-lookup",
-            "side_effects": false,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "lookup-quote"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*",
-                  "payload"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S._deleted",
-                      false
-                    ],
-                    [
-                      "not",
-                      [
-                        "matches",
-                        "discard*",
-                        "_S.$operation"
-                      ]
-                    ]
-                  ],
-                  [
-                    [
-                      "comment",
-                      "See if the sesam_SaleId has a corresponding quote or not. If there isn't then one needs to be created. If there is, move on to checking the quote version"
-                    ],
-                    [
-                      "if",
-                      [
-                        "is-empty",
-                        "_S.response"
-                      ],
-                      [
-                        "add",
-                        "$operation",
-                        "create-quote"
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "create-quote",
-            "payload": {
-              "ConnectionId": 1,
-              "SaleId": "{{ entity.sesam_SaleId }}"
-            },
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "create-quote"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*",
-                  "response"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S._deleted",
-                      false
-                    ],
-                    [
-                      "not",
-                      [
-                        "matches",
-                        "discard*",
-                        "_S.$operation"
-                      ]
-                    ]
-                  ],
-                  [
-                    [
-                      "comment",
-                      "Add a boolean if we inserted a quote and use the new quoteAlternativeId to avoid blank alternatives"
-                    ],
-                    [
-                      "if",
-                      [
-                        "eq",
-                        "_S.$operation",
-                        "create-quote"
-                      ],
-                      [
-                        [
-                          "add",
-                          "sesam_InsertedAbove",
-                          true
-                        ],
-                        [
-                          "add",
-                          "QuoteAlternativeId",
-                          [
-                            "first",
-                            "_S.response.QuoteVersions.QuoteAlternatives.QuoteAlternativeId"
-                          ]
-                        ]
-                      ]
-                    ],
-                    [
-                      "comment",
-                      "At this point there should be a quote entity in response. Need to pull ActiveQuoteVersionId out of response in order to be accessible by the jinja 'entity'"
-                    ],
-                    [
-                      "comment",
-                      "TODO: I'm pretty sure we can get rid of the sesam_ActiveQuoteVersionId but need to actually look at it again and be sure"
-                    ],
-                    [
-                      "add",
-                      "sesam_ActiveQuoteVersionId",
-                      [
-                        "first",
-                        "_S.response.ActiveQuoteVersionId"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "QuoteVersionId",
-                      [
-                        "first",
-                        "_S.response.ActiveQuoteVersionId"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "sesam_QuoteId",
-                      [
-                        "first",
-                        "_S.response.QuoteId"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "sesam_QuoteVersion",
-                      "_S.response.ActiveQuoteVersionId"
-                    ],
-                    [
-                      "comment",
-                      "Don't lookup version for now. This likely needs to be moved into the share template (see TODO comment in the next DTL transform)"
-                    ],
-                    [
-                      "comment",
-                      "[add, $operation, lookup-version]"
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "{{@ datatype @}}-version-lookup",
-            "operations": {
-              "{{@ datatype @}}-version-lookup": {
-                "method": "POST",
-                "url": "Agents/Quote/GetQuoteVersion"
-              }
-            },
-            "payload": {
-              "QuoteVersionId": "{{ entity.sesam_ActiveQuoteVersionId }}"
-            },
-            "side_effects": false,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "lookup-version"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S._deleted",
-                      false
-                    ],
-                    [
-                      "not",
-                      [
-                        "matches",
-                        "discard*",
-                        "_S.$operation"
-                      ]
-                    ],
-                    false
-                  ],
-                  [
-                    [
-                      "comment",
-                      "If the quote version is locked then we need a new one, otherwise move on to process the quote alternative"
-                    ],
-                    [
-                      "comment",
-                      "TODO: Is it necessarily implied that we need a new version when one is locked and an alternative entity is received? Once a version is sent we should check that an alternative entity is actually an update to the one that was sent."
-                    ],
-                    [
-                      "if",
-                      [
-                        "neq",
-                        "_S.response.State",
-                        "Draft"
-                      ],
-                      [
-                        "merge",
-                        [
-                          "apply",
-                          "version-is-locked",
-                          "_S."
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "version-is-locked": [
-                [
-                  "add",
-                  "$operation",
-                  "create-quote-version"
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "{{@ datatype @}}-create-version",
-            "payload": {
-              "QuoteVersionId": "{{ entity.sesam_ActiveQuoteVersionId }}"
-            },
-            "response_property": "response_body",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "create-quote-version"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "build-payload": [
-                [
-                  "add",
-                  "Quote",
-                  [
-                    "dict",
-                    "QuoteId",
-                    "_S.sesam_QuoteId",
-                    "SaleId",
-                    "_S.sesam_SaleId",
-                    "QuoteConnectionId",
-                    1,
-                    "AcceptedQuoteAlternativeId",
-                    "_R._T.QuoteAlternativeId"
-                  ]
-                ]
-              ],
-              "default": [
-                [
-                  "comment",
-                  "If new version inserted we need to use the new quote version ID, new quote alternative ID, and say that the insert happened"
-                ],
-                [
-                  "if",
-                  [
-                    "neq",
-                    "_S.$operation",
-                    "create-quote-version"
-                  ],
-                  [
-                    "copy",
-                    "*"
-                  ],
-                  [
-                    [
-                      "copy",
-                      "*",
-                      [
-                        "list",
-                        "response_body",
-                        "QuoteVersionId"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "QuoteVersionId",
-                      [
-                        "first",
-                        "_S.response_body.QuoteVersionId"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "QuoteAlternativeId",
-                      [
-                        "first",
-                        "_S.response_body.LikelyQuoteAlternativeId"
-                      ]
-                    ]
-                  ]
-                ],
-                [
-                  "comment",
-                  "If sesam_Accepted=true && there is at least one quote line, add an acceptedQuoteAlternative ID to the quote and mark the quote version as sold"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S._deleted",
-                      false
-                    ],
-                    [
-                      "not",
-                      [
-                        "matches",
-                        "discard*",
-                        "_S.$operation"
-                      ]
-                    ]
-                  ],
-                  [
-                    "if",
-                    "_S.sesam_Accepted",
-                    [
-                      [
-                        "add",
-                        "$operation",
-                        "mark-as-accepted"
-                      ],
-                      [
-                        "add",
-                        "payload",
-                        [
-                          "apply",
-                          "build-payload",
-                          "_S."
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "{{@ datatype @}}-save-quote",
-            "response_property": "response_body",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "mark-as-accepted"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*",
-                  "response_body"
-                ],
-                [
-                  "if",
-                  [
-                    "eq",
-                    "_S.$operation",
-                    "mark-as-accepted"
-                  ],
-                  [
-                    "add",
-                    "$operation",
-                    "lookup-quotelines"
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "quoteline-list",
-            "response_property": "response_body",
-            "side_effects": false,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "lookup-quotelines"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*",
-                  [
-                    "list",
-                    "response_body",
-                    "payload"
-                  ]
-                ],
-                [
-                  "if",
-                  [
-                    "eq",
-                    "_S.$operation",
-                    "lookup-quotelines"
-                  ],
-                  [
-                    [
-                      "add",
-                      "$operation",
-                      "close-{{@ parent @}}"
-                    ],
-                    [
-                      "comment",
-                      "payload for marking {{@ parent @}} as sold"
-                    ],
-                    [
-                      "add",
-                      "payload",
-                      [
-                        "dict",
-                        "QuoteVersionId",
-                        [
-                          "first",
-                          "_S.sesam_QuoteVersion"
-                        ],
-                        "State",
-                        "Sold"
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "{{@ datatype @}}-save-{{@ parent @}}",
-            "response_property": "response_body",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "close-{{@ parent @}}-foo"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*",
-                  [
-                    "list",
-                    "response_body",
-                    "payload"
-                  ]
-                ],
-                [
-                  "if",
-                  [
-                    "eq",
-                    "_S.$operation",
-                    "close-{{@ parent @}}"
-                  ],
-                  [
-                    [
-                      "add",
-                      "$operation",
-                      "close-sale"
-                    ],
-                    [
-                      "add",
-                      "payload",
-                      [
-                        "dict",
-                        "SaleId",
-                        "_S.sesam_SaleId",
-                        "Status",
-                        "Sold"
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "operation": "update",
-            "properties": {
-              "base_url": "Sale",
-              "lookup_id": "sesam_SaleId"
-            },
-            "response_property": "response_body",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "close-sale"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "if",
-                  [
-                    "eq",
-                    "_S.$operation",
-                    "close-sale"
-                  ],
-                  [
-                    "add",
-                    "$operation",
-                    "discard-sale-now-closed"
-                  ]
-                ],
-                [
-                  "comment",
-                  "Need to remove sesam prefixed properties from based_on_properties. Can be removed when this ability is added to the template, or the transfrom doesn't add these types of variables to the field."
-                ],
-                [
-                  "copy",
-                  "*",
-                  "$based_on_properties"
-                ],
-                [
-                  "add",
-                  "$based_on_properties",
-                  [
-                    "filter",
-                    [
-                      "not",
-                      [
-                        "matches",
-                        "sesam*",
-                        [
-                          "first",
-                          "_."
-                        ]
-                      ]
-                    ],
-                    "_S.$based_on_properties"
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  "*"
-                ],
-                [
-                  "add",
-                  "$source",
-                  "_S."
-                ],
-                [
-                  "copy",
-                  "$origin"
-                ],
-                [
-                  "copy",
-                  "$replaced"
-                ],
-                [
-                  "comment",
-                  "NON-STANDARD: If we want to discard the entity, don't do other processing besides formatting the entity the way we want, can be removed if a native of handling incoming discards is added."
-                ],
-                [
-                  "if",
-                  [
-                    "not",
-                    [
-                      "matches",
-                      "discard*",
-                      "_S.$operation"
-                    ]
-                  ],
-                  [
-                    "if",
-                    [
-                      "and",
-                      [
-                        "eq",
-                        "_S.$replaced",
-                        true
-                      ],
-                      [
-                        "eq",
-                        "_S._deleted",
-                        true
-                      ]
-                    ],
-                    [
-                      "merge",
-                      [
-                        "apply",
-                        "discard-replaced",
-                        "_S."
-                      ]
-                    ],
-                    [
-                      "if",
-                      [
-                        "is-null",
-                        "_S.sesam_InsertedAbove"
-                      ],
-                      [
-                        "if",
-                        [
-                          "eq",
-                          "_S._deleted",
-                          true
-                        ],
-                        [
-                          [
-                            "comment",
-                            "Entity is deleted and it does have a system specific id."
-                          ],
-                          [
-                            "merge",
-                            [
-                              "apply",
-                              "delete",
-                              "_S."
-                            ]
-                          ]
-                        ],
-                        [
-                          [
-                            "comment",
-                            "Entity is not deleted and it does have a system specific id."
-                          ],
-                          [
-                            "merge",
-                            [
-                              "apply",
-                              "lookup",
-                              "_S."
-                            ]
-                          ]
-                        ]
-                      ],
-                      [
-                        "if",
-                        [
-                          "eq",
-                          "_S._deleted",
-                          true
-                        ],
-                        [
-                          "merge",
-                          [
-                            "apply",
-                            "discard-delete-non-existent",
-                            "_S."
-                          ]
-                        ],
-                        [
-                          [
-                            "comment",
-                            "At this point there is no primary key, so we should do an insert unless there are sink entity ids in $ids with $generated_id in them."
-                          ],
-                          [
-                            "if",
-                            [
-                              "is-not-empty",
-                              [
-                                "filter",
-                                [
-                                  "is-not-null",
-                                  "_."
-                                ],
-                                [
-                                  "hops",
-                                  {
-                                    "datasets": [
-                                      "{{@ system @}}-{{@ datatype @}}-share st"
-                                    ],
-                                    "return": "st.$generated_id",
-                                    "track-dependencies": false,
-                                    "where": [
-                                      [
-                                        "eq",
-                                        "_S.$ids",
-                                        [
-                                          "ni",
-                                          "st._id"
-                                        ]
-                                      ]
-                                    ]
-                                  }
-                                ]
-                              ]
-                            ],
-                            [
-                              "merge",
-                              [
-                                "apply",
-                                "discard-already-inserted",
-                                "_S."
-                              ]
-                            ],
-                            [
-                              [
-                                "comment",
-                                "Entity is not deleted, it does not have a system specific id and it does not exist in sink dataset."
-                              ],
-                              [
-                                "merge",
-                                [
-                                  "apply",
-                                  "insert",
-                                  "_S."
-                                ]
-                              ]
-                            ]
-                          ]
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "delete": [
-                [
-                  "add",
-                  "$operation",
-                  "discard-deletes-not-enabled"
-                ]
-              ],
-              "discard-already-inserted": [
-                [
-                  "add",
-                  "$operation",
-                  "discard-already-inserted"
-                ]
-              ],
-              "discard-delete-non-existent": [
-                [
-                  "add",
-                  "$operation",
-                  "discard-delete-non-existent"
-                ]
-              ],
-              "discard-no-saleId": [
-                [
-                  "add",
-                  "$operation",
-                  "discard-no-saleId"
-                ]
-              ],
-              "discard-replaced": [
-                [
-                  "add",
-                  "$operation",
-                  "discard-replaced"
-                ]
-              ],
-              "insert": [
-                [
-                  "add",
-                  "$operation",
-                  "insert"
-                ],
-                [
-                  "add",
-                  "_payload",
-                  [
-                    "if",
-                    [
-                      "is-not-null",
-                      "_R._T.$source.$payload"
-                    ],
-                    "_R._T.$source.$payload",
-                    [
-                      "apply",
-                      "payload",
-                      "_R._T.$source"
-                    ]
-                  ]
-                ],
-                [
-                  "add",
-                  "payload",
-                  "_T._payload"
-                ]
-              ],
-              "lookup": [
-                [
-                  "add",
-                  "$operation",
-                  "lookup"
-                ]
-              ],
-              "payload": [
-                [
-                  "merge",
-                  [
-                    "dict",
-                    [
-                      "filter",
-                      [
-                        "not",
-                        [
-                          "or",
-                          [
-                            "matches",
-                            "_*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ],
-                          [
-                            "matches",
-                            "$*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ],
-                          [
-                            "matches",
-                            "sesam*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ]
-                        ]
-                      ],
-                      [
-                        "items",
-                        "_S."
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-lookup",
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": false,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "lookup"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "based-on-comparison": [
-                [
-                  "comment",
-                  "If looked up entity is different from $based_on then noop. If looked up entity is same as _S then noop - otherwise perform update"
-                ],
-                [
-                  "merge",
-                  [
-                    "apply",
-                    "based-on-source",
-                    "_S."
-                  ]
-                ],
-                [
-                  "merge",
-                  [
-                    "apply",
-                    "based-on-lookup",
-                    "_S."
-                  ]
-                ],
-                [
-                  "merge",
-                  [
-                    "apply",
-                    "based-on-update",
-                    "_S."
-                  ]
-                ],
-                [
-                  "if",
-                  [
-                    "neq",
-                    "_T.$based_on_lookup",
-                    "_T.$based_on_source"
-                  ],
-                  [
-                    "add",
-                    "$result",
-                    "modified-in-system"
-                  ],
-                  [
-                    "if",
-                    [
-                      "neq",
-                      "_T.$based_on_update",
-                      "_T.$based_on_source"
-                    ],
-                    [
-                      "add",
-                      "$result",
-                      "needs-update"
-                    ],
-                    [
-                      "add",
-                      "$result",
-                      "entity-not-changed"
-                    ]
-                  ]
-                ]
-              ],
-              "based-on-lookup": [
-                [
-                  "add",
-                  "$based_on_lookup",
-                  [
-                    "apply",
-                    "remove-unmapped-properties",
-                    [
-                      "dict",
-                      "prefix",
-                      "",
-                      "data",
-                      [
-                        "first",
-                        "_S.response_body"
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "based-on-source": [
-                [
-                  "comment",
-                  "NON-STANDARD: We don't normally send the source through remove-unmapped-properties. Can be remvoed when there is a way to handle sesam_ variables in the basedOn"
-                ],
-                [
-                  "add",
-                  "$based_on_source",
-                  [
-                    "apply",
-                    "remove-unmapped-properties",
-                    [
-                      "dict",
-                      "prefix",
-                      "",
-                      "data",
-                      [
-                        "first",
-                        "_S.$source.$based_on"
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "based-on-update": [
-                [
-                  "add",
-                  "$based_on_update",
-                  [
-                    "apply",
-                    "remove-unmapped-properties",
-                    [
-                      "dict",
-                      "prefix",
-                      "",
-                      "data",
-                      "_S.$source"
-                    ]
-                  ]
-                ]
-              ],
-              "default": [
-                [
-                  "if",
-                  [
-                    "neq",
-                    "_S.$operation",
-                    "lookup"
-                  ],
-                  [
-                    [
-                      "if",
-                      [
-                        "eq",
-                        "_S.$operation",
-                        "insert"
-                      ],
-                      [
-                        "if",
-                        [
-                          "is-null",
-                          "_S.$origin"
-                        ],
-                        [
-                          "fail!",
-                          "Entity to be inserted does not have $origin property"
-                        ]
-                      ]
-                    ],
-                    [
-                      "copy",
-                      "*"
-                    ]
-                  ],
-                  [
-                    [
-                      "if",
-                      [
-                        "neq",
-                        "_S.response_status",
-                        200
-                      ],
-                      [
-                        "copy",
-                        "*"
-                      ],
-                      [
-                        [
-                          "add",
-                          "$comparison",
-                          [
-                            "apply",
-                            "based-on-comparison",
-                            "_S."
-                          ]
-                        ],
-                        [
-                          "case-eq",
-                          [
-                            "path",
-                            "$result",
-                            "_T.$comparison"
-                          ],
-                          "modified-in-system",
-                          [
-                            "merge",
-                            [
-                              "apply",
-                              "discard-modified-in-system",
-                              "_S."
-                            ]
-                          ],
-                          "entity-not-changed",
-                          [
-                            "merge",
-                            [
-                              "apply",
-                              "discard-entity-not-changed",
-                              "_S."
-                            ]
-                          ],
-                          [
-                            "merge",
-                            [
-                              "apply",
-                              "update",
-                              "_S."
-                            ]
-                          ]
-                        ],
-                        [
-                          "copy",
-                          "$source"
-                        ],
-                        [
-                          "copy",
-                          [
-                            "literal",
-                            "QuoteAlternativeId"
-                          ]
-                        ],
-                        [
-                          "copy",
-                          "$origin"
-                        ],
-                        [
-                          "copy",
-                          "$replaced"
-                        ],
-                        [
-                          "add",
-                          "$trace_lookup",
-                          [
-                            "apply",
-                            "trace",
-                            "_S."
-                          ]
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "discard-entity-not-changed": [
-                [
-                  "add",
-                  "$operation",
-                  "discard-entity-not-changed"
-                ]
-              ],
-              "discard-modified-in-system": [
-                [
-                  "add",
-                  "$operation",
-                  "discard-modified-in-system"
-                ]
-              ],
-              "is-match": [
-                [
-                  "comment",
-                  "workaround for shadowing the outer _. variable"
-                ],
-                [
-                  "discard",
+                  "coalesce",
                   [
                     "is-not-empty",
-                    [
-                      "filter",
-                      [
-                        "matches",
-                        "_S.pattern",
-                        "_."
-                      ],
-                      "_R._S.$source.$based_on_properties"
-                    ]
-                  ]
-                ]
-              ],
-              "payload": [
-                [
-                  "merge",
-                  [
-                    "dict",
-                    [
-                      "filter",
-                      [
-                        "not",
-                        [
-                          "or",
-                          [
-                            "matches",
-                            "_*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ],
-                          [
-                            "matches",
-                            "$*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ],
-                          [
-                            "matches",
-                            "sesam*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ]
-                        ]
-                      ],
-                      [
-                        "items",
-                        "_S."
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "remove-unmapped-properties": [
-                [
-                  "comment",
-                  "function that builds up the dotted key and checks if one of dotted notations in _based_on_properties starts with this dotted key, recurses if the value is a dict"
-                ],
-                [
-                  "merge",
-                  [
-                    "dict",
-                    [
-                      "map",
-                      [
-                        "if",
-                        [
-                          "or",
-                          [
-                            "and",
-                            [
-                              "is-dict",
-                              [
-                                "last",
-                                "_."
-                              ]
-                            ],
-                            [
-                              "gt",
-                              [
-                                "count",
-                                [
-                                  "apply",
-                                  "remove-unmapped-properties",
-                                  [
-                                    "dict",
-                                    "data",
-                                    [
-                                      "last",
-                                      "_."
-                                    ],
-                                    "prefix",
-                                    [
-                                      "concat",
-                                      "_S.prefix",
-                                      [
-                                        "ni-id",
-                                        [
-                                          "ni",
-                                          [
-                                            "first",
-                                            "_."
-                                          ]
-                                        ]
-                                      ],
-                                      "."
-                                    ]
-                                  ]
-                                ]
-                              ],
-                              0
-                            ]
-                          ],
-                          [
-                            "and",
-                            [
-                              "not",
-                              [
-                                "is-dict",
-                                [
-                                  "last",
-                                  "_."
-                                ]
-                              ]
-                            ],
-                            [
-                              "and",
-                              [
-                                "is-not-empty",
-                                [
-                                  "last",
-                                  "_."
-                                ]
-                              ],
-                              [
-                                "neq",
-                                [
-                                  "last",
-                                  "_."
-                                ],
-                                ""
-                              ]
-                            ]
-                          ]
-                        ],
-                        [
-                          "list",
-                          [
-                            "if",
-                            [
-                              "is-not-empty",
-                              [
-                                "apply",
-                                "is-match",
-                                [
-                                  "dict",
-                                  "pattern",
-                                  [
-                                    "concat",
-                                    "_S.prefix",
-                                    [
-                                      "ni-id",
-                                      [
-                                        "ni",
-                                        [
-                                          "first",
-                                          "_."
-                                        ]
-                                      ]
-                                    ],
-                                    "*"
-                                  ]
-                                ]
-                              ]
-                            ],
-                            [
-                              "ni-id",
-                              [
-                                "ni",
-                                [
-                                  "first",
-                                  "_."
-                                ]
-                              ]
-                            ]
-                          ],
-                          [
-                            "if",
-                            [
-                              "is-dict",
-                              [
-                                "last",
-                                "_."
-                              ]
-                            ],
-                            [
-                              "apply",
-                              "remove-unmapped-properties",
-                              [
-                                "dict",
-                                "data",
-                                [
-                                  "last",
-                                  "_."
-                                ],
-                                "prefix",
-                                [
-                                  "concat",
-                                  "_S.prefix",
-                                  [
-                                    "ni-id",
-                                    [
-                                      "ni",
-                                      [
-                                        "first",
-                                        "_."
-                                      ]
-                                    ]
-                                  ],
-                                  "."
-                                ]
-                              ]
-                            ],
-                            [
-                              "last",
-                              "_."
-                            ]
-                          ]
-                        ]
-                      ],
-                      [
-                        "items",
-                        "_S.data"
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              "trace": [
-                [
-                  "copy",
-                  "*",
+                    "_."
+                  ],
                   [
                     "list",
-                    "$trace_*",
-                    "$source"
-                  ]
-                ]
-              ],
-              "update": [
-                [
-                  "add",
-                  "$operation",
-                  "discard-update"
-                ],
-                [
-                  "add",
-                  "_payload",
-                  [
-                    "if",
-                    [
-                      "is-not-null",
-                      "_S.$source.$payload"
-                    ],
-                    "_S.$source.$payload",
-                    [
-                      "apply",
-                      "payload",
-                      "_S.$source"
-                    ]
-                  ]
-                ],
-                [
-                  "add",
-                  "payload",
-                  "_T._payload"
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "comment",
-                  "transform for inserts where we add the QuoteAlternativeId from the previous insert operation to the payload in order to populate the remaining metadata"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S.$operation",
-                      "insert"
-                    ],
-                    "_S.sesam_InsertedAbove"
-                  ],
-                  [
-                    [
-                      "copy",
-                      "*",
-                      [
-                        "list",
-                        "response_body",
-                        "payload"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "payload",
-                      [
-                        "apply",
-                        "payload",
-                        "_T."
-                      ]
-                    ]
-                  ],
-                  [
-                    "copy",
-                    "*"
-                  ]
-                ]
-              ],
-              "payload": [
-                [
-                  "merge",
-                  [
-                    "dict",
-                    [
-                      "filter",
-                      [
-                        "not",
-                        [
-                          "or",
-                          [
-                            "matches",
-                            "_*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ],
-                          [
-                            "matches",
-                            "$*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ],
-                          [
-                            "matches",
-                            "sesam*",
-                            [
-                              "first",
-                              "_."
-                            ]
-                          ],
-                          [
-                            "is-null",
-                            [
-                              "last",
-                              "_."
-                            ]
-                          ]
-                        ]
-                      ],
-                      [
-                        "items",
-                        "_S."
-                      ]
-                    ]
-                  ]
-                ]
-              ]
-            },
-            "type": "dtl"
-          },
-          {
-            "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-save",
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "insert"
-            },
-            "type": "rest"
-          },
-          {
-            "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-save",
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "update"
-            },
-            "type": "rest"
-          },
-          {
-            "allowed_status_codes": "100-599",
-            "operation": "{{@ datatype @}}-delete",
-            "replace_entity": false,
-            "response_property": "response_body",
-            "response_status_property": "response_status",
-            "side_effects": true,
-            "system": "{{@ system @}}",
-            "trigger_on": {
-              "key": "$operation",
-              "value": "delete"
-            },
-            "type": "rest"
-          },
-          {
-            "rules": {
-              "default": [
-                [
-                  "copy",
-                  [
-                    "literal",
-                    "QuoteAlternativeId"
-                  ]
-                ],
-                [
-                  "copy",
-                  "$source"
-                ],
-                [
-                  "copy",
-                  "$origin"
-                ],
-                [
-                  "copy",
-                  "$replaced"
-                ],
-                [
-                  "copy",
-                  "$trace_*"
-                ],
-                [
-                  "add",
-                  "$last_operation",
-                  "_S.$operation"
-                ],
-                [
-                  "add",
-                  [
-                    "concat",
-                    "$trace_",
-                    "_S.$operation"
-                  ],
-                  [
-                    "apply",
-                    "trace",
-                    "_S."
-                  ]
-                ],
-                [
-                  "comment",
-                  "Check lookup operation"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S.$operation",
-                      "lookup"
-                    ],
-                    [
-                      "not",
-                      [
-                        "in",
-                        "_S.response_status",
-                        [
-                          "list",
-                          200
-                        ]
-                      ]
-                    ]
-                  ],
-                  [
-                    "add",
-                    "$error",
-                    "error-lookup"
-                  ]
-                ],
-                [
-                  "comment",
-                  "Check insert operation"
-                ],
-                [
-                  "if",
-                  [
-                    "eq",
-                    "_S.$operation",
-                    "insert"
-                  ],
-                  [
-                    "if",
-                    [
-                      "not",
-                      [
-                        "in",
-                        "_S.response_status",
-                        [
-                          "list",
-                          200,
-                          201
-                        ]
-                      ]
-                    ],
-                    [
-                      "add",
-                      "$error",
-                      "error-insert"
-                    ],
-                    [
-                      [
-                        "add",
-                        "$generated_id",
-                        [
-                          "first",
-                          "_S.QuoteAlternativeId"
-                        ]
-                      ],
-                      [
-                        "if",
-                        [
-                          "is-null",
-                          "_T.$generated_id"
-                        ],
-                        [
-                          "fail!",
-                          "Generated primary key not found"
-                        ]
-                      ]
-                    ]
-                  ]
-                ],
-                [
-                  "comment",
-                  "Check update operation"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S.$operation",
-                      "update"
-                    ],
-                    [
-                      "not",
-                      [
-                        "in",
-                        "_S.response_status",
-                        [
-                          "list",
-                          200,
-                          201,
-                          204
-                        ]
-                      ]
-                    ]
-                  ],
-                  [
-                    "add",
-                    "$error",
-                    "error-update"
-                  ]
-                ],
-                [
-                  "comment",
-                  "Check delete operation"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "eq",
-                      "_S.$operation",
-                      "delete"
-                    ],
-                    [
-                      "not",
-                      [
-                        "in",
-                        "_S.response_status",
-                        [
-                          "list",
-                          200,
-                          204
-                        ]
-                      ]
-                    ]
-                  ],
-                  [
-                    "add",
-                    "$error",
-                    "error-delete"
-                  ]
-                ],
-                [
-                  "add",
-                  "_previous",
-                  [
-                    "apply",
-                    "previous",
                     [
                       "first",
                       [
@@ -2365,148 +150,204 @@
                           "where": [
                             [
                               "eq",
-                              "_S._id",
-                              "st._id"
+                              "_S.QuoteAlternativeId",
+                              "st.$generated_id"
+                            ]
+                          ]
+                        }
+                      ]
+                    ],
+                    [
+                      "first",
+                      [
+                        "hops",
+                        {
+                          "datasets": [
+                            "{{@ system @}}-{{@ datatype @}}-quote-share st"
+                          ],
+                          "track-dependencies": false,
+                          "where": [
+                            [
+                              "eq",
+                              "_S.QuoteAlternativeId",
+                              "st.$trace_insert.response_body.QuoteVersions.QuoteAlternatives.QuoteAlternativeId"
                             ]
                           ]
                         }
                       ]
                     ]
                   ]
-                ],
+                ]
+              ],
+              [
+                "add-if",
+                "$origin",
+                "_T._origin_entity.$origin"
+              ],
+              [
+                "remove",
+                "_origin_entity"
+              ],
+              [
+                "add-if",
+                "$truncation",
                 [
-                  "if",
+                  "max",
+                  "_._updated",
                   [
-                    "and",
-                    [
-                      "is-null",
-                      "_T.$generated_id"
-                    ],
-                    [
-                      "is-not-null",
-                      "_T._previous.$generated_id"
-                    ]
-                  ],
-                  [
-                    "add",
-                    "$generated_id",
-                    "_T._previous.$generated_id"
-                  ]
-                ],
-                [
-                  "add-if",
-                  "$previous_success",
-                  "_T._previous.$success"
-                ],
-                [
-                  "if",
-                  [
-                    "is-not-null",
-                    "_T.$error"
-                  ],
-                  [
-                    "add",
-                    "$success",
-                    false
-                  ],
-                  [
-                    "if",
-                    [
-                      "matches",
-                      "discard-",
-                      "_S.$operation"
-                    ],
-                    [
-                      "add-if",
-                      "$success",
-                      "_T.$previous_success"
-                    ],
-                    [
-                      "add",
-                      "$success",
-                      true
-                    ]
-                  ]
-                ],
-                [
-                  "comment",
-                  "If entity is not successfully deleted and it has a $generated_id then we must not delete it"
-                ],
-                [
-                  "if",
-                  [
-                    "and",
-                    [
-                      "is-not-null",
-                      "_T.$generated_id"
-                    ],
-                    [
-                      "not",
-                      [
-                        "and",
+                    "hops",
+                    {
+                      "datasets": [
+                        "{{@ system @}}-{{@ datatype @}}-share st"
+                      ],
+                      "return": "st.$truncation",
+                      "track-dependencies": false,
+                      "where": [
                         [
                           "eq",
-                          "_S.$operation",
-                          "delete"
-                        ],
-                        [
-                          "eq",
-                          "_T.$success",
-                          true
+                          "_S.QuoteAlternativeId",
+                          "st.QuoteAlternativeId"
                         ]
                       ]
-                    ]
-                  ],
-                  [
-                    "add",
-                    "_deleted",
-                    false
-                  ]
-                ],
-                [
-                  "if",
-                  [
-                    "eq",
-                    "_S.$replaced",
-                    true
-                  ],
-                  [
-                    "add-if",
-                    "$origin",
-                    "_T._previous.$origin"
-                  ]
-                ]
-              ],
-              "previous": [
-                [
-                  "copy",
-                  "$generated_id"
-                ],
-                [
-                  "copy",
-                  "$origin"
-                ],
-                [
-                  "copy",
-                  "$success"
-                ]
-              ],
-              "trace": [
-                [
-                  "copy",
-                  "*",
-                  [
-                    "list",
-                    "$trace_*",
-                    "$source"
+                    }
                   ]
                 ]
               ]
-            },
-            "type": "dtl"
-          }
-        ],
-        "type": "chained"
+            ]
+          },
+          "type": "dtl"
+        }
+      ],
+      "type": "chained"
+    },
+    "type": "pipe"
+  },
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-share",
+    "add_namespaces": false,
+    "batch_size": 1,
+    "compaction": {
+      "keep_versions": 100
+    },
+    "namespaced_identifiers": false,
+    "rescan_when_config_changes": false,
+    "sink": {
+      "deletion_tracking": false,
+      "set_initial_offset": "onload"
+    },
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
+      "type": "dataset"
+    },
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "add",
+              "_QuoteVersionState",
+              [
+                "first",
+                [
+                  "hops",
+                  {
+                    "datasets": [
+                      "{{@ system @}}-{{@ parent @}}-collect ga"
+                    ],
+                    "return": "ga.superoffice-{{@ parent @}}:State",
+                    "where": [
+                      [
+                        "eq",
+                        [
+                          "ni",
+                          "superoffice-{{@ parent @}}",
+                          [
+                            "string",
+                            "_S.QuoteVersionId"
+                          ]
+                        ],
+                        "ga.$ids"
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            ],
+            [
+              "if",
+              [
+                "is-null",
+                "_S.sesam_SaleId"
+              ],
+              [
+                "add",
+                "$discard",
+                "missing SaleId"
+              ]
+            ],
+            [
+              "if",
+              [
+                "neq",
+                "_T._QuoteVersionState",
+                "Draft"
+              ],
+              [
+                "add",
+                "$discard",
+                "wrong QuoteVersion State"
+              ]
+            ],
+            [
+              "if",
+              [
+                "is-null",
+                "_S.QuoteAlternativeId"
+              ],
+              [
+                "add",
+                "$discard",
+                "missing QuoteAlternativeId"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "operation": "{{@ datatype @}}-default",
+          "primary_key": "QuoteAlternativeId",
+          "rest_system": "{{@ system @}}"
+        },
+        "template": "transform-defaults-rest",
+        "type": "template"
+      },
+      {
+        "properties": {
+          "operation_delete_properties": {
+            "base_url": "QuoteAlternative",
+            "lookup_id": "QuoteAlternativeId"
+          },
+          "operation_insert_properties": {
+            "base_url": "QuoteAlternative"
+          },
+          "operation_lookup": "{{@ datatype @}}-lookup",
+          "operation_update": "{{@ datatype @}}-save",
+          "operation_update_properties": {
+            "base_url": "QuoteAlternative",
+            "lookup_id": "QuoteAlternativeId"
+          },
+          "primary_key": "QuoteAlternativeId",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-share-rest",
+        "type": "template"
       }
     ],
     "type": "pipe"

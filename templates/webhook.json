@@ -36,7 +36,7 @@
   },
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-wipe",
-    "comment": "Used to delete all the webhooks.",
+    "comment": "Used to delete all the {{@ datatype @}}s.",
     "namespaced_identifiers": false,
     "pump": {
       "mode": "manual"
@@ -55,7 +55,7 @@
             ],
             [
               "comment",
-              "We only delete the webhooks that have targetUrl pointing to our service_url - i.e. the ones we created."
+              "We only delete the {{@ datatype @}}s that have targetUrl pointing to our service_url - i.e. the ones we created."
             ],
             [
               "discard",

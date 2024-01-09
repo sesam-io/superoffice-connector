@@ -2,8 +2,7 @@
   "additional_parameters": {
     "account_id": {},
     "base_url": {},
-    "service_url": {},
-    "token_url": {}
+    "service_url": {}
   },
   "auth": "oauth2",
   "auth_variant": "superoffice-ticket",
@@ -83,6 +82,15 @@
       "parent": "quoteversion",
       "template": "templates/quotealternative.json"
     },
+    "quotealternative-quote": {
+      "template": "templates/quotealternative-quote.json"
+    },
+    "quotealternative-quoteversion": {
+      "template": "templates/quotealternative-quoteversion.json"
+    },
+    "quotealternative-sale": {
+      "template": "templates/quotealternative-sale.json"
+    },
     "quoteline": {
       "label": "Quote Line",
       "parent": "quotealternative",
@@ -94,15 +102,7 @@
       "template": "templates/quoteversion.json"
     },
     "sale": {
-      "label": "Sale",
-      "parameters": {
-        "base_url": "Sale",
-        "list_url": "saleId",
-        "primary_key": "SaleId",
-        "updated_param": "updatedDate"
-      },
-      "template": "templates/contact.json",
-      "webhook": true
+      "template": "templates/sale.json"
     },
     "user": {
       "label": "User",

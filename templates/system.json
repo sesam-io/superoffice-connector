@@ -179,9 +179,6 @@
         "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
-      "payload": {
-        "QuoteId": "{{ entity['quote/quoteId'] }}"
-      },
       "url": "Agents/Quote/GetQuoteEntity"
     },
     "quote-webhook-insert": {
@@ -358,6 +355,15 @@
         "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
+      "url": "Agents/Quote/GetQuoteVersion"
+    },
+    "quoteversions-lookup": {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
+      "method": "POST",
       "payload": {
         "QuoteId": "{{ entity['QuoteId'] }}"
       },
@@ -438,6 +444,22 @@
       },
       "method": "PATCH",
       "url": "{{ properties.base_url }}/{{ entity[properties.lookup_id] }}"
+    },
+    "update-quote": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/SaveQuote"
+    },
+    "update-quoteversion": {
+      "headers": {
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/SaveQuoteVersion"
     },
     "user_list": {
       "headers": {
