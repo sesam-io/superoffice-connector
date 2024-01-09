@@ -205,29 +205,7 @@
                   "if",
                   [
                     "and",
-                    [
-                      "in",
-                      "~:wd:Q566889",
-                      [
-                        "flatten",
-                        [
-                          "hops",
-                          {
-                            "datasets": [
-                              "86842f770c62-global-agreement ga"
-                            ],
-                            "return": "ga.ps:P31",
-                            "where": [
-                              [
-                                "eq",
-                                "_S.$ids",
-                                "ga.$ids"
-                              ]
-                            ]
-                          }
-                        ]
-                      ]
-                    ],
+                    "_S.sesam_Accepted",
                     [
                       "eq",
                       [
@@ -380,6 +358,9 @@
     "compaction": {
       "keep_versions": 100
     },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
     "namespaced_identifiers": false,
     "rescan_when_config_changes": false,
     "sink": {

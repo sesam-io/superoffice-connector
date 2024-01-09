@@ -18,7 +18,8 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-collect",
     "exclude_completeness": [
-      "{{@ system @}}-{{@ datatype @}}alternative-{{@ datatype @}}-share"
+      "{{@ system @}}-{{@ datatype @}}alternative-{{@ datatype @}}-share",
+      "{{@ system @}}-{{@ datatype @}}-event"
     ],
     "namespaced_identifiers": false,
     "pump": {

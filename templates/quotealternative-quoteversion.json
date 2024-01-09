@@ -277,6 +277,9 @@
     "compaction": {
       "keep_versions": 100
     },
+    "exclude_completeness": [
+      "{{@ system @}}-{{@ datatype @}}-share"
+    ],
     "namespaced_identifiers": false,
     "rescan_when_config_changes": false,
     "sink": {
