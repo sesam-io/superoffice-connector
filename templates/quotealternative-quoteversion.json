@@ -2,7 +2,6 @@
   {
     "_id": "{{@ system @}}-{{@ datatype @}}-preshare",
     "namespaced_identifiers": false,
-    "rescan_when_config_changes": false,
     "sink": {
       "set-initial-offset": "onload"
     },
@@ -281,7 +280,6 @@
       "{{@ system @}}-{{@ datatype @}}-share"
     ],
     "namespaced_identifiers": false,
-    "rescan_when_config_changes": false,
     "sink": {
       "deletion_tracking": false,
       "set_initial_offset": "onload"
