@@ -85,20 +85,11 @@
     "quotealternative-quote": {
       "template": "templates/quotealternative-quote.json"
     },
-    "quotealternative-quote-pre": {
-      "template": "templates/quotealternative-quote-pre.json"
-    },
     "quotealternative-quoteversion": {
       "template": "templates/quotealternative-quoteversion.json"
     },
-    "quotealternative-quoteversion-pre": {
-      "template": "templates/quotealternative-quoteversion-pre.json"
-    },
     "quotealternative-sale": {
       "template": "templates/quotealternative-sale.json"
-    },
-    "quotealternative-sale-pre": {
-      "template": "templates/quotealternative-sale-pre.json"
     },
     "quoteline": {
       "label": "Quote Line",
@@ -111,15 +102,7 @@
       "template": "templates/quoteversion.json"
     },
     "sale": {
-      "label": "Sale",
-      "parameters": {
-        "base_url": "Sale",
-        "list_url": "saleId",
-        "primary_key": "SaleId",
-        "updated_param": "updatedDate"
-      },
-      "template": "templates/contact.json",
-      "webhook": true
+      "template": "templates/sale.json"
     },
     "user": {
       "label": "User",
