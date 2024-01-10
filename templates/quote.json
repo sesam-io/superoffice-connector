@@ -45,11 +45,17 @@
                 "copy",
                 "*"
               ],
-              [
-                "default",
+              ["default", 
                 "QuoteId",
-                "_S.{{@ datatype @}}/{{@ datatype @}}Id"
-              ],
+                [
+                  "coalesce",
+                  [
+                    "list", 
+                    "_S.quote/quoteId",
+                    "_S.PrimaryKey"
+                  ]
+                ]
+              ],              
               [
                 "add",
                 "payload",
