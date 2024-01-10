@@ -343,7 +343,7 @@
           },
           "primary_key": "QuoteAlternativeId",
           "rest_system": "{{@ system @}}",
-          "share_dataset": "{{@ system @}}-{{@ datatype @}}-{{@ datatype @}}-share"
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-share-rest",
         "type": "template"
