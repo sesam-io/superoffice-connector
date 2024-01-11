@@ -194,6 +194,11 @@
                         "Status",
                         "Sold"
                       ]
+                    ],
+                    [
+                      "add",
+                      "$discard",
+                      "only close sales with a closed active quoteversion"
                     ]
                   ],
                   [
