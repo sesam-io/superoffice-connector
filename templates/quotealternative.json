@@ -247,70 +247,136 @@
               "*"
             ],
             [
-              "add",
-              "_QuoteVersionState",
+              "add-if",
+              "SaleId",
               [
-                "first",
+                "coalesce",
                 [
-                  "hops",
-                  {
-                    "datasets": [
-                      "{{@ system @}}-{{@ parent @}}-collect ga"
-                    ],
-                    "return": "ga.superoffice-{{@ parent @}}:State",
-                    "where": [
-                      [
-                        "eq",
-                        [
-                          "ni",
-                          "superoffice-{{@ parent @}}",
-                          [
-                            "string",
-                            "_S.QuoteVersionId"
-                          ]
+                  "list",
+                  "_S.sesam_SaleId",
+                  [
+                    "first",
+                    [
+                      "hops",
+                      {
+                        "datasets": [
+                          "{{@ system @}}-{{@ datatype @}}-sale-share ss"
                         ],
-                        "ga.$ids"
-                      ]
+                        "return": "ss.$generated_id",
+                        "where": [
+                          [
+                            "eq",
+                            "_S.$ids",
+                            "ss.$ids"
+                          ]
+                        ]
+                      }
                     ]
-                  }
+                  ]
                 ]
               ]
             ],
             [
               "if",
               [
-                "is-null",
-                "_S.sesam_SaleId"
+                "not",
+                "_S.sesam_Accepted"
               ],
               [
-                "add",
-                "$discard",
-                "missing SaleId"
-              ]
-            ],
-            [
-              "if",
-              [
-                "neq",
-                "_T._QuoteVersionState",
-                "Draft"
+                "if",
+                [
+                  "is-not-empty",
+                  "_T.SaleId"
+                ],
+                [
+                  "add",
+                  "$discard",
+                  "already inserted"
+                ]
               ],
               [
-                "add",
-                "$discard",
-                "wrong QuoteVersion State"
-              ]
-            ],
-            [
-              "if",
-              [
-                "is-null",
-                "_S.QuoteAlternativeId"
-              ],
-              [
-                "add",
-                "$discard",
-                "missing QuoteAlternativeId"
+                "if",
+                [
+                  "is-not-empty",
+                  "_T.SaleId"
+                ],
+                [
+                  [
+                    "add-if",
+                    "_QuoteId",
+                    [
+                      "first",
+                      [
+                        "hops",
+                        {
+                          "datasets": [
+                            "{{@ system @}}-quote-collect qc"
+                          ],
+                          "return": "qc.QuoteId",
+                          "where": [
+                            [
+                              "eq",
+                              "_S.sesam_SaleId",
+                              "qc.sesam_SaleId"
+                            ]
+                          ]
+                        }
+                      ]
+                    ]
+                  ],
+                  [
+                    "if",
+                    [
+                      "is-not-empty",
+                      "_T._QuoteId"
+                    ],
+                    [
+                      "if",
+                      [
+                        "not",
+                        [
+                          "in",
+                          "superoffice-{{@ datatype @}}",
+                          [
+                            "ni-ns",
+                            "_S._id"
+                          ]
+                        ]
+                      ],
+                      [
+                        "add",
+                        "$discard",
+                        "wrong entity type for updates"
+                      ],
+                      [
+                        [
+                          "add",
+                          "$operation",
+                          "lookup-quote"
+                        ],
+                        [
+                          "add",
+                          "payload",
+                          [
+                            "dict",
+                            "QuoteId",
+                            "_T._QuoteId"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "add",
+                      "$discard",
+                      "missing QuoteId"
+                    ]
+                  ]
+                ],
+                [
+                  "add",
+                  "payload",
+                  "_S."
+                ]
               ]
             ]
           ]
@@ -343,7 +409,7 @@
           },
           "primary_key": "QuoteAlternativeId",
           "rest_system": "{{@ system @}}",
-          "share_dataset": "{{@ system @}}-{{@ datatype @}}-{{@ datatype @}}-share"
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
         },
         "template": "transform-share-rest",
         "type": "template"

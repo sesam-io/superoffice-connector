@@ -616,7 +616,7 @@
                                 "hops",
                                 {
                                   "datasets": [
-                                    "{{@ system @}}-sale-share st"
+                                    "{{@ system @}}-{{@ datatype @}}-share st"
                                   ],
                                   "return": "st.$generated_id",
                                   "track-dependencies": false,
@@ -1536,7 +1536,7 @@
                       "hops",
                       {
                         "datasets": [
-                          "{{@ system @}}-sale-share st"
+                          "{{@ system @}}-{{@ datatype @}}-share st"
                         ],
                         "track-dependencies": false,
                         "where": [
