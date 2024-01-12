@@ -25,7 +25,7 @@
         "Name": "Sesam Talk Contact events",
         "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
-        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-contact-event/entities",
+        "TargetUrl": "{{@ service_url @}}/receivers/superoffice-Cust41398-superoffice-contact-event/entities",
         "Type": "webhook"
       },
       "payload-type": "json",
@@ -74,7 +74,7 @@
       },
       "id_expression": "{{ PrimaryKey }}",
       "method": "GET",
-      "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
+      "next_page_link": "https://sod2.superoffice.com/Cust41398/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
         "not-full-page",
         "empty-result"
@@ -137,7 +137,7 @@
         "Name": "Sesam Talk Person events",
         "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
-        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-person-event/entities",
+        "TargetUrl": "{{@ service_url @}}/receivers/superoffice-Cust41398-superoffice-person-event/entities",
         "Type": "webhook"
       },
       "payload-type": "json",
@@ -158,7 +158,7 @@
         "Name": "Sesam Talk Project events",
         "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
-        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-project-event/entities",
+        "TargetUrl": "{{@ service_url @}}/receivers/superoffice-Cust41398-superoffice-project-event/entities",
         "Type": "webhook"
       },
       "payload-type": "json",
@@ -179,6 +179,9 @@
         "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
+      "payload": {
+        "QuoteId": "{{ entity.QuoteId }}"
+      },
       "url": "Agents/Quote/GetQuoteEntity"
     },
     "quote-webhook-insert": {
@@ -197,7 +200,7 @@
         "Name": "Sesam Talk Quote events",
         "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
-        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-quote-event/entities",
+        "TargetUrl": "{{@ service_url @}}/receivers/superoffice-Cust41398-superoffice-quote-event/entities",
         "Type": "webhook"
       },
       "payload-type": "json",
@@ -355,6 +358,9 @@
         "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
+      "payload": {
+        "QuoteVersionId": "{{ entity.QuoteVersionId }}"
+      },
       "url": "Agents/Quote/GetQuoteVersion"
     },
     "quoteversions-lookup": {
@@ -387,7 +393,7 @@
         "Name": "Sesam Talk Sale events",
         "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
-        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-sale-event/entities",
+        "TargetUrl": "{{@ service_url @}}/receivers/superoffice-Cust41398-superoffice-sale-event/entities",
         "Type": "webhook"
       },
       "payload-type": "json",
@@ -402,7 +408,7 @@
       },
       "id_expression": "{{ PrimaryKey }}",
       "method": "GET",
-      "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
+      "next_page_link": "https://sod2.superoffice.com/Cust41398/api/v1/archive/Sale?$select=saleId,quote/quoteId,quote/connectionId,updatedDate",
       "next_page_termination_strategy": [
         "not-full-page",
         "empty-result"
@@ -431,7 +437,7 @@
         "Name": "Sesam Talk Ticket events",
         "Secret": "$SECRET(webhook_secret)",
         "State": "Active",
-        "TargetUrl": "{{@ service_url @}}/receivers/{{@ system @}}-ticket-event/entities",
+        "TargetUrl": "{{@ service_url @}}/receivers/superoffice-Cust41398-superoffice-ticket-event/entities",
         "Type": "webhook"
       },
       "payload-type": "json",
@@ -468,7 +474,7 @@
         "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "GET",
-      "next_page_link": "{{@ base_url @}}/{{@ account_id @}}/api/v1/{{ properties.base_url }}",
+      "next_page_link": "https://sod2.superoffice.com/Cust41398/api/v1/{{ properties.base_url }}",
       "next_page_termination_strategy": [
         "not-full-page",
         "empty-result"
