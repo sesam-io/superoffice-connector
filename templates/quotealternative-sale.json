@@ -213,6 +213,11 @@
                       true
                     ]
                   ]
+                ],
+                [
+                  "add",
+                  "$discard",
+                  "no quotelines available"
                 ]
               ],
               [
