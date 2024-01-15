@@ -11,6 +11,10 @@
         "rules": {
           "default": [
             [
+              "filter",
+              "_S.sesam_Accepted"
+            ],
+            [
               "copy",
               "*"
             ],
@@ -47,84 +51,83 @@
             [
               "if",
               [
-                "not",
-                "_S.sesam_Accepted"
+                "is-empty",
+                "_T.SaleId"
+              ],
+              [
+                "add",
+                "payload",
+                "_S."
+              ],
+              [
+                "add",
+                "$operation",
+                "lookup-sale"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "operation": "lookup",
+        "properties": {
+          "base_url": "Sale",
+          "lookup_id": "SaleId"
+        },
+        "replace_entity": false,
+        "response_property": "response_body",
+        "response_status_property": "response_status",
+        "side_effects": false,
+        "system": "{{@ system @}}",
+        "trigger_on": {
+          "key": "$operation",
+          "value": "lookup-sale"
+        },
+        "type": "rest"
+      },
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "if",
+              [
+                "eq",
+                "_S.$operation",
+                "lookup-sale"
               ],
               [
                 "if",
                 [
-                  "is-not-empty",
-                  "_T.SaleId"
+                  "neq",
+                  "_S.response_body.Status",
+                  "Sold"
                 ],
                 [
-                  "add",
-                  "$discard",
-                  "already inserted"
-                ]
-              ],
-              [
-                "if",
-                [
-                  "is-not-empty",
-                  "_T.SaleId"
-                ],
-                [
+                  "if",
                   [
-                    "add-if",
-                    "_QuoteId",
-                    [
-                      "first",
-                      [
-                        "hops",
-                        {
-                          "datasets": [
-                            "{{@ system @}}-quote-collect qc"
-                          ],
-                          "return": "qc.QuoteId",
-                          "where": [
-                            [
-                              "eq",
-                              "_S.sesam_SaleId",
-                              "qc.sesam_SaleId"
-                            ]
-                          ]
-                        }
-                      ]
-                    ]
+                    "is-not-empty",
+                    "_S.QuoteAlternativeId"
                   ],
                   [
-                    "if",
-                    [
-                      "is-not-empty",
-                      "_T._QuoteId"
-                    ],
-                    [
-                      [
-                        "add",
-                        "$operation",
-                        "lookup-quote"
-                      ],
-                      [
-                        "add",
-                        "payload",
-                        [
-                          "dict",
-                          "QuoteId",
-                          "_T._QuoteId"
-                        ]
-                      ]
-                    ],
-                    [
-                      "add",
-                      "$discard",
-                      "missing QuoteId"
-                    ]
+                    "add",
+                    "$operation",
+                    "lookup-quotelines"
+                  ],
+                  [
+                    "add",
+                    "$discard",
+                    "missing QuoteAlternativeId"
                   ]
                 ],
                 [
                   "add",
-                  "payload",
-                  "_S."
+                  "$discard",
+                  "Sale is already sold. No update needed"
                 ]
               ]
             ]
@@ -133,13 +136,13 @@
         "type": "dtl"
       },
       {
-        "operation": "quote-lookup",
-        "response_property": "$trace-pre-lookup-quote",
+        "operation": "quoteline-list",
+        "response_property": "$trace-pre-lookup-quotelines",
         "side_effects": false,
         "system": "{{@ system @}}",
         "trigger_on": {
           "key": "$operation",
-          "value": "lookup-quote"
+          "value": "lookup-quotelines"
         },
         "type": "rest"
       },
@@ -149,94 +152,65 @@
             [
               "if",
               [
-                "is-empty",
-                "_S.$discard"
+                "eq",
+                "_S.$operation",
+                "lookup-quotelines"
               ],
               [
+                "if",
                 [
-                  "if",
+                  "is-not-empty",
+                  "_S.$trace-pre-lookup-quotelines"
+                ],
+                [
                   [
-                    "eq",
-                    "_S.$operation",
-                    "lookup-quote"
+                    "copy",
+                    "$ids"
                   ],
                   [
-                    "if",
+                    "add",
+                    "$based_on_properties",
                     [
-                      "eq",
-                      [
-                        "map",
-                        "_.State",
-                        [
-                          "filter",
-                          [
-                            "eq",
-                            [
-                              "first",
-                              "_.ActiveQuoteVersionId"
-                            ],
-                            [
-                              "first",
-                              "_S.$trace-pre-lookup-quote.QuoteVersionId"
-                            ]
-                          ],
-                          "_S.$trace-pre-lookup-quote.QuoteVersions"
-                        ]
-                      ],
-                      "Sold"
-                    ],
-                    [
-                      [
-                        "copy",
-                        "$ids"
-                      ],
-                      [
-                        "add",
-                        "$based_on",
-                        [
-                          "dict",
-                          "Status",
-                          "Unknown"
-                        ]
-                      ],
-                      [
-                        "add",
-                        "$based_on_properties",
-                        [
-                          "list",
-                          "Status"
-                        ]
-                      ],
-                      [
-                        "add",
-                        "SaleId",
-                        "_S.SaleId"
-                      ],
-                      [
-                        "add",
-                        "Status",
-                        "Sold"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "$discard",
-                      "QuoteVersion not closed"
+                      "list",
+                      "Status"
                     ]
                   ],
                   [
+                    "add",
+                    "$based_on",
                     [
-                      "copy",
+                      "dict",
+                      "Status",
                       [
-                        "list",
-                        "$origin",
-                        "$ids"
+                        "first",
+                        "_S.response_body.Status"
                       ]
-                    ],
+                    ]
+                  ],
+                  [
+                    "add",
+                    "Status",
+                    "Sold"
+                  ],
+                  [
+                    "add",
+                    "DiscountPercent",
+                    "_S.DiscountPercent"
+                  ],
+                  [
+                    "add",
+                    "SaleId",
+                    "_S.SaleId"
+                  ],
+                  [
+                    "add",
+                    "$payload",
                     [
-                      "add",
-                      "merge",
-                      "_S.payload"
+                      "dict",
+                      "QuoteAlternativeId",
+                      "_S.QuoteAlternativeId",
+                      "MarkSaleAsSold",
+                      true
                     ]
                   ]
                 ]
@@ -288,10 +262,6 @@
       {
         "properties": {
           "client_side_patching": true,
-          "operation_delete_properties": {
-            "base_url": "Sale",
-            "lookup_id": "SaleId"
-          },
           "operation_insert_properties": {
             "base_url": "Sale"
           },
@@ -299,10 +269,7 @@
             "base_url": "Sale",
             "lookup_id": "SaleId"
           },
-          "operation_update_properties": {
-            "base_url": "Sale",
-            "lookup_id": "SaleId"
-          },
+          "operation_update": "place-order",
           "primary_key": "SaleId",
           "rest_system": "{{@ system @}}",
           "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"

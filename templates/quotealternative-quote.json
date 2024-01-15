@@ -9,198 +9,204 @@
       "dataset": "{{@ system @}}-quotealternative-transform",
       "type": "dataset"
     },
-    "transform": {
-      "transforms": [
-        {
-          "rules": {
-            "default": [
-              [
-                "copy",
-                "*"
-              ],
-              [
-                "comment",
-                "instead of making 2 hops, maybe fix connector to accomodate 2 sources?"
-              ],
-              [
-                "add",
-                "SaleId",
+    "transform": [
+      {
+        "transforms": [
+          {
+            "rules": {
+              "default": [
                 [
-                  "coalesce",
-                  [
-                    "list",
-                    "_S.sesam_SaleId",
-                    [
-                      "first",
-                      [
-                        "hops",
-                        {
-                          "datasets": [
-                            "{{@ system @}}-sale-share sh"
-                          ],
-                          "return": "sh.$generated_id",
-                          "where": [
-                            [
-                              "eq",
-                              "_S.$ids",
-                              "sh.$ids"
-                            ]
-                          ]
-                        }
-                      ]
-                    ],
-                    [
-                      "first",
-                      [
-                        "hops",
-                        {
-                          "datasets": [
-                            "{{@ system @}}-quotealternative-sale-share sh"
-                          ],
-                          "return": "sh.$generated_id",
-                          "where": [
-                            [
-                              "eq",
-                              "_S.$ids",
-                              "sh.$ids"
-                            ]
-                          ]
-                        }
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              [
-                "if",
+                  "filter",
+                  "_S.sesam_Accepted"
+                ],
                 [
-                  "is-null",
-                  "_T.SaleId"
+                  "copy",
+                  "*"
+                ],
+                [
+                  "comment",
+                  "instead of making 2 hops, maybe fix connector to accomodate 2 sources?"
                 ],
                 [
                   "add",
-                  "$discard",
-                  "missing SaleId"
-                ],
-                [
+                  "SaleId",
                   [
-                    "add",
-                    "$operation",
-                    "lookup-sale"
-                  ],
-                  [
-                    "add",
-                    "payload",
+                    "coalesce",
                     [
-                      "dict",
-                      "SaleId",
-                      "_T.SaleId"
+                      "list",
+                      "_S.sesam_SaleId",
+                      [
+                        "first",
+                        [
+                          "hops",
+                          {
+                            "datasets": [
+                              "{{@ system @}}-sale-share sh"
+                            ],
+                            "return": "sh.$generated_id",
+                            "where": [
+                              [
+                                "eq",
+                                "_S.$ids",
+                                "sh.$ids"
+                              ]
+                            ]
+                          }
+                        ]
+                      ],
+                      [
+                        "first",
+                        [
+                          "hops",
+                          {
+                            "datasets": [
+                              "{{@ system @}}-quotealternative-sale-share sh"
+                            ],
+                            "return": "sh.$generated_id",
+                            "where": [
+                              [
+                                "eq",
+                                "_S.$ids",
+                                "sh.$ids"
+                              ]
+                            ]
+                          }
+                        ]
+                      ]
                     ]
                   ]
-                ]
-              ]
-            ]
-          },
-          "type": "dtl"
-        },
-        {
-          "operation": "quotealternative-sale-lookup",
-          "response_property": "$trace-pre-lookup-sale",
-          "side_effects": false,
-          "system": "{{@ system @}}",
-          "trigger_on": {
-            "key": "$operation",
-            "value": "lookup-sale"
-          },
-          "type": "rest"
-        },
-        {
-          "rules": {
-            "default": [
-              [
-                "copy",
-                "*"
-              ],
-              [
-                "add",
-                "QuoteId",
-                [
-                  "first",
-                  "_S.$trace-pre-lookup-sale.QuoteId"
-                ]
-              ],
-              [
-                "comment",
-                "TODO"
-              ],
-              [
-                "comment",
-                "support update for AcceptedQuoteAlternative"
-              ],
-              [
-                "if",
-                [
-                  "is-null",
-                  "_T.QuoteId"
-                ],
-                [
-                  "add",
-                  "payload",
-                  [
-                    "dict",
-                    "ConnectionId",
-                    1,
-                    "SaleId",
-                    "_S.SaleId"
-                  ]
-                ],
-                [
-                  [
-                    "add",
-                    "payload",
-                    [
-                      "dict",
-                      "QuoteId",
-                      "_T.QuoteId"
-                    ]
-                  ],
-                  [
-                    "add",
-                    "$operation",
-                    "lookup-quote"
-                  ]
-                ]
-              ]
-            ]
-          },
-          "type": "dtl"
-        },
-        {
-          "operation": "quote-lookup",
-          "response_property": "$trace-pre-lookup-quote",
-          "side_effects": false,
-          "system": "{{@ system @}}",
-          "trigger_on": {
-            "key": "$operation",
-            "value": "lookup-quote"
-          },
-          "type": "rest"
-        },
-        {
-          "rules": {
-            "default": [
-              [
-                "if",
-                [
-                  "eq",
-                  "_S.$operation",
-                  "lookup-quote"
                 ],
                 [
                   "if",
                   [
-                    "and",
-                    "_S.sesam_Accepted",
+                    "is-null",
+                    "_T.SaleId"
+                  ],
+                  [
+                    "add",
+                    "$discard",
+                    "missing SaleId"
+                  ],
+                  [
+                    [
+                      "add",
+                      "$operation",
+                      "lookup-sale"
+                    ],
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "dict",
+                        "SaleId",
+                        "_T.SaleId"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "quotealternative-sale-lookup",
+            "response_property": "$trace-pre-lookup-sale",
+            "side_effects": false,
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "lookup-sale"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "*"
+                ],
+                [
+                  "add",
+                  "QuoteId",
+                  [
+                    "first",
+                    "_S.$trace-pre-lookup-sale.QuoteId"
+                  ]
+                ],
+                [
+                  "comment",
+                  "TODO"
+                ],
+                [
+                  "comment",
+                  "support update for AcceptedQuoteAlternative"
+                ],
+                [
+                  "if",
+                  [
+                    "is-null",
+                    "_T.QuoteId"
+                  ],
+                  [
+                    "add",
+                    "payload",
+                    [
+                      "dict",
+                      "ConnectionId",
+                      1,
+                      "SaleId",
+                      "_S.SaleId"
+                    ]
+                  ],
+                  [
+                    [
+                      "add",
+                      "payload",
+                      [
+                        "dict",
+                        "QuoteId",
+                        "_T.QuoteId"
+                      ]
+                    ],
+                    [
+                      "add",
+                      "$operation",
+                      "lookup-quote"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "type": "dtl"
+          },
+          {
+            "operation": "quote-lookup",
+            "response_property": "$trace-pre-lookup-quote",
+            "side_effects": false,
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "lookup-quote"
+            },
+            "type": "rest"
+          },
+          {
+            "rules": {
+              "default": [
+                [
+                  "copy",
+                  "$ids"
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    "_S.$operation",
+                    "lookup-quote"
+                  ],
+                  [
+                    "if",
                     [
                       "eq",
                       [
@@ -208,97 +214,282 @@
                         "_S.$trace-pre-lookup-quote.AcceptedQuoteAlternativeId"
                       ],
                       0
-                    ]
-                  ],
-                  [
-                    [
-                      "copy",
-                      "$ids"
                     ],
                     [
-                      "copy",
-                      "QuoteId"
-                    ],
-                    [
-                      "add",
-                      "$based_on_properties",
                       [
-                        "list",
-                        "AcceptedQuoteAlternativeId"
-                      ]
-                    ],
-                    [
-                      "add",
-                      "$based_on",
+                        "copy",
+                        "$ids"
+                      ],
                       [
-                        "dict",
+                        "copy",
+                        "QuoteId"
+                      ],
+                      [
+                        "add",
+                        "$based_on_properties",
+                        [
+                          "list",
+                          "AcceptedQuoteAlternativeId"
+                        ]
+                      ],
+                      [
+                        "add",
+                        "$based_on",
+                        [
+                          "dict",
+                          "AcceptedQuoteAlternativeId",
+                          [
+                            "first",
+                            "_S.$trace-pre-lookup-quote.AcceptedQuoteAlternativeId"
+                          ]
+                        ]
+                      ],
+                      [
+                        "add",
                         "AcceptedQuoteAlternativeId",
                         [
                           "first",
-                          "_S.$trace-pre-lookup-quote.AcceptedQuoteAlternativeId"
+                          "_S.$trace-pre-lookup-sale.FavoriteQuoteAlternative.QuoteAlternativeId"
+                        ]
+                      ],
+                      [
+                        "add",
+                        "$payload",
+                        [
+                          "dict",
+                          "Quote",
+                          [
+                            "dict",
+                            "QuoteConnectionId",
+                            1,
+                            "QuoteId",
+                            "_S.QuoteId",
+                            "SaleId",
+                            "_S.SaleId",
+                            "AcceptedQuoteAlternativeId",
+                            [
+                              "first",
+                              "_S.$trace-pre-lookup-sale.FavoriteQuoteAlternative.QuoteAlternativeId"
+                            ]
+                          ]
                         ]
                       ]
                     ],
                     [
                       "add",
-                      "AcceptedQuoteAlternativeId",
-                      [
-                        "first",
-                        "_S.$trace-pre-lookup-sale.FavoriteQuoteAlternative.QuoteAlternativeId"
-                      ]
-                    ],
+                      "$discard",
+                      "AcceptedQuoteAlternative already set"
+                    ]
+                  ],
+                  [
                     [
                       "add",
                       "$payload",
+                      "_S.payload"
+                    ],
+                    [
+                      "copy",
                       [
-                        "dict",
-                        "Quote",
+                        "list",
+                        "$origin",
+                        "$ids"
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "recursive-merge": [
+                [
+                  "merge",
+                  [
+                    "dict",
+                    [
+                      "map",
+                      [
+                        "list",
+                        "_.",
                         [
-                          "dict",
-                          "QuoteConnectionId",
-                          1,
-                          "QuoteId",
-                          "_S.QuoteId",
-                          "SaleId",
-                          "_S.SaleId",
-                          "AcceptedQuoteAlternativeId",
+                          "sorted",
                           [
-                            "first",
-                            "_S.$trace-pre-lookup-sale.FavoriteQuoteAlternative.QuoteAlternativeId"
+                            "if",
+                            [
+                              "and",
+                              [
+                                "is-dict",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ]
+                              ],
+                              [
+                                "is-dict",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ],
+                            [
+                              "apply",
+                              "recursive-merge",
+                              [
+                                "dict",
+                                "a",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.a"
+                                ],
+                                "b",
+                                [
+                                  "path",
+                                  "_.",
+                                  "_S.b"
+                                ]
+                              ]
+                            ],
+                            [
+                              "if",
+                              [
+                                "has-key",
+                                "_.",
+                                "_S.b"
+                              ],
+                              [
+                                "path",
+                                "_.",
+                                "_S.b"
+                              ],
+                              [
+                                "path",
+                                "_.",
+                                "_S.a"
+                              ]
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "distinct",
+                        [
+                          "combine",
+                          [
+                            "keys",
+                            "_S.a"
+                          ],
+                          [
+                            "keys",
+                            "_S.b"
                           ]
                         ]
                       ]
                     ]
-                  ],
-                  [
-                    "add",
-                    "$discard",
-                    "AcceptedQuoteAlternative probably already updated"
-                  ]
-                ],
-                [
-                  [
-                    "add",
-                    "$payload",
-                    "_S.payload"
-                  ],
-                  [
-                    "copy",
-                    [
-                      "list",
-                      "$origin",
-                      "$ids"
-                    ]
                   ]
                 ]
               ]
-            ]
+            },
+            "type": "dtl"
           },
-          "type": "dtl"
-        }
-      ],
-      "type": "chained"
-    },
+          {
+            "operation": "quoteline-list",
+            "response_property": "$trace-pre-lookup-quotelines",
+            "side_effects": false,
+            "system": "{{@ system @}}",
+            "trigger_on": {
+              "key": "$operation",
+              "value": "lookup-quotelines"
+            },
+            "type": "rest"
+          }
+        ],
+        "type": "chained"
+      },
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "$ids"
+            ],
+            [
+              "if",
+              [
+                "eq",
+                "_S.$operation",
+                "lookup-quotelines"
+              ],
+              [
+                "if",
+                [
+                  "is-not-empty",
+                  "_S.$trace-pre-lookup-quotelines"
+                ],
+                [
+                  [
+                    "copy",
+                    "QuoteId"
+                  ],
+                  [
+                    "add",
+                    "$based_on_properties",
+                    [
+                      "list",
+                      "AcceptedQuoteAlternativeId"
+                    ]
+                  ],
+                  [
+                    "add",
+                    "$based_on",
+                    [
+                      "dict",
+                      "AcceptedQuoteAlternativeId",
+                      [
+                        "first",
+                        "_S.$trace-pre-lookup-quote.AcceptedQuoteAlternativeId"
+                      ]
+                    ]
+                  ],
+                  [
+                    "add",
+                    "AcceptedQuoteAlternativeId",
+                    [
+                      "first",
+                      "_S.$trace-pre-lookup-quote.AcceptedQuoteAlternativeId"
+                    ]
+                  ],
+                  [
+                    "add",
+                    "$payload",
+                    [
+                      "dict",
+                      "QuoteAlternativeId",
+                      [
+                        "first",
+                        "_S.$trace-pre-lookup-quote.AcceptedQuoteAlternativeId"
+                      ],
+                      "MarkSaleAsSold",
+                      true
+                    ]
+                  ]
+                ],
+                [
+                  "add",
+                  "$discard",
+                  "no quotelines available yet"
+                ]
+              ],
+              [
+                "copy",
+                "*"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      }
+    ],
     "type": "pipe"
   },
   {
@@ -320,18 +511,32 @@
       "dataset": "{{@ system @}}-{{@ datatype @}}-preshare",
       "type": "dataset"
     },
-    "transform": {
-      "properties": {
-        "operation_insert": "create-quote",
-        "operation_lookup": "quote-lookup",
-        "operation_update": "update-quote",
-        "primary_key": "QuoteId",
-        "rest_system": "{{@ system @}}",
-        "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+    "transform": [
+      {
+        "properties": {
+          "operation": "defaults",
+          "operation_properties": {
+            "base_url": "Sale/default"
+          },
+          "primary_key": "SaleId",
+          "rest_system": "{{@ system @}}"
+        },
+        "template": "transform-defaults-rest",
+        "type": "template"
       },
-      "template": "transform-share-rest",
-      "type": "template"
-    },
+      {
+        "properties": {
+          "operation_insert": "create-quote",
+          "operation_lookup": "quote-lookup",
+          "operation_update": "update-quote",
+          "primary_key": "QuoteId",
+          "rest_system": "{{@ system @}}",
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-share-rest",
+        "type": "template"
+      }
+    ],
     "type": "pipe"
   }
 ]

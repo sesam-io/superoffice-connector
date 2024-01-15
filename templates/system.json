@@ -143,6 +143,15 @@
       "payload-type": "json",
       "url": "Webhook"
     },
+    "place-order": {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/PlaceOrder"
+    },
     "project-webhook-insert": {
       "headers": {
         "Authorization": "SOTicket $SECRET(so_ticket)",
