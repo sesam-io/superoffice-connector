@@ -85,9 +85,6 @@
     "quotealternative-quote": {
       "template": "templates/quotealternative-quote.json"
     },
-    "quotealternative-quoteversion": {
-      "template": "templates/quotealternative-quoteversion.json"
-    },
     "quotealternative-sale": {
       "template": "templates/quotealternative-sale.json"
     },

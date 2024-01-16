@@ -143,6 +143,15 @@
       "payload-type": "json",
       "url": "Webhook"
     },
+    "place-order": {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
+      "method": "POST",
+      "url": "Agents/Quote/PlaceOrder"
+    },
     "project-webhook-insert": {
       "headers": {
         "Authorization": "SOTicket $SECRET(so_ticket)",
@@ -179,6 +188,9 @@
         "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
+      "payload": {
+        "QuoteId": "{{ entity.QuoteId }}"
+      },
       "url": "Agents/Quote/GetQuoteEntity"
     },
     "quote-webhook-insert": {
@@ -355,6 +367,9 @@
         "SO-Apptoken": "$SECRET(oauth_client_secret)"
       },
       "method": "POST",
+      "payload": {
+        "QuoteVersionId": "{{ entity.QuoteVersionId }}"
+      },
       "url": "Agents/Quote/GetQuoteVersion"
     },
     "quoteversions-lookup": {
