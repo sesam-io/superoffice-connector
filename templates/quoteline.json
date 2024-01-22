@@ -131,11 +131,15 @@
                   2,
                   [
                     "multiply",
-                    "_S.UnitListPrice",
+                    "_S.Quantity",
                     [
-                      "divide",
-                      100,
-                      "_S.ERPDiscountPercent"
+                      "multiply",
+                      "_S.UnitListPrice",
+                      [
+                        "divide",
+                        100,
+                        "_S.ERPDiscountPercent"
+                      ]
                     ]
                   ]
                 ]
