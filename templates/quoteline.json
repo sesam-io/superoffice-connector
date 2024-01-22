@@ -111,6 +111,45 @@
           "default": [
             [
               "comment",
+              "IS-16810"
+            ],
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "if",
+              [
+                "is-not-null",
+                "_S.ERPDiscountPercent"
+              ],
+              [
+                "add",
+                "ERPDiscountAmount",
+                [
+                  "round",
+                  2,
+                  [
+                    "multiply",
+                    "_S.UnitListPrice",
+                    [
+                      "divide",
+                      100,
+                      "_S.ERPDiscountPercent"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "rules": {
+          "default": [
+            [
+              "comment",
               "first if clause here where the $operation discard-QuoteAlternativeId-missing is set, is a workaround for now. (IS-14730) will implement robust fix"
             ],
             [
