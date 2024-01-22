@@ -111,7 +111,7 @@
           "default": [
             [
               "comment",
-              "IS-16810"
+              "IS-16810: Calculating DiscountAmount based on DiscountPercentage since DiscountAmount is required to calculate TotalPrice"
             ],
             [
               "copy",
