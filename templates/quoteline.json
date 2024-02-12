@@ -105,94 +105,185 @@
       "dataset": "{{@ system @}}-{{@ datatype @}}-transform",
       "type": "dataset"
     },
-    "transform": [{
-      "type": "dtl",
-      "rules": {
-        "default": [
-          ["comment", "IS-16810: Calculating DiscountAmount based on DiscountPercentage since DiscountAmount is required to calculate TotalPrice"],
-          ["copy", "*"],
-          ["if",
-            ["is-not-null", "_S.ERPDiscountPercent"],
-            ["add", "ERPDiscountAmount",
-              ["round", 2,
-                ["multiply", "_S.Quantity",
-                  ["multiply", "_S.UnitListPrice",
-                    ["divide", 100, "_S.ERPDiscountPercent"]
+    "transform": [
+      {
+        "rules": {
+          "default": [
+            [
+              "comment",
+              "IS-16810: Calculating DiscountAmount based on DiscountPercentage since DiscountAmount is required to calculate TotalPrice"
+            ],
+            [
+              "copy",
+              "*"
+            ],
+            [
+              "if",
+              [
+                "is-not-null",
+                "_S.ERPDiscountPercent"
+              ],
+              [
+                "add",
+                "ERPDiscountAmount",
+                [
+                  "round",
+                  2,
+                  [
+                    "multiply",
+                    "_S.Quantity",
+                    [
+                      "multiply",
+                      "_S.UnitListPrice",
+                      [
+                        "divide",
+                        100,
+                        "_S.ERPDiscountPercent"
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "if",
+              [
+                "is-null",
+                "_S.QuoteLineId"
+              ],
+              [
+                "remove",
+                "QuoteLineId"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "properties": {
+          "operation": "{{@ datatype @}}-default",
+          "operation_properties": {
+            "base_url": "Sale/default"
+          },
+          "primary_key": "QuoteLineId",
+          "rest_system": "{{@ system @}}"
+        },
+        "template": "transform-defaults-rest",
+        "type": "template"
+      },
+      {
+        "properties": {
+          "client_side_patching": false,
+          "operation_insert": "{{@ datatype @}}-insert",
+          "operation_lookup": "{{@ datatype @}}-lookup",
+          "operation_update": "{{@ datatype @}}-update",
+          "primary_key": "QuoteLineId",
+          "rest_system": "{{@ system @}}",
+          "rewrite_rules_payload": {
+            "is-match": [
+              [
+                "comment",
+                "workaround for shadowing the outer _. variable"
+              ],
+              [
+                "discard",
+                [
+                  "is-not-empty",
+                  [
+                    "filter",
+                    [
+                      "matches",
+                      "_S.pattern",
+                      "_."
+                    ],
+                    "_R._S.$source.$based_on_properties"
+                  ]
+                ]
+              ]
+            ],
+            "payload": [
+              [
+                "merge",
+                [
+                  "dict",
+                  [
+                    "filter",
+                    [
+                      "not",
+                      [
+                        "or",
+                        [
+                          "matches",
+                          "_*",
+                          [
+                            "first",
+                            "_."
+                          ]
+                        ],
+                        [
+                          "matches",
+                          "$*",
+                          [
+                            "first",
+                            "_."
+                          ]
+                        ],
+                        [
+                          "matches",
+                          "sesam_*",
+                          [
+                            "first",
+                            "_."
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "items",
+                      "_S."
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "rewrite_insert_payload": [
+              [
+                "add",
+                "$payload",
+                [
+                  "dict",
+                  "QuoteLine",
+                  [
+                    "apply",
+                    "payload",
+                    "_R._T.$source"
+                  ]
+                ]
+              ]
+            ],
+            "rewrite_update_payload ": [
+              [
+                "add",
+                "$payload",
+                [
+                  "dict",
+                  "QuoteLine",
+                  [
+                    "apply",
+                    "payload",
+                    "_R._T.$source"
                   ]
                 ]
               ]
             ]
-          ],
-          ["if",
-            ["is-null", "_S.QuoteLineId"],
-            ["remove", "QuoteLineId"]
-          ]
-        ]
+          },
+          "share_dataset": "{{@ system @}}-{{@ datatype @}}-share"
+        },
+        "template": "transform-share-rest",
+        "type": "template"
       }
-    },
-      {
-      "type": "template",
-      "properties": {
-        "operation": "quoteline-default",
-        "operation_properties": {
-          "base_url": "Sale/default"
-        },
-        "primary_key": "QuoteLineId",
-        "rest_system": "xxxxxx"
-      },
-      "template": "transform-defaults-rest"
-    },
-      {
-      "type": "template",
-      "properties": {
-        "client_side_patching": false,
-        "operation_insert": "quoteline-insert",
-        "operation_lookup": "quoteline-lookup",
-        "operation_update": "quoteline-update",
-        "primary_key": "QuoteLineId",
-        "rest_system": "xxxxxx",
-        "rewrite_rules_payload": {
-          "payload": [
-            ["merge",
-              ["dict",
-                ["filter",
-                  ["not",
-                    ["or",
-                      ["matches", "_*",
-                        ["first", "_."]
-                      ],
-                      ["matches", "$*",
-                        ["first", "_."]
-                      ],
-                      ["matches", "sesam_*",
-                        ["first", "_."]
-                      ]
-                    ]
-                  ],
-                  ["items", "_S."]
-                ]
-              ]
-            ]
-          ],
-          "rewrite_insert_payload": [
-            ["add", "$payload",
-              ["dict", "QuoteLine",
-                ["apply", "payload", "_R._T.$source"]
-              ]
-            ]
-          ],
-          "rewrite_update_payload ": [
-            ["add", "$payload",
-              ["dict", "QuoteLine",
-                ["apply", "payload", "_R._T.$source"]
-              ]
-            ]
-          ]
-        },
-        "share_dataset": "xxxxxx-quoteline-share"
-      },
-      "template": "transform-share-rest"
-    }],
+    ],
     "type": "pipe"
   }
 ]
