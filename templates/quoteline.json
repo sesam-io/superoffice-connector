@@ -155,6 +155,80 @@
                 "remove",
                 "QuoteLineId"
               ]
+            ],
+            [
+              "if",
+              [
+                "not",
+                [
+                  "gt",
+                  "_S.Rank",
+                  0
+                ]
+              ],
+              [
+                "add",
+                "$operation",
+                "get-all-{{@ datatype @}}s"
+              ]
+            ]
+          ]
+        },
+        "type": "dtl"
+      },
+      {
+        "allowed_status_codes": "200",
+        "operation": "{{@ datatype @}}-list",
+        "response_property": "response_body",
+        "side_effects": false,
+        "system": "{{@ system @}}",
+        "trigger_on": {
+          "key": "$operation",
+          "value": "get-all-{{@ datatype @}}s"
+        },
+        "type": "rest"
+      },
+      {
+        "rules": {
+          "default": [
+            [
+              "copy",
+              "*",
+              [
+                "list",
+                "response*"
+              ]
+            ],
+            [
+              "if",
+              [
+                "eq",
+                "_S.$operation",
+                "get-all-{{@ datatype @}}s"
+              ],
+              [
+                "add",
+                "Rank",
+                [
+                  "coalesce",
+                  [
+                    "list",
+                    [
+                      "plus",
+                      1,
+                      [
+                        "max",
+                        [
+                          "map",
+                          "_.Rank",
+                          "_S.response_body"
+                        ]
+                      ]
+                    ],
+                    1
+                  ]
+                ]
+              ]
             ]
           ]
         },
@@ -262,7 +336,7 @@
                 ]
               ]
             ],
-            "rewrite_update_payload ": [
+            "rewrite_update_payload": [
               [
                 "add",
                 "$payload",
@@ -272,7 +346,7 @@
                   [
                     "apply",
                     "payload",
-                    "_R._T.$source"
+                    "_R._S.$source"
                   ]
                 ]
               ]
