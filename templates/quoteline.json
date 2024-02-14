@@ -117,59 +117,67 @@
               "copy",
               "*"
             ],
-            [
-              "if",
+            ["if", 
               [
-                "is-not-null",
-                "_S.ERPDiscountPercent"
+                "is-not-null", 
+                "_S.$discard"
               ],
               [
-                "add",
-                "ERPDiscountAmount",
                 [
-                  "round",
-                  2,
+                  "if",
                   [
-                    "multiply",
-                    "_S.Quantity",
+                    "is-not-null",
+                    "_S.ERPDiscountPercent"
+                  ],
+                  [
+                    "add",
+                    "ERPDiscountAmount",
                     [
-                      "multiply",
-                      "_S.UnitListPrice",
+                      "round",
+                      2,
                       [
-                        "divide",
-                        100,
-                        "_S.ERPDiscountPercent"
+                        "multiply",
+                        "_S.Quantity",
+                        [
+                          "multiply",
+                          "_S.UnitListPrice",
+                          [
+                            "divide",
+                            100,
+                            "_S.ERPDiscountPercent"
+                          ]
+                        ]
                       ]
                     ]
                   ]
-                ]
-              ]
-            ],
-            [
-              "if",
-              [
-                "is-null",
-                "_S.QuoteLineId"
-              ],
-              [
-                "remove",
-                "QuoteLineId"
-              ]
-            ],
-            [
-              "if",
-              [
-                "not",
+                ],
                 [
-                  "gt",
-                  "_S.Rank",
-                  0
+                  "if",
+                  [
+                    "is-null",
+                    "_S.QuoteLineId"
+                  ],
+                  [
+                    "remove",
+                    "QuoteLineId"
+                  ]
+                ],
+                [
+                  "if",
+                  [
+                    "not",
+                    [
+                      "gt",
+                      "_S.Rank",
+                      0
+                    ]
+                  ],
+                  [
+                    "add",
+                    "$operation",
+                    "get-all-{{@ datatype @}}s"
+                  ]
                 ]
-              ],
-              [
-                "add",
-                "$operation",
-                "get-all-{{@ datatype @}}s"
               ]
             ]
           ]
