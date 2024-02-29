@@ -1,17 +1,28 @@
-{
-  "_id": "{{@ system @}}-{{@ datatype @}}-collect",
-  "namespaced_identifiers": false,
-  "source": {
-    "id_expression": "{{ PrimaryKey }}",
-    "operation": "{{@ datatype @}}_list",
-    "payload_property": "value",
-    "properties": {
-      "base_url": "{{@ datatype @}}",
-      "ordering": "PrimaryKey asc",
-      "primary_key": "PrimaryKey"
+[
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "namespaced_identifiers": false,
+    "source": {
+      "id_expression": "{{ PrimaryKey }}",
+      "operation": "{{@ datatype @}}_list",
+      "payload_property": "value",
+      "properties": {
+        "base_url": "{{@ datatype @}}",
+        "ordering": "PrimaryKey asc",
+        "primary_key": "PrimaryKey"
+      },
+      "system": "{{@ system @}}",
+      "type": "rest"
     },
-    "system": "{{@ system @}}",
-    "type": "rest"
+    "type": "pipe"
   },
-  "type": "pipe"
-}
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "namespaced_identifiers": false,
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
+      "type": "dataset"
+    },
+    "type": "pipe"
+  }
+]

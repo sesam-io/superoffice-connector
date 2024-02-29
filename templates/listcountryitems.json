@@ -1,33 +1,44 @@
-{
-  "_id": "{{@ system @}}-{{@ datatype @}}-collect",
-  "namespaced_identifiers": false,
-  "source": {
-    "operation": "alternate_list",
-    "properties": {
-      "base_url": "{{@ base_url @}}",
-      "primary_key": "Id"
+[
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-all",
+    "namespaced_identifiers": false,
+    "source": {
+      "operation": "alternate_list",
+      "properties": {
+        "base_url": "{{@ base_url @}}",
+        "primary_key": "Id"
+      },
+      "system": "{{@ system @}}",
+      "type": "rest"
     },
-    "system": "{{@ system @}}",
-    "type": "rest"
-  },
-  "transform": {
-    "rules": {
-      "default": [
-        [
-          "copy",
-          "*"
-        ],
-        [
-          "add",
-          "_id",
+    "transform": {
+      "rules": {
+        "default": [
           [
-            "string",
-            "_S.{{@ lookup_id @}}"
+            "copy",
+            "*"
+          ],
+          [
+            "add",
+            "_id",
+            [
+              "string",
+              "_S.{{@ lookup_id @}}"
+            ]
           ]
         ]
-      ]
+      },
+      "type": "dtl"
     },
-    "type": "dtl"
+    "type": "pipe"
   },
-  "type": "pipe"
-}
+  {
+    "_id": "{{@ system @}}-{{@ datatype @}}-collect",
+    "namespaced_identifiers": false,
+    "source": {
+      "dataset": "{{@ system @}}-{{@ datatype @}}-all",
+      "type": "dataset"
+    },
+    "type": "pipe"
+  }
+]

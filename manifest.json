@@ -36,11 +36,6 @@
       "sync_frequency": "weekly",
       "template": "templates/listcurrencyitems.json"
     },
-    "ownercontactlink": {
-      "label": "Owner Contact Link",
-      "sync_frequency": "slow",
-      "template": "templates/ownercontactlink.json"
-    },
     "person": {
       "label": "Contact Person",
       "parameters": {
