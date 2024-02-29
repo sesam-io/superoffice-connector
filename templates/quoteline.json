@@ -117,9 +117,10 @@
               "copy",
               "*"
             ],
-            ["if", 
+            [
+              "if",
               [
-                "is-not-null", 
+                "is-not-null",
                 "_S.$discard"
               ],
               [
