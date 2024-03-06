@@ -60,7 +60,7 @@
                           "hops",
                           {
                             "datasets": [
-                              "{{@ system @}}-quotealternative-sale-share sh"
+                              "{{@ system @}}-quotealternativesale-share sh"
                             ],
                             "return": "sh.$generated_id",
                             "where": [
@@ -109,7 +109,7 @@
             "type": "dtl"
           },
           {
-            "operation": "quotealternative-sale-lookup",
+            "operation": "quotealternativesale-lookup",
             "response_property": "$trace-pre-lookup-sale",
             "side_effects": false,
             "system": "{{@ system @}}",
