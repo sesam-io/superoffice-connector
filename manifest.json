@@ -77,11 +77,11 @@
       "parent": "quoteversion",
       "template": "templates/quotealternative.json"
     },
-    "quotealternative-quote": {
-      "template": "templates/quotealternative-quote.json"
+    "quotealternativequote": {
+      "template": "templates/quotealternativequote.json"
     },
-    "quotealternative-sale": {
-      "template": "templates/quotealternative-sale.json"
+    "quotealternativesale": {
+      "template": "templates/quotealternativesale.json"
     },
     "quoteline": {
       "label": "Quote Line",
