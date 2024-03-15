@@ -254,7 +254,7 @@
       "method": "POST",
       "url": "Agents/Quote/GetQuoteAlternative?quoteAlternativeId={{ entity['QuoteAlternativeId'] }}"
     },
-    "quotealternative-sale-lookup": {
+    "quotealternativesale-lookup": {
       "headers": {
         "Accept": "application/json",
         "Authorization": "SOTicket $SECRET(so_ticket)",
