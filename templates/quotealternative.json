@@ -78,7 +78,7 @@
     "transform": {
       "transforms": [
         {
-          "operation": "{{@ datatype @}}-sale-lookup",
+          "operation": "{{@ datatype @}}sale-lookup",
           "side_effects": false,
           "system": "{{@ system @}}",
           "type": "rest"
