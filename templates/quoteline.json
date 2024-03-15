@@ -120,7 +120,7 @@
             [
               "if",
               [
-                "is-not-null",
+                "is-null",
                 "_S.$discard"
               ],
               [
