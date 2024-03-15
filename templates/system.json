@@ -254,18 +254,6 @@
       "method": "POST",
       "url": "Agents/Quote/GetQuoteAlternative?quoteAlternativeId={{ entity['QuoteAlternativeId'] }}"
     },
-    "quotealternativesale-lookup": {
-      "headers": {
-        "Accept": "application/json",
-        "Authorization": "SOTicket $SECRET(so_ticket)",
-        "SO-Apptoken": "$SECRET(oauth_client_secret)"
-      },
-      "method": "POST",
-      "payload": {
-        "SaleId": "{{ entity['sesam_SaleId'] }}"
-      },
-      "url": "Agents/Quote/GetQuoteFromSaleId"
-    },
     "quotealternative-save": {
       "headers": {
         "Accept": "application/json",
@@ -292,6 +280,18 @@
       },
       "method": "POST",
       "url": "Agents/Quote/SaveQuoteVersion"
+    },
+    "quotealternativesale-lookup": {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "SOTicket $SECRET(so_ticket)",
+        "SO-Apptoken": "$SECRET(oauth_client_secret)"
+      },
+      "method": "POST",
+      "payload": {
+        "SaleId": "{{ entity['sesam_SaleId'] }}"
+      },
+      "url": "Agents/Quote/GetQuoteFromSaleId"
     },
     "quoteline-default": {
       "headers": {
