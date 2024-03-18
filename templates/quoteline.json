@@ -262,20 +262,6 @@
         "type": "dtl"
       },
       {
-        "allowed_status_codes": "200",
-        "operation": "{{@ datatype @}}-default",
-        "properties": {
-          "base_url": "Sale/default"
-        },
-        "side_effects": false,
-        "system": "{{@ system @}}",
-        "trigger_on": {
-          "key": "$operation",
-          "value": "lookup-defaults"
-        },
-        "type": "rest"
-      },
-      {
         "rules": {
           "default": [
             [
